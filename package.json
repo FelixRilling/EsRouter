@@ -1,0 +1,39 @@
+{
+  "name": "esQuery",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/esQuery.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheBinaryBee/microAnimate.git"
+  },
+  "keywords": [
+    "dom",
+    "micro"
+  ],
+  "author": "Felix Rilling",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheBinaryBee/microAnimate/issues"
+  },
+  "homepage": "https://github.com/TheBinaryBee/microAnimate#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "grunt": "^0.4.5",
+    "grunt-babel": "^6.0.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-uglify": "^0.11.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-replace": "^0.11.0",
+    "grunt-webpack": "^1.0.11",
+    "jit-grunt": "^0.9.1",
+    "jshint-stylish": "^1.0.0",
+    "time-grunt": "^1.0.0",
+    "uglify-js": "^2.6.1",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {}
+}
