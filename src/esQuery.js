@@ -74,6 +74,7 @@
 
 
     //esQuery Methods
+    //1) Utility
     each(fn) {
       //"forEach" is more fitting but "for" is waaaay faster
       //[].forEach.call(this, fn(value,index));
@@ -83,30 +84,69 @@
       return this;
     }
 
+    //2) Events
+    //Main event method
+    on(type, fn, capture) {
+      return this.each(element => {
+        element.addEventListener(type, fn, capture || false);
+      });
+    }
 
+      //'Short'hands (only the most important, for others use $().on)
+    ready(fn, capture) {
+      return this.on("DOMContentLoaded", fn, capture);
+    }
+    load(fn, capture) {
+      return this.on("load", fn, capture);
+    }
+    click(fn, capture) {
+      return this.on("click", fn, capture);
+    }
+    change(fn, capture) {
+      return this.on("change", fn, capture);
+    }
+    select(fn, capture) {
+      return this.on("select", fn, capture);
+    }
+    focus(fn, capture) {
+      return this.on("focus", fn, capture);
+    }
+    blur(fn, capture) {
+      return this.on("blur", fn, capture);
+    }
+
+
+    //3) DOM Manipulation
+    //General
     append(string) {
-      return this.each(function(element) {
+      return this.each(element => {
         element.innerHTML += string;
       });
     }
 
     prepend(string) {
-      return this.each(function(element) {
+      return this.each(element => {
         element.innerHTML = string + element.innerHTML;
       });
     }
 
-     remove() {
-      return this.each(function(element) {
+    remove() {
+      return this.each(element => {
+        element.parentNode.removeChild(element);
+      });
+    }
+
+    empty() {
+      return this.each(element => {
         element.parentNode.removeChild(element);
       });
     }
 
 
-    //Not DRY, but every try to make it so made the file bigger than using it like this
+    //Content
     html(string) {
       if (string) {
-        return this.each(function(element) {
+        return this.each(element => {
           element.innerHTML = string;
         });
       }
@@ -115,7 +155,7 @@
 
     text(string) {
       if (string) {
-        return this.each(function(element) {
+        return this.each(element => {
           element.textContent = string;
         });
       }
@@ -124,7 +164,7 @@
 
     val(value) {
       if (value) {
-        return this.each(function(element) {
+        return this.each(element => {
           element.value = value;
         });
       }
@@ -132,10 +172,10 @@
     }
 
 
-
+    //Atributes
     attr(attribute, value) {
       if (value) {
-        return this.each(function(element) {
+        return this.each(element => {
           element.setAttribute(attribute, value);
         });
       }
@@ -144,17 +184,33 @@
 
     css(property, value) {
       if (value) {
-        return this.each(function(element) {
+        return this.each(element => {
           element.style[property] = value;
         });
       }
       return this[0].style[property];
     }
 
+    height(value) {
+      if (value) {
+        return this.each(element => {
+          element.style.height = value;
+        });
+      }
+      return this[0].offsetHeight;
+    }
 
+    width(value) {
+      if (value) {
+        return this.each(element => {
+          element.style.width = value;
+        });
+      }
+      return this[0].offsetWidth;
+    }
 
     addClass(classToAdd) {
-      return this.each(function(element) {
+      return this.each(element => {
         if (!element.className) {
           element.className = classToAdd;
         } else {
@@ -164,20 +220,19 @@
     }
 
     removeClass(classToRemove) {
-      return this.each(function(element) {
+      return this.each(element => {
         element.className = element.className.replace(
-          new RegExp("\\b" + classToRemove + "\\b", "g"),
+          classToRemove,
           ""
         );
       });
     }
 
     hasClass(classToCheck) {
-      if (this[0].className && this[0].className.indexOf(classToCheck) > -1) {
-        return true;
-      } else {
-        return false;
-      }
+      return (
+        this[0].className &&
+        this[0].className.indexOf(classToCheck) > -1
+      );
     }
 
 

@@ -73,6 +73,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     //esQuery Methods
+    //1) Utility
 
 
     _createClass(esQuery, [{
@@ -85,6 +86,59 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
         return this;
       }
+
+      //2) Events
+      //Main event method
+
+    }, {
+      key: "on",
+      value: function on(type, fn, capture) {
+        return this.each(function (element) {
+          element.addEventListener(type, fn, capture || false);
+        });
+      }
+
+      //'Short'hands (only the most important, for others use $().on)
+
+    }, {
+      key: "ready",
+      value: function ready(fn, capture) {
+        return this.on("DOMContentLoaded", fn, capture);
+      }
+    }, {
+      key: "load",
+      value: function load(fn, capture) {
+        return this.on("load", fn, capture);
+      }
+    }, {
+      key: "click",
+      value: function click(fn, capture) {
+        return this.on("click", fn, capture);
+      }
+    }, {
+      key: "change",
+      value: function change(fn, capture) {
+        return this.on("change", fn, capture);
+      }
+    }, {
+      key: "select",
+      value: function select(fn, capture) {
+        return this.on("select", fn, capture);
+      }
+    }, {
+      key: "focus",
+      value: function focus(fn, capture) {
+        return this.on("focus", fn, capture);
+      }
+    }, {
+      key: "blur",
+      value: function blur(fn, capture) {
+        return this.on("blur", fn, capture);
+      }
+
+      //3) DOM Manipulation
+      //General
+
     }, {
       key: "append",
       value: function append(string) {
@@ -106,8 +160,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           element.parentNode.removeChild(element);
         });
       }
+    }, {
+      key: "empty",
+      value: function empty() {
+        return this.each(function (element) {
+          element.parentNode.removeChild(element);
+        });
+      }
 
-      //Not DRY, but every try to make it so made the file bigger than using it like this
+      //Content
 
     }, {
       key: "html",
@@ -139,6 +200,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
         return this[0].value;
       }
+
+      //Atributes
+
     }, {
       key: "attr",
       value: function attr(attribute, value) {
@@ -160,6 +224,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return this[0].style[property];
       }
     }, {
+      key: "height",
+      value: function height(value) {
+        if (value) {
+          return this.each(function (element) {
+            element.style.height = value;
+          });
+        }
+        return this[0].offsetHeight;
+      }
+    }, {
+      key: "width",
+      value: function width(value) {
+        if (value) {
+          return this.each(function (element) {
+            element.style.width = value;
+          });
+        }
+        return this[0].offsetWidth;
+      }
+    }, {
       key: "addClass",
       value: function addClass(classToAdd) {
         return this.each(function (element) {
@@ -174,17 +258,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: "removeClass",
       value: function removeClass(classToRemove) {
         return this.each(function (element) {
-          element.className = element.className.replace(new RegExp("\\b" + classToRemove + "\\b", "g"), "");
+          element.className = element.className.replace(classToRemove, "");
         });
       }
     }, {
       key: "hasClass",
       value: function hasClass(classToCheck) {
-        if (this[0].className && this[0].className.indexOf(classToCheck) > -1) {
-          return true;
-        } else {
-          return false;
-        }
+        return this[0].className && this[0].className.indexOf(classToCheck) > -1;
       }
     }]);
 
