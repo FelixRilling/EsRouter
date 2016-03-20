@@ -72,9 +72,10 @@
 
 
 
+
     //esQuery Methods
     each(fn) {
-      //"forEach" is more fitting but "for" is way faster
+      //"forEach" is more fitting but "for" is waaaay faster
       //[].forEach.call(this, fn(value,index));
       for (var i = 0; i < this.length; i++) {
         fn(this[i], i);
@@ -83,22 +84,20 @@
     }
 
 
-
-
     append(string) {
-      return this.e(function(element) {
+      return this.each(function(element) {
         element.innerHTML += string;
       });
     }
 
     prepend(string) {
-      return this.e(function(element) {
+      return this.each(function(element) {
         element.innerHTML = string + element.innerHTML;
       });
     }
 
-    remove() {
-      return this.e(function(element) {
+     remove() {
+      return this.each(function(element) {
         element.parentNode.removeChild(element);
       });
     }
@@ -107,7 +106,7 @@
     //Not DRY, but every try to make it so made the file bigger than using it like this
     html(string) {
       if (string) {
-        return this.e(function(element) {
+        return this.each(function(element) {
           element.innerHTML = string;
         });
       }
@@ -116,7 +115,7 @@
 
     text(string) {
       if (string) {
-        return this.e(function(element) {
+        return this.each(function(element) {
           element.textContent = string;
         });
       }
@@ -125,7 +124,7 @@
 
     val(value) {
       if (value) {
-        return this.e(function(element) {
+        return this.each(function(element) {
           element.value = value;
         });
       }
@@ -136,7 +135,7 @@
 
     attr(attribute, value) {
       if (value) {
-        return this.e(function(element) {
+        return this.each(function(element) {
           element.setAttribute(attribute, value);
         });
       }
@@ -145,7 +144,7 @@
 
     css(property, value) {
       if (value) {
-        return this.e(function(element) {
+        return this.each(function(element) {
           element.style[property] = value;
         });
       }
@@ -155,7 +154,7 @@
 
 
     addClass(classToAdd) {
-      return this.e(function(element) {
+      return this.each(function(element) {
         if (!element.className) {
           element.className = classToAdd;
         } else {
@@ -165,7 +164,7 @@
     }
 
     removeClass(classToRemove) {
-      return this.e(function(element) {
+      return this.each(function(element) {
         element.className = element.className.replace(
           new RegExp("\\b" + classToRemove + "\\b", "g"),
           ""

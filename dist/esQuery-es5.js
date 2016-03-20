@@ -78,7 +78,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _createClass(esQuery, [{
       key: "each",
       value: function each(fn) {
-        //"forEach" is more fitting but "for" is way faster
+        //"forEach" is more fitting but "for" is waaaay faster
         //[].forEach.call(this, fn(value,index));
         for (var i = 0; i < this.length; i++) {
           fn(this[i], i);
@@ -88,21 +88,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: "append",
       value: function append(string) {
-        return this.e(function (element) {
+        return this.each(function (element) {
           element.innerHTML += string;
         });
       }
     }, {
       key: "prepend",
       value: function prepend(string) {
-        return this.e(function (element) {
+        return this.each(function (element) {
           element.innerHTML = string + element.innerHTML;
         });
       }
     }, {
       key: "remove",
       value: function remove() {
-        return this.e(function (element) {
+        return this.each(function (element) {
           element.parentNode.removeChild(element);
         });
       }
@@ -113,7 +113,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: "html",
       value: function html(string) {
         if (string) {
-          return this.e(function (element) {
+          return this.each(function (element) {
             element.innerHTML = string;
           });
         }
@@ -123,7 +123,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: "text",
       value: function text(string) {
         if (string) {
-          return this.e(function (element) {
+          return this.each(function (element) {
             element.textContent = string;
           });
         }
@@ -133,7 +133,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: "val",
       value: function val(value) {
         if (value) {
-          return this.e(function (element) {
+          return this.each(function (element) {
             element.value = value;
           });
         }
@@ -143,7 +143,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: "attr",
       value: function attr(attribute, value) {
         if (value) {
-          return this.e(function (element) {
+          return this.each(function (element) {
             element.setAttribute(attribute, value);
           });
         }
@@ -153,7 +153,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       key: "css",
       value: function css(property, value) {
         if (value) {
-          return this.e(function (element) {
+          return this.each(function (element) {
             element.style[property] = value;
           });
         }
@@ -162,7 +162,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: "addClass",
       value: function addClass(classToAdd) {
-        return this.e(function (element) {
+        return this.each(function (element) {
           if (!element.className) {
             element.className = classToAdd;
           } else {
@@ -173,7 +173,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: "removeClass",
       value: function removeClass(classToRemove) {
-        return this.e(function (element) {
+        return this.each(function (element) {
           element.className = element.className.replace(new RegExp("\\b" + classToRemove + "\\b", "g"), "");
         });
       }

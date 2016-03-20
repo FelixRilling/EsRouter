@@ -96,7 +96,7 @@
       });
     }
 
-    remove() {
+     remove() {
       return this.each(function(element) {
         element.parentNode.removeChild(element);
       });
