@@ -1,8 +1,10 @@
 "use strict";
 
-(function(location, window) {
+(function(window) {
 
-    let esRouter = class {
+    let _location = window.location;
+
+    window.esRouter = class {
         constructor(
             nodeList,
             options,
@@ -82,12 +84,6 @@
             this.callback(this.events.always, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
             return success;
         }
-        moveForward() {
-            this.moveBy(1);
-        }
-        moveBackward() {
-            this.moveBy(-1);
-        }
         moveBy(val) {
             let index = this.getCurrentIndex();
             if (typeof this.sections[index + val] !== "undefined") {
@@ -95,6 +91,12 @@
                     this.sections[index + val].dataset["routerId"]
                 );
             }
+        }
+        moveForward() {
+            this.moveBy(1);
+        }
+        moveBackward() {
+            this.moveBy(-1);
         }
         toggleActiveSection(id) {
                 let newSection = this.findData(this.sections, "routerId", id);
@@ -111,8 +113,8 @@
             /###############*/
         slugGet(recursive) {
             if (this.slugIsSet()) {
-                return location.href.substr(
-                    location.href.lastIndexOf(this.slug.full) +
+                return _location.href.substr(
+                    _location.href.lastIndexOf(this.slug.full) +
                     (this.slug.preSlash ? 2 : 1)
                 );
             } else {
@@ -126,18 +128,18 @@
             }
         }
         slugIsSet() {
-            return location.href.lastIndexOf(this.slug.full) > -1;
+            return _location.href.lastIndexOf(this.slug.full) > -1;
         }
         slugSet(id) {
-            location.href = (location.href.substr(
+            _location.href = (_location.href.substr(
                 0,
-                location.href.lastIndexOf(this.slug.full) +
+                _location.href.lastIndexOf(this.slug.full) +
                 this.slug.full.length
             ) + id);
         }
         slugInit(id) {
-            location.href = (
-                location.href +
+            _location.href = (
+                _location.href +
                 this.slug.full +
                 id);
         }
@@ -187,6 +189,4 @@
         }
     };
 
-    //Export
-    window.esRouter = esRouter;
-})(location, window);
+})(window);

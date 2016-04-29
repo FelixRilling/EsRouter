@@ -4,11 +4,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-(function (location, window) {
+(function (window) {
 
-    var esRouter = function () {
-        function esRouter(nodeList, options, events) {
-            _classCallCheck(this, esRouter);
+    var _location = window.location;
+
+    window.esRouter = function () {
+        function _class(nodeList, options, events) {
+            _classCallCheck(this, _class);
 
             this.sections = nodeList;
             this.events = {
@@ -45,7 +47,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         //Initialize & move to url slug
 
 
-        _createClass(esRouter, [{
+        _createClass(_class, [{
             key: "init",
             value: function init() {
                 var defaultSection = this.findData(this.sections, "routerDefault", "true");
@@ -85,6 +87,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 return success;
             }
         }, {
+            key: "moveBy",
+            value: function moveBy(val) {
+                var index = this.getCurrentIndex();
+                if (typeof this.sections[index + val] !== "undefined") {
+                    this.moveTo(this.sections[index + val].dataset["routerId"]);
+                }
+            }
+        }, {
             key: "moveForward",
             value: function moveForward() {
                 this.moveBy(1);
@@ -93,14 +103,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "moveBackward",
             value: function moveBackward() {
                 this.moveBy(-1);
-            }
-        }, {
-            key: "moveBy",
-            value: function moveBy(val) {
-                var index = this.getCurrentIndex();
-                if (typeof this.sections[index + val] !== "undefined") {
-                    this.moveTo(this.sections[index + val].dataset["routerId"]);
-                }
             }
         }, {
             key: "toggleActiveSection",
@@ -122,7 +124,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "slugGet",
             value: function slugGet(recursive) {
                 if (this.slugIsSet()) {
-                    return location.href.substr(location.href.lastIndexOf(this.slug.full) + (this.slug.preSlash ? 2 : 1));
+                    return _location.href.substr(_location.href.lastIndexOf(this.slug.full) + (this.slug.preSlash ? 2 : 1));
                 } else {
                     //Only recurse once, error after that
                     if (!recursive) {
@@ -136,17 +138,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "slugIsSet",
             value: function slugIsSet() {
-                return location.href.lastIndexOf(this.slug.full) > -1;
+                return _location.href.lastIndexOf(this.slug.full) > -1;
             }
         }, {
             key: "slugSet",
             value: function slugSet(id) {
-                location.href = location.href.substr(0, location.href.lastIndexOf(this.slug.full) + this.slug.full.length) + id;
+                _location.href = _location.href.substr(0, _location.href.lastIndexOf(this.slug.full) + this.slug.full.length) + id;
             }
         }, {
             key: "slugInit",
             value: function slugInit(id) {
-                location.href = location.href + this.slug.full + id;
+                _location.href = _location.href + this.slug.full + id;
             }
 
             /*##############/
@@ -209,10 +211,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }]);
 
-        return esRouter;
+        return _class;
     }();
-
-    //Export
-    window.esRouter = esRouter;
-})(location, window);
+})(window);
 //# sourceMappingURL=esRouter-es5.js.map
