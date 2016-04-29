@@ -1,4 +1,4 @@
-# esQuery
+# esRouter
 esQuery is a es6 based, modern and small library for DOM Manipulation with a jQuery-like syntax. the basic selector is:
 
 ```javascript
