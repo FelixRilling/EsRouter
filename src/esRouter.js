@@ -75,7 +75,6 @@
                     this.throwError(2);
                 }
             } else {
-                this.data.activeId = id;
                 this.slugSet(this.data.activeId);
                 this.callback(this.events.done, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
             }
@@ -83,15 +82,12 @@
             this.callback(this.events.always, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
             return success;
         }
-
         moveForward() {
             this.moveBy(1);
         }
-
         moveBackward() {
             this.moveBy(-1);
         }
-
         moveBy(val) {
             let index = this.getCurrentIndex();
             if (typeof this.sections[index + val] !== "undefined") {
@@ -100,15 +96,10 @@
                 );
             }
         }
-
         toggleActiveSection(id) {
-                this.iterateDomNode(this.sections, function(e) {
-                    e.classList.remove("active");
-                });
-
                 let newSection = this.findData(this.sections, "routerId", id);
                 if (typeof newSection !== "undefined") {
-                    newSection.classList.add("active");
+                    this.data.activeId = id;
                     this.data.active = newSection;
                     return true;
                 } else {
@@ -120,7 +111,10 @@
             /###############*/
         slugGet(recursive) {
             if (this.slugIsSet()) {
-                return location.href.substr(location.href.lastIndexOf(this.slug.full) + 2);
+                return location.href.substr(
+                    location.href.lastIndexOf(this.slug.full) +
+                    (this.slug.preSlash ? 2 : 1)
+                );
             } else {
                 //Only recurse once, error after that
                 if (!recursive) {
@@ -135,10 +129,17 @@
             return location.href.lastIndexOf(this.slug.full) > -1;
         }
         slugSet(id) {
-            location.href = (location.href.substr(0, location.href.lastIndexOf(this.slug.full) + 2) + id);
+            location.href = (location.href.substr(
+                0,
+                location.href.lastIndexOf(this.slug.full) +
+                this.slug.full.length
+            ) + id);
         }
         slugInit(id) {
-            location.href = (location.href + (this.slug.preSlash ? "/" : "") + this.slug.urlFragmentInitator + id);
+            location.href = (
+                location.href +
+                this.slug.full +
+                id);
         }
 
         /*##############/

@@ -7,36 +7,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function (location, window) {
 
     var esRouter = function () {
-        function esRouter() {
-            var nodeList = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-            var events = arguments.length <= 1 || arguments[1] === undefined ? {
-                before: null,
-                done: null,
-                fail: null,
-                always: null
-            } : arguments[1];
-            var options = arguments.length <= 2 || arguments[2] === undefined ? {
-                ajax: false,
-                slug: {
-                    preSlash: true,
-                    urlFragmentInitator: "#",
-                    urlFragmentAppend: ""
-                }
-            } : arguments[2];
-
+        function esRouter(nodeList, options, events) {
             _classCallCheck(this, esRouter);
 
             this.sections = nodeList;
-            this.events = events;
-            this.options = options;
-            this.slug = (options.slug.preSlash ? "/" : "") + options.slug.urlFragmentInitator + options.slug.urlFragmentAppend;
+            this.events = {
+                before: events.before,
+                done: events.done,
+                fail: events.fail,
+                always: events.always
+            };
 
-            this.active = null;
-            this.activeId = null;
-            this.defaultId = null;
+            this.options = {
+                ajax: options.ajax | false,
+                log: options.log | false
+            };
+
+            this.slug = {
+                preSlash: options.slug.preSlash | false,
+                postSlash: options.slug.postSlash | false,
+                urlFragmentInitator: typeof options.slug.urlFragmentInitator === "string" ? options.slug.urlFragmentInitator : "#",
+                urlFragmentAppend: typeof options.slug.urlFragmentAppend === "string" ? options.slug.urlFragmentAppend : ""
+            };
+            this.slug.full = (this.slug.preSlash ? "/" : "") + this.slug.urlFragmentInitator + this.slug.urlFragmentAppend;
+
+            this.data = {
+                active: null,
+                activeId: null,
+                defaultId: null
+            };
 
             if (typeof this.sections[0] === "undefined") {
-                throw new Error("Sections undefined! are section datasets bound?");
+                this.throwError(0);
             }
         }
 
@@ -46,44 +48,55 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _createClass(esRouter, [{
             key: "init",
             value: function init() {
-                this.defaultId = this.findData(this.sections, "sectionDefault", "true").dataset.routerId;
-
-                var slug = this.getSlug();
-                console.log("Router: init", slug);
-                this.moveTo(slug);
+                var defaultSection = this.findData(this.sections, "routerDefault", "true");
+                if (defaultSection) {
+                    this.data.defaultId = defaultSection.dataset.routerId;
+                    var slug = this.slugGet();
+                    this.writeLog("init", this.data.defaultId);
+                    this.moveTo(slug);
+                } else {
+                    this.throwError(1);
+                }
             }
 
             //main move-to-id
 
         }, {
             key: "moveTo",
-            value: function moveTo(id) {
-                this.events.before(id, this);
+            value: function moveTo(id, recursive) {
+                this.callback(this.events.before, [id, this]);
+                this.writeLog("move", id);
+                var success = this.toggleActiveSection(id);
 
-                this.activeId = id;
-                console.log("Router: move", this.activeId);
-                this.setSlug(id);
-                if (!this.toggleActiveSection(id)) {
+                if (!success) {
                     //if not found revert to default
-                    console.log("Router: error: #" + id + " not found");
-                    this.moveTo(this.defaultId);
+                    if (!recursive) {
+                        this.writeLog("warning", id + " not found");
+                        this.moveTo(this.data.defaultId, true);
+                    } else {
+                        this.throwError(2);
+                    }
+                } else {
+                    this.slugSet(this.data.activeId);
+                    this.callback(this.events.done, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
                 }
-                this.callback(this.activeId, this.active, this.getCurrentIndex());
-                return id;
+
+                this.callback(this.events.always, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
+                return success;
             }
         }, {
             key: "moveForward",
             value: function moveForward() {
-                this.movePaginated(-1);
+                this.moveBy(1);
             }
         }, {
             key: "moveBackward",
             value: function moveBackward() {
-                this.movePaginated(1);
+                this.moveBy(-1);
             }
         }, {
-            key: "movePaginated",
-            value: function movePaginated(val) {
+            key: "moveBy",
+            value: function moveBy(val) {
                 var index = this.getCurrentIndex();
                 if (typeof this.sections[index + val] !== "undefined") {
                     this.moveTo(this.sections[index + val].dataset["routerId"]);
@@ -92,14 +105,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "toggleActiveSection",
             value: function toggleActiveSection(id) {
-                this.iterateDomNode(this.sections, function (e) {
-                    e.classList.remove("active");
-                });
-
                 var newSection = this.findData(this.sections, "routerId", id);
                 if (typeof newSection !== "undefined") {
-                    newSection.classList.add("active");
-                    this.active = newSection;
+                    this.data.activeId = id;
+                    this.data.active = newSection;
                     return true;
                 } else {
                     return false;
@@ -110,25 +119,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             /###############*/
 
         }, {
-            key: "getSlug",
-            value: function getSlug() {
-                var index = location.href.lastIndexOf(this.slug);
-                if (index > -1) {
-                    return location.href.substr(location.href.lastIndexOf(this.slug) + 2);
+            key: "slugGet",
+            value: function slugGet(recursive) {
+                if (this.slugIsSet()) {
+                    return location.href.substr(location.href.lastIndexOf(this.slug.full) + (this.slug.preSlash ? 2 : 1));
                 } else {
-                    this.initSlug(this.defaultId);
-                    return this.getSlug();
+                    //Only recurse once, error after that
+                    if (!recursive) {
+                        this.slugInit(this.data.defaultId);
+                        return this.slugGet(true);
+                    } else {
+                        this.throwError(3);
+                    }
                 }
             }
         }, {
-            key: "setSlug",
-            value: function setSlug(id) {
-                location.href = location.href.substr(0, location.href.lastIndexOf(this.slug) + 2) + id;
+            key: "slugIsSet",
+            value: function slugIsSet() {
+                return location.href.lastIndexOf(this.slug.full) > -1;
             }
         }, {
-            key: "initSlug",
-            value: function initSlug(id) {
-                location.href = location.href + "#" + id;
+            key: "slugSet",
+            value: function slugSet(id) {
+                location.href = location.href.substr(0, location.href.lastIndexOf(this.slug.full) + this.slug.full.length) + id;
+            }
+        }, {
+            key: "slugInit",
+            value: function slugInit(id) {
+                location.href = location.href + this.slug.full + id;
             }
 
             /*##############/
@@ -138,12 +156,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "getCurrentIndex",
             value: function getCurrentIndex() {
-                return this.getElementIndex(this.sections, this.active);
+                return this.getElementIndex(this.sections, this.data.active);
             }
         }, {
             key: "getElementIndex",
             value: function getElementIndex(nodelist, node) {
-                var result;
+                var result = void 0;
                 this.iterateDomNode(nodelist, function (x, i) {
                     if (x === node) {
                         result = i;
@@ -154,7 +172,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "findData",
             value: function findData(node, data, val) {
-                var result;
+                var result = void 0;
                 this.iterateDomNode(node, function (x) {
                     if (x.dataset[data] === val) {
                         result = x;
@@ -168,6 +186,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 for (var i = 0; i < nodelist.length; i++) {
                     fn(nodelist[i], i);
                 }
+            }
+        }, {
+            key: "callback",
+            value: function callback(fn, args) {
+                if (typeof fn === "function") {
+                    fn.apply(this, args);
+                }
+            }
+        }, {
+            key: "writeLog",
+            value: function writeLog(type, message) {
+                if (this.options.log) {
+                    console.log("esRouter " + type + ": " + message);
+                }
+            }
+        }, {
+            key: "throwError",
+            value: function throwError(code) {
+                throw new Error("esRouter error: " + code);
+                this.callback(this.events.fail, [code, this]);
             }
         }]);
 
