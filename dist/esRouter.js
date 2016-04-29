@@ -103,7 +103,7 @@
             let _this = this;
             _this.callback(_this.events.before, [id, _this]);
             _this.writeLog("move", id);
-            let success = (function toggleActiveSection(id) {
+            let success = (id => {
                 let newSection = _this.findData(_this.sections, "routerId", id);
                 if (typeof newSection !== "undefined") {
                     _this.data.activeId = id;
