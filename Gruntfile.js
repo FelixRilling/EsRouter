@@ -11,7 +11,7 @@ module.exports = function(grunt) {
           "src/{,*/}*.js"
         ],
         tasks: [
-          "webpack"
+          "babel"
         ]
       },
     },
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
     uglify: {
       main: {
         files: {
-          "dist/esQuery-es5.min.js": ".tmp/esQuery-es5.js"
+          "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.js"
         },
         options: {
           compress: {
@@ -56,13 +56,13 @@ module.exports = function(grunt) {
     copy: {
       build: {
         files: {
-          ".tmp/esQuery.js": "src/esQuery.js",
+          ".tmp/esRouter.js": "src/esRouter.js",
         }
       },
       dist: {
         files: {
-          "dist/esQuery.js": ".tmp/esQuery.js",
-          "dist/esQuery-es5.js": ".tmp/esQuery-es5.js"
+          "dist/esRouter.js": ".tmp/esRouter.js",
+          "dist/esRouter-es5.js": ".tmp/esRouter-es5.js"
         }
       }
     },
@@ -74,7 +74,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          ".tmp/esQuery-es5.js": ".tmp/esQuery.js"
+          ".tmp/esRouter-es5.js": ".tmp/esRouter.js"
         }
       }
     },

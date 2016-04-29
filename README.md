@@ -1,86 +1,107 @@
-microAnimate
-=============
-microAnimate is a tiny(~2.5kb) JavaScript Library with a CSS-like animation syntax. This library calculates the Animation when its initialized, not when executed, giving a huge performance boost! microAnimate also uses CSS based animating - which means it uses hardware acceleration.
+# esRouter
+esQuery is a es6 based, modern and small library for DOM Manipulation with a jQuery-like syntax. the basic selector is:
 
-[Demo](http://f-rilling.com/projects/microAnimate/demo/demo.html)
-
-Usage:
-------------
 ```javascript
-//Basic Syntax
-var myAnimation = new Anim(element, {animation}, {options});
+$(selector)
+```
+
+this will return the DOM element matching your jQuery-like selector. You can also use:
+
+```javascript
+$(selector, context)
+```
+
+if you want to specify the context of the selector (can only use IDs, because thats the purpose of using context).
+
+## Selector
+The Selector works like the jQuery one:
+
+```javascript
+
+//SELECTOR
+//Tag Selector
+$("p")
+//Returns all "p"s
+
+//ID Selector
+$("#featured")
+//Returns all elements with the ID "featured"
+
+//Class Selector
+$(".active")
+//Returns all elements with the Class "active"
 
 
-//Full Example
-var myAdvancedAnimation = new Anim(
-  document.getElementById("square"), {
-    "0%": [
-      ["width", "200px"],
-      ["color", "transparent"]
-    ],
-    "20%": [
-      ["width", "100px"],
-      ["color", "#fff"],
-      function() {
-        console.log("callback 2");
-      }
-    ],
-    "100%": [
-      ["width", "60px"],
-      ["color", "red"],
-      function() {
-        console.log("callback 3");
-      }
-    ]
-  }, {
-    duration: 2000,
-    ticklength: 30,
-    ease: true,
-    retainEndState: true,
-    loop: false
+//Query Selector
+$("ul > li")
+//Returns all "li"s that are descendants to an "ul"
+
+
+//Create DOM via Selector
+$("<div class='newElement'>Hello World</div>")
+//Returns a new div DOM object
+```
+
+## Methods
+most of the methods can be used like their jQuery counterparts, some examples:
+
+```javascript
+//Methods
+//1) Utility
+//Go over each li element
+$("li").each(
+  element=>{
+
   }
 );
+
+//2) Events
+$("button").on("click",
+  evt=>{
+    console.log(evt);
+  }
+);
+//or
+$("button").click(
+  evt=>{
+    console.log(evt);
+  }
+);
+
+//3) DOM Manipulation
+//Append string to DOM
+$("#text").append("foobar");
+
+//Prepend string to DOM
+$(".footer").prepend("<p>Message</p>");
+
+//Remove element from DOM
+$("h1").remove();
+
+
+$("article").html();//get html
+$("article").html("foobar");//set html
+
+$("article > p").text();//get text
+$("article > p").text("foobar");//set text
+
+$("input[type=text]").val();//get value
+$("input[type=text]").val("foobar");//set value
+
+
+$("article").attr("id");//get attribute
+$("article").attr("id", "thing");//set attribute
+
+$("article#red").css("color");//get style
+$("article#red").css("color", "red");//set style
+
+$("article#blue > p").height();//get height
+$("article#blue > p").width("100px");//set width
+
+
+$("article").addClass("newClass");//set new className
+
+$("article.oldClass").removeClass("oldClass");//delete class
+
+$("article").hasClass("doIHaveThisClass");//check for class
 ```
-
-Methods:
------------
-```javascript
-//Start the Animation
-myAnimation.start();
-
-
-//Stops the Animation & resets it to the initial state
-myAnimation.stop();
-
-
-//Pauses the Animation
-myAnimation.pause();
-
-//Unpauses the Animation
-myAnimation.unpause();
-```
-
-Options:
------------
-- duration:
-
-  the duration of the whole animation in ms
-
-
-- ease:
-
-  If the animation should be eased. Accepts either "true" or a custom CSS-easing.
-
-  default: false.
-
-- retainEndState:
-
-  If the animation should stay the way it finished or if it should be reseted to the initial state
-
-  default: true.
-
-- loop:
-
-  If the should loop. either false, true(infinite times) or integer(n times).
-
-  default: false.
