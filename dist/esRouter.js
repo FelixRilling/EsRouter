@@ -10,35 +10,70 @@
             options,
             events
         ) {
-            this.sections = nodeList;
-            this.events = {
+            let _this = this;
+            _this.sections = nodeList;
+            _this.events = {
                 before: events.before,
                 done: events.done,
                 fail: events.fail,
                 always: events.always
             };
 
-            this.options = {
-                ajax: options.ajax | false,
-                log: options.log | false
+            _this.options = {
+                ajax: options.ajax,
+                log: options.log
             };
 
-            this.slug = {
-                preSlash: options.slug.preSlash | false,
-                postSlash: options.slug.postSlash | false,
+
+            //Fake options if nonexstistant
+            _this.options = options | {
+                slug: options.slug | {},
+                domAttr: options.domAttr | {}
+            };
+
+            _this.slug = {
+                preSlash: options.slug.preSlash,
+                postSlash: options.slug.postSlash,
                 urlFragmentInitator: (typeof options.slug.urlFragmentInitator === "string") ? options.slug.urlFragmentInitator : "#",
                 urlFragmentAppend: (typeof options.slug.urlFragmentAppend === "string") ? options.slug.urlFragmentAppend : "",
             };
-            this.slug.full = (this.slug.preSlash ? "/" : "") + this.slug.urlFragmentInitator + this.slug.urlFragmentAppend;
+            _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.urlFragmentInitator + _this.slug.urlFragmentAppend;
 
-            this.data = {
+
+            /*_this.domAttr = {
+                buildAttr: function(pre, attr) {
+                    return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
+
+                    function buildDomAttr(pre, attr) {
+                        return "data-" + pre + "-" + attr;
+                    }
+
+                    function buildDataSet(pre, attr) {
+                        return pre + attr[0].toUpperCase() + attr.substr(1);
+                    }
+                },
+
+                corePrefix: options.domAttr.corePrefix | "router", //Core of the data-router attribute
+                section: options.domAttr.section | "section", // #coreprefix#-#section# => data-router-section
+                sectionDefault: options.domAttr.sectionDefault | "default",
+                link: options.domAttr.link | "href",
+                pagination: options.domAttr.pagination | "pagin",
+                built: {
+                    section: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.section),
+                    sectionDefault: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.sectionDefault),
+                    link: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.link),
+                    pagination: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.pagination),
+                }
+            };*/
+
+            _this.data = {
                 active: null,
                 activeId: null,
                 defaultId: null
             };
 
-            if (typeof this.sections[0] === "undefined") {
-                this.throwError(0);
+            if (typeof _this.sections[0] === "undefined") {
+                _this.throwError(0);
             }
 
         }
@@ -46,49 +81,61 @@
 
         //Initialize & move to url slug
         init() {
-            let defaultSection = this.findData(
-                this.sections,
-                "routerDefault",
-                "true"
-            );
+            let _this = this,
+                defaultSection = _this.findData(
+                    _this.sections,
+                    "routerDefault",
+                    "true"
+                );
             if (defaultSection) {
-                this.data.defaultId = defaultSection.dataset.routerId;
-                let slug = this.slugGet();
-                this.writeLog("init", this.data.defaultId);
-                this.moveTo(slug);
+                _this.data.defaultId = defaultSection.dataset.routerId;
+                let slug = _this.slugGet();
+                _this.writeLog("init", _this.data.defaultId);
+                _this.moveTo(slug);
             } else {
-                this.throwError(1);
+                _this.throwError(1);
             }
 
         }
 
         //main move-to-id
         moveTo(id, recursive) {
-            this.callback(this.events.before, [id, this]);
-            this.writeLog("move", id);
-            let success = this.toggleActiveSection(id);
+            let _this = this;
+            _this.callback(_this.events.before, [id, _this]);
+            _this.writeLog("move", id);
+            let success = (id => {
+                let newSection = _this.findData(_this.sections, "routerId", id);
+                if (typeof newSection !== "undefined") {
+                    _this.data.activeId = id;
+                    _this.data.active = newSection;
+                    return true;
+                } else {
+                    return false;
+                }
+            })(id);
 
             if (!success) {
                 //if not found revert to default
                 if (!recursive) {
-                    this.writeLog("warning", id + " not found");
-                    this.moveTo(this.data.defaultId, true);
+                    _this.writeLog("warning", id + " not found");
+                    _this.moveTo(_this.data.defaultId, true);
                 } else {
-                    this.throwError(2);
+                    _this.throwError(2);
                 }
             } else {
-                this.slugSet(this.data.activeId);
-                this.callback(this.events.done, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
+                _this.slugSet(_this.data.activeId);
+                _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.getCurrentIndex(), _this]);
             }
 
-            this.callback(this.events.always, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
+            _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.getCurrentIndex(), _this]);
             return success;
         }
         moveBy(val) {
-            let index = this.getCurrentIndex();
-            if (typeof this.sections[index + val] !== "undefined") {
-                this.moveTo(
-                    this.sections[index + val].dataset["routerId"]
+            let _this = this;
+            let index = _this.getCurrentIndex();
+            if (typeof _this.sections[index + val] !== "undefined") {
+                _this.moveTo(
+                    _this.sections[index + val].dataset["routerId"]
                 );
             }
         }
@@ -96,51 +143,39 @@
             this.moveBy(1);
         }
         moveBackward() {
-            this.moveBy(-1);
-        }
-        toggleActiveSection(id) {
-                let newSection = this.findData(this.sections, "routerId", id);
-                if (typeof newSection !== "undefined") {
-                    this.data.activeId = id;
-                    this.data.active = newSection;
-                    return true;
-                } else {
-                    return false;
-                }
+                this.moveBy(-1);
             }
             /*##############/
             / Slug functions
             /###############*/
         slugGet(recursive) {
-            if (this.slugIsSet()) {
+            let _this = this;
+            if (_location.href.lastIndexOf(this.slug.built) > -1) {
                 return _location.href.substr(
-                    _location.href.lastIndexOf(this.slug.full) +
-                    (this.slug.preSlash ? 2 : 1)
+                    _location.href.lastIndexOf(_this.slug.built) +
+                    (_this.slug.preSlash ? 2 : 1)
                 );
             } else {
                 //Only recurse once, error after that
                 if (!recursive) {
-                    this.slugInit(this.data.defaultId);
-                    return this.slugGet(true);
+                    _this.slugInit(_this.data.defaultId);
+                    return _this.slugGet(true);
                 } else {
-                    this.throwError(3);
+                    _this.throwError(3);
                 }
             }
-        }
-        slugIsSet() {
-            return _location.href.lastIndexOf(this.slug.full) > -1;
         }
         slugSet(id) {
             _location.href = (_location.href.substr(
                 0,
-                _location.href.lastIndexOf(this.slug.full) +
-                this.slug.full.length
+                _location.href.lastIndexOf(this.slug.built) +
+                this.slug.built.length
             ) + id);
         }
         slugInit(id) {
             _location.href = (
                 _location.href +
-                this.slug.full +
+                this.slug.built +
                 id);
         }
 
@@ -148,7 +183,8 @@
         / Utility functions
         /###############*/
         getCurrentIndex() {
-            return this.getElementIndex(this.sections, this.data.active);
+            let _this = this;
+            return _this.getElementIndex(_this.sections, _this.data.active);
         }
         getElementIndex(nodelist, node) {
             let result;
@@ -184,8 +220,9 @@
             }
         }
         throwError(code) {
+            let _this = this;
+            _this.callback(_this.events.fail, [code, _this]);
             throw new Error("esRouter error: " + code);
-            this.callback(this.events.fail, [code, this]);
         }
     };
 
