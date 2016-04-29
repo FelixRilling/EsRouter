@@ -8,12 +8,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
+        <style>
+            .active {
+                background-color: #ddd;
+            }
+        </style>
     </head>
     <body>
-        <!--[if lt IE 8]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
-
-        <!-- Add your site or application content here -->
 
         <section class="mySection" data-router-id="main" data-router-default="true">Hello World! Page 1</section>
         <section class="mySection" data-router-id="secondary">Lorem ipsum! Page 2</section>
@@ -35,11 +36,11 @@
             var myRouter = new esRouter(document.getElementsByClassName("mySection"), {
                 log: true,
                 slug: {
-                    preSlash: false
+                    urlFragmentAppend:"youAreHere="
                 }
             }, {
                 before: function(id, router) {
-                    console.log("started !",id);
+                    console.log("started !", id);
                 },
                 done: function(activeDOM, activeId, activeIndex, router) {
                     console.log("success !");

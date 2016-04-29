@@ -1,129 +1,157 @@
 "use strict";
 
-(function(location, window) {
+(function(window) {
 
-    let esRouter = class {
+    let _location = window.location;
+
+    window.esRouter = class {
         constructor(
-            nodeList = [],
-            events = {
-                before: null,
-                done: null,
-                fail: null,
-                always: null
-            },
-            options = {
-                ajax: false,
-                slug: {
-                    preSlash: true,
-                    urlFragmentInitator: "#",
-                    urlFragmentAppend: ""
-                }
-            }
+            nodeList,
+            options,
+            events
         ) {
             this.sections = nodeList;
-            this.events = events;
-            this.options = options;
-            this.slug = (options.slug.preSlash ? "/" : "") + options.slug.urlFragmentInitator + options.slug.urlFragmentAppend;
+            this.events = {
+                before: events.before,
+                done: events.done,
+                fail: events.fail,
+                always: events.always
+            };
 
-            this.active = null;
-            this.activeId = null;
-            this.defaultId = null;
+            this.options = {
+                ajax: options.ajax | false,
+                log: options.log | false
+            };
+
+            this.slug = {
+                preSlash: options.slug.preSlash | false,
+                postSlash: options.slug.postSlash | false,
+                urlFragmentInitator: (typeof options.slug.urlFragmentInitator === "string") ? options.slug.urlFragmentInitator : "#",
+                urlFragmentAppend: (typeof options.slug.urlFragmentAppend === "string") ? options.slug.urlFragmentAppend : "",
+            };
+            this.slug.full = (this.slug.preSlash ? "/" : "") + this.slug.urlFragmentInitator + this.slug.urlFragmentAppend;
+
+            this.data = {
+                active: null,
+                activeId: null,
+                defaultId: null
+            };
 
             if (typeof this.sections[0] === "undefined") {
-                throw new Error("Sections undefined! are section datasets bound?");
+                this.throwError(0);
             }
 
-            this.init();
         }
 
 
         //Initialize & move to url slug
         init() {
-            this.defaultId = (this.findData(
+            let defaultSection = this.findData(
                 this.sections,
-                "sectionDefault",
+                "routerDefault",
                 "true"
-            )).dataset.routerId;
+            );
+            if (defaultSection) {
+                this.data.defaultId = defaultSection.dataset.routerId;
+                let slug = this.slugGet();
+                this.writeLog("init", this.data.defaultId);
+                this.moveTo(slug);
+            } else {
+                this.throwError(1);
+            }
 
-            var slug = this.getSlug();
-            console.log("Router: init", slug);
-            this.moveTo(slug);
         }
 
         //main move-to-id
-        moveTo(id) {
-            this.events.before(id, this);
+        moveTo(id, recursive) {
+            this.callback(this.events.before, [id, this]);
+            this.writeLog("move", id);
+            let success = this.toggleActiveSection(id);
 
-            this.activeId = id;
-            console.log("Router: move", this.activeId);
-            this.setSlug(id);
-            if (!this.toggleActiveSection(id)) {
+            if (!success) {
                 //if not found revert to default
-                console.log("Router: error: #" + id + " not found");
-                this.moveTo(this.defaultId);
+                if (!recursive) {
+                    this.writeLog("warning", id + " not found");
+                    this.moveTo(this.data.defaultId, true);
+                } else {
+                    this.throwError(2);
+                }
+            } else {
+                this.slugSet(this.data.activeId);
+                this.callback(this.events.done, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
             }
-            this.callback(this.activeId, this.active, this.getCurrentIndex());
-            return id;
-        }
 
-        moveForward() {
-            this.movePaginated(-1);
+            this.callback(this.events.always, [this.data.active, this.data.activeId, this.getCurrentIndex(), this]);
+            return success;
         }
-
-        moveBackward() {
-            this.movePaginated(1);
-        }
-
-        movePaginated(val) {
-            var index = this.getCurrentIndex();
+        moveBy(val) {
+            let index = this.getCurrentIndex();
             if (typeof this.sections[index + val] !== "undefined") {
                 this.moveTo(
                     this.sections[index + val].dataset["routerId"]
                 );
             }
         }
-
+        moveForward() {
+            this.moveBy(1);
+        }
+        moveBackward() {
+            this.moveBy(-1);
+        }
         toggleActiveSection(id) {
-            this.iterateDomNode(this.sections, function(e) {
-                e.classList.remove("active");
-            });
-
-            var newSection = this.findData(this.sections, "routerId", id);
-            if (typeof newSection !== "undefined") {
-                newSection.classList.add("active");
-                this.active = newSection;
-                return true;
+                let newSection = this.findData(this.sections, "routerId", id);
+                if (typeof newSection !== "undefined") {
+                    this.data.activeId = id;
+                    this.data.active = newSection;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            /*##############/
+            / Slug functions
+            /###############*/
+        slugGet(recursive) {
+            if (this.slugIsSet()) {
+                return _location.href.substr(
+                    _location.href.lastIndexOf(this.slug.full) +
+                    (this.slug.preSlash ? 2 : 1)
+                );
             } else {
-                return false;
+                //Only recurse once, error after that
+                if (!recursive) {
+                    this.slugInit(this.data.defaultId);
+                    return this.slugGet(true);
+                } else {
+                    this.throwError(3);
+                }
             }
         }
-        /*##############/
-        / Slug functions
-        /###############*/
-        getSlug() {
-            var index = location.href.lastIndexOf(this.slug);
-            if (index > -1) {
-                return location.href.substr(location.href.lastIndexOf(this.slug) + 2);
-            } else {
-                this.initSlug(this.defaultId);
-                return this.getSlug();
-            }
+        slugIsSet() {
+            return _location.href.lastIndexOf(this.slug.full) > -1;
         }
-        setSlug(id) {
-            location.href = (location.href.substr(0, location.href.lastIndexOf(this.slug) + 2) + id);
+        slugSet(id) {
+            _location.href = (_location.href.substr(
+                0,
+                _location.href.lastIndexOf(this.slug.full) +
+                this.slug.full.length
+            ) + id);
         }
-        initSlug(id) {
-            location.href = location.href + "#" + id;
+        slugInit(id) {
+            _location.href = (
+                _location.href +
+                this.slug.full +
+                id);
         }
 
         /*##############/
         / Utility functions
         /###############*/
         getCurrentIndex() {
-            return this.getElementIndex(this.sections, this.active);
+            return this.getElementIndex(this.sections, this.data.active);
         }
         getElementIndex(nodelist, node) {
-            var result;
+            let result;
             this.iterateDomNode(nodelist, function(x, i) {
                 if (x === node) {
                     result = i;
@@ -132,7 +160,7 @@
             return result;
         }
         findData(node, data, val) {
-            var result;
+            let result;
             this.iterateDomNode(node, function(x) {
                 if (x.dataset[data] === val) {
                     result = x;
@@ -141,12 +169,24 @@
             return result;
         }
         iterateDomNode(nodelist, fn) {
-            for (var i = 0; i < nodelist.length; i++) {
+            for (let i = 0; i < nodelist.length; i++) {
                 fn(nodelist[i], i);
             }
         }
+        callback(fn, args) {
+            if (typeof fn === "function") {
+                fn.apply(this, args);
+            }
+        }
+        writeLog(type, message) {
+            if (this.options.log) {
+                console.log("esRouter " + type + ": " + message);
+            }
+        }
+        throwError(code) {
+            throw new Error("esRouter error: " + code);
+            this.callback(this.events.fail, [code, this]);
+        }
     };
 
-    //Export
-    window.esRouter = esRouter;
-})(location, window);
+})(window);
