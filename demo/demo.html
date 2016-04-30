@@ -12,31 +12,32 @@
             .active {
                 background-color: #ddd;
             }
+
         </style>
     </head>
     <body>
 
-        <section class="mySection" data-router-id="main" data-router-default="true">Hello World! Page 1</section>
-        <section class="mySection" data-router-id="secondary">Lorem ipsum! Page 2</section>
-        <div class="mySection" data-router-id="third">Et dolor! Page 3</div>
+        <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1</section>
+        <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
+        <div class="mySection" data-router-section="third">Et dolor! Page 3</div>
         <div class="container">
-            <div class="mySection" data-router-id="wrapped">Im wrapped!</div>
+            <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
         </div>
         <br>
 
-        <a href="javascript:;" onclick="myRouter.moveTo('main')">Go to main</a>
+        <a href="javascript:;" data-router-link="main">Go to main</a>
         <br>
-        <a href="javascript:;" onclick="myRouter.moveBackward()">Go Backward</a>
-        <a href="javascript:;" onclick="myRouter.moveForward()">Go Forward</a>
+        <a href="javascript:;" data-router-pagin="-1">Go Backward</a>
+        <a href="javascript:;" data-router-pagin="1">Go Forward</a>
 
         <script src="../src/esRouter.js"></script>
         <script>
             "use strict";
 
-            var myRouter = new esRouter(document.getElementsByClassName("mySection"), {
+            var myRouter = new esRouter({
                 log: true,
                 slug: {
-                    urlFragmentAppend:"youAreHere="
+                    urlFragmentAppend: "youAreHere="
                 }
             }, {
                 before: function(id, router) {
@@ -45,8 +46,8 @@
                 done: function(activeDOM, activeId, activeIndex, router) {
                     console.log("success !");
                     console.log(arguments);
-                    for (let i = 0; i < router.sections.length; i++) {
-                        router.sections[i].classList.remove("active");
+                    for (let i = 0; i < router.dom.elements.section.length; i++) {
+                        router.dom.elements.section[i].classList.remove("active");
                     }
                     activeDOM.classList.add("active");
                 }

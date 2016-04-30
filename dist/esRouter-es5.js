@@ -9,11 +9,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var _location = window.location;
 
     window.esRouter = function () {
-        function _class(nodeList, options, events) {
+        function _class(options, events) {
             _classCallCheck(this, _class);
 
+            /*##############/
+            / Construct Router
+            /###############*/
             var _this = this;
-            _this.sections = nodeList;
             _this.events = {
                 before: events.before,
                 done: events.done,
@@ -22,56 +24,57 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             };
 
             _this.options = {
-                ajax: options.ajax,
-                log: options.log
-            };
-
-            //Fake options if nonexstistant
-            _this.options = options | {
-                slug: options.slug | {},
-                domAttr: options.domAttr | {}
+                ajax: options.ajax || false,
+                log: options.log || false
             };
 
             _this.slug = {
-                preSlash: options.slug.preSlash,
-                postSlash: options.slug.postSlash,
+                preSlash: options.slug.preSlash || false,
+                postSlash: options.slug.postSlash || false,
                 urlFragmentInitator: typeof options.slug.urlFragmentInitator === "string" ? options.slug.urlFragmentInitator : "#",
                 urlFragmentAppend: typeof options.slug.urlFragmentAppend === "string" ? options.slug.urlFragmentAppend : ""
             };
             _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.urlFragmentInitator + _this.slug.urlFragmentAppend;
 
-            /*_this.domAttr = {
-                buildAttr: function(pre, attr) {
-                    return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
-                      function buildDomAttr(pre, attr) {
-                        return "data-" + pre + "-" + attr;
-                    }
-                      function buildDataSet(pre, attr) {
-                        return pre + attr[0].toUpperCase() + attr.substr(1);
+            options.dataAttr = options.dataAttr || {};
+            _this.dom = {
+                getElements: function getElements(arr) {
+                    for (var i = 0; i < arr.length; i++) {
+                        var attr = _this.dom.dataAttr.buildAttr(_this.dom.dataAttr.corePrefix, _this.dom.dataAttr[arr[i]]);
+                        _this.dom.dataAttr.built[arr[i]] = attr;
+                        _this.dom.elements[arr[i]] = document.querySelectorAll("[" + attr[0] + "]") || [];
                     }
                 },
-                  corePrefix: options.domAttr.corePrefix | "router", //Core of the data-router attribute
-                section: options.domAttr.section | "section", // #coreprefix#-#section# => data-router-section
-                sectionDefault: options.domAttr.sectionDefault | "default",
-                link: options.domAttr.link | "href",
-                pagination: options.domAttr.pagination | "pagin",
-                built: {
-                    section: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.section),
-                    sectionDefault: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.sectionDefault),
-                    link: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.link),
-                    pagination: _this.domAttr.buildAttr(_this.domAttr.corePrefix, _this.domAttr.pagination),
-                }
-            };*/
+                dataAttr: {
+
+                    buildAttr: function buildAttr(pre, attr) {
+                        return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
+
+                        function buildDomAttr(pre, attr) {
+                            return "data-" + pre + "-" + attr;
+                        }
+
+                        function buildDataSet(pre, attr) {
+                            return pre + attr[0].toUpperCase() + attr.substr(1);
+                        }
+                    },
+                    types: ["section", "sectionDefault", "link", "pagination"],
+                    corePrefix: options.dataAttr.corePrefix || "router", //Core of the data-router attribute
+                    section: options.dataAttr.section || "section", // #coreprefix#-#section# => data-router-section
+                    sectionDefault: options.dataAttr.sectionDefault || "default",
+                    link: options.dataAttr.link || "href",
+                    pagination: options.dataAttr.pagination || "pagin",
+                    built: {}
+                },
+                elements: {}
+
+            };
 
             _this.data = {
                 active: null,
                 activeId: null,
                 defaultId: null
             };
-
-            if (typeof _this.sections[0] === "undefined") {
-                _this.throwError(0);
-            }
         }
 
         //Initialize & move to url slug
@@ -80,19 +83,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _createClass(_class, [{
             key: "init",
             value: function init() {
-                var _this = this,
-                    defaultSection = _this.findData(_this.sections, "routerDefault", "true");
-                if (defaultSection) {
-                    _this.data.defaultId = defaultSection.dataset.routerId;
+                var _this = this;
+                _this.dom.getElements(_this.dom.dataAttr.types);
+                if (typeof _this.dom.elements.section === "undefined") {
+                    _this.throwError.call(this, 0);
+                }
+                if (typeof _this.dom.elements.sectionDefault !== "undefined") {
+                    _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[_this.dom.dataAttr.built.section[1]];
                     var slug = _this.slugGet();
                     _this.writeLog("init", _this.data.defaultId);
                     _this.moveTo(slug);
                 } else {
-                    _this.throwError(1);
+                    _this.throwError.call(this, 1);
                 }
             }
 
-            //main move-to-id
+            /*##############/
+            / Main routing functions
+            /###############*/
 
         }, {
             key: "moveTo",
@@ -101,10 +109,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 _this.callback(_this.events.before, [id, _this]);
                 _this.writeLog("move", id);
                 var success = function toggleActiveSection(id) {
-                    var newSection = _this.findData(_this.sections, "routerId", id);
+                    var newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
+
                     if (typeof newSection !== "undefined") {
                         _this.data.activeId = id;
                         _this.data.active = newSection;
+                        _this.data.index = _this.getCurrentIndex();
                         return true;
                     } else {
                         return false;
@@ -117,23 +127,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         _this.writeLog("warning", id + " not found");
                         _this.moveTo(_this.data.defaultId, true);
                     } else {
-                        _this.throwError(2);
+                        _this.throwError.call(this, 2);
                     }
                 } else {
                     _this.slugSet(_this.data.activeId);
-                    _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.getCurrentIndex(), _this]);
+                    _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                 }
 
-                _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.getCurrentIndex(), _this]);
+                _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                 return success;
             }
         }, {
             key: "moveBy",
             value: function moveBy(val) {
                 var _this = this;
-                var index = _this.getCurrentIndex();
-                if (typeof _this.sections[index + val] !== "undefined") {
-                    _this.moveTo(_this.sections[index + val].dataset["routerId"]);
+                var index = _this.data.index;
+                if (typeof _this.dom.elements.section[index + val] !== "undefined") {
+                    _this.moveTo(_this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]);
                 }
             }
         }, {
@@ -155,14 +165,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function slugGet(recursive) {
                 var _this = this;
                 if (_location.href.lastIndexOf(this.slug.built) > -1) {
-                    return _location.href.substr(_location.href.lastIndexOf(_this.slug.built) + (_this.slug.preSlash ? 2 : 1));
+                    return _location.href.substr(_location.href.lastIndexOf(_this.slug.built) + _this.slug.built.length + (_this.slug.preSlash ? 1 : 0));
                 } else {
                     //Only recurse once, error after that
                     if (!recursive) {
                         _this.slugInit(_this.data.defaultId);
                         return _this.slugGet(true);
                     } else {
-                        _this.throwError(3);
+                        _this.throwError.call(this, 3);
                     }
                 }
             }
@@ -185,7 +195,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "getCurrentIndex",
             value: function getCurrentIndex() {
                 var _this = this;
-                return _this.getElementIndex(_this.sections, _this.data.active);
+                return _this.getElementIndex(_this.dom.elements.section, _this.data.active);
             }
         }, {
             key: "getElementIndex",
@@ -201,6 +211,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "findData",
             value: function findData(node, data, val) {
+
                 var result = void 0;
                 this.iterateDomNode(node, function (x) {
                     if (x.dataset[data] === val) {
@@ -235,7 +246,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function throwError(code) {
                 var _this = this;
                 _this.callback(_this.events.fail, [code, _this]);
-                throw new Error("esRouter error: " + code);
+                throw new Error("esRouter error: " + code, this);
             }
         }]);
 
