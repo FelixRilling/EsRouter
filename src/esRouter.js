@@ -69,13 +69,12 @@
             };
 
 
-
             _this.data = {
                 active: null,
                 activeId: null,
-                defaultId: null
+                defaultId: null,
+                index: 0
             };
-
         }
 
 
@@ -83,20 +82,37 @@
         init() {
             let _this = this;
             _this.dom.getElements(_this.dom.dataAttr.types);
-            if (typeof _this.dom.elements.section === "undefined") {
-                _this.throwError.call(this, 0);
-            }
-            if (typeof _this.dom.elements.sectionDefault !== "undefined") {
-                _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[
-                    _this.dom.dataAttr.built.section[1]
-                ];
-                let slug = _this.slugGet();
-                _this.writeLog("init", _this.data.defaultId);
-                _this.moveTo(slug);
-            } else {
-                _this.throwError.call(this, 1);
+            setDefault();
+            bindEvents();
+
+            function setDefault() {
+                if (typeof _this.dom.elements.section === "undefined") {
+                    _this.throwError.call(this, 0);
+                }
+                if (typeof _this.dom.elements.sectionDefault !== "undefined") {
+                    _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[
+                        _this.dom.dataAttr.built.section[1]
+                    ];
+                    let slug = _this.slugGet();
+                    _this.writeLog("init", _this.data.defaultId);
+                    _this.moveTo(slug);
+                } else {
+                    _this.throwError.call(this, 1);
+                }
             }
 
+            function bindEvents() {
+                _this.iterateDomNode(_this.dom.elements.link, link => {
+                    link.addEventListener("click", ev => {
+                        _this.moveTo(parseInt(ev.target.dataset[_this.dom.dataAttr.built.link[1]]));
+                    });
+                });
+                _this.iterateDomNode(_this.dom.elements.pagination, pagin => {
+                    pagin.addEventListener("click", ev => {
+                        _this.moveBy(parseInt(ev.target.dataset[_this.dom.dataAttr.built.pagination[1]]));
+                    });
+                });
+            }
         }
 
         /*##############/
@@ -136,19 +152,22 @@
             return success;
         }
         moveBy(val) {
-            let _this = this;
-            let index = _this.data.index;
+            let _this = this,
+                index = _this.data.index;
             if (typeof _this.dom.elements.section[index + val] !== "undefined") {
-                _this.moveTo(
+                return _this.moveTo(
                     _this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]
                 );
+            } else {
+                _this.writeLog("info", "index " + val + " not found");
+                return false;
             }
         }
         moveForward() {
-            this.moveBy(1);
+            return this.moveBy(1);
         }
         moveBackward() {
-                this.moveBy(-1);
+                return this.moveBy(-1);
             }
             /*##############/
             / Slug functions
@@ -194,7 +213,7 @@
         }
         getElementIndex(nodelist, node) {
             let result;
-            this.iterateDomNode(nodelist, function(x, i) {
+            this.iterateDomNode(nodelist, (x, i) => {
                 if (x === node) {
                     result = i;
                 }
@@ -204,7 +223,7 @@
         findData(node, data, val) {
 
             let result;
-            this.iterateDomNode(node, function(x) {
+            this.iterateDomNode(node, (x) => {
                 if (x.dataset[data] === val) {
                     result = x;
                 }

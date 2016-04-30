@@ -73,7 +73,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this.data = {
                 active: null,
                 activeId: null,
-                defaultId: null
+                defaultId: null,
+                index: 0
             };
         }
 
@@ -85,16 +86,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function init() {
                 var _this = this;
                 _this.dom.getElements(_this.dom.dataAttr.types);
-                if (typeof _this.dom.elements.section === "undefined") {
-                    _this.throwError.call(this, 0);
+                setDefault();
+                bindEvents();
+
+                function setDefault() {
+                    if (typeof _this.dom.elements.section === "undefined") {
+                        _this.throwError.call(this, 0);
+                    }
+                    if (typeof _this.dom.elements.sectionDefault !== "undefined") {
+                        _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[_this.dom.dataAttr.built.section[1]];
+                        var slug = _this.slugGet();
+                        _this.writeLog("init", _this.data.defaultId);
+                        _this.moveTo(slug);
+                    } else {
+                        _this.throwError.call(this, 1);
+                    }
                 }
-                if (typeof _this.dom.elements.sectionDefault !== "undefined") {
-                    _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[_this.dom.dataAttr.built.section[1]];
-                    var slug = _this.slugGet();
-                    _this.writeLog("init", _this.data.defaultId);
-                    _this.moveTo(slug);
-                } else {
-                    _this.throwError.call(this, 1);
+
+                function bindEvents() {
+                    _this.iterateDomNode(_this.dom.elements.link, function (link) {
+                        link.addEventListener("click", function (ev) {
+                            _this.moveTo(parseInt(ev.target.dataset[_this.dom.dataAttr.built.link[1]]));
+                        });
+                    });
+                    _this.iterateDomNode(_this.dom.elements.pagination, function (pagin) {
+                        pagin.addEventListener("click", function (ev) {
+                            _this.moveBy(parseInt(ev.target.dataset[_this.dom.dataAttr.built.pagination[1]]));
+                        });
+                    });
                 }
             }
 
@@ -140,21 +159,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "moveBy",
             value: function moveBy(val) {
-                var _this = this;
-                var index = _this.data.index;
+                var _this = this,
+                    index = _this.data.index;
                 if (typeof _this.dom.elements.section[index + val] !== "undefined") {
-                    _this.moveTo(_this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]);
+                    return _this.moveTo(_this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]);
+                } else {
+                    _this.writeLog("info", "index " + val + " not found");
+                    return false;
                 }
             }
         }, {
             key: "moveForward",
             value: function moveForward() {
-                this.moveBy(1);
+                return this.moveBy(1);
             }
         }, {
             key: "moveBackward",
             value: function moveBackward() {
-                this.moveBy(-1);
+                return this.moveBy(-1);
             }
             /*##############/
             / Slug functions

@@ -42,7 +42,7 @@ module.exports = function(grunt) {
     uglify: {
       main: {
         files: {
-          "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.js"
+          "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.rpl.js"
         },
         options: {
           compress: {
@@ -77,7 +77,23 @@ module.exports = function(grunt) {
           ".tmp/esRouter-es5.js": ".tmp/esRouter.js"
         }
       }
-    },
+    },    /* UglifyJS doesnt uglify properties, so we do it by hand*
+         * The properties left out are not included for a reason, adding them will break functionality
+         * UPDATE: yep we shouldnt do this, too much work
+         */
+        replace: {
+          dist: {
+            options: {
+              patterns: [{
+                match: /built/g,
+                replacement: "a"
+              }]
+            },
+            files: {
+              ".tmp/esRouter-es5.rpl.js": ".tmp/esRouter-es5.js"
+            }
+          }
+        },
 
   });
 
@@ -94,6 +110,7 @@ module.exports = function(grunt) {
   grunt.registerTask("dist", [
     "build",
     "babel:dist",
+    "replace",
     "uglify:main",
     "copy:dist"
   ]);
