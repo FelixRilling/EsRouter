@@ -122,6 +122,9 @@ module.exports = function(grunt) {
                         }, {
                             match: /pagination/g,
                             replacement: "k"
+                        }, {
+                            match: /source/g,
+                            replacement: "t"
                         },
                         //callback
                         {

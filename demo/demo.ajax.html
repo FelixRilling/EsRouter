@@ -17,11 +17,11 @@
     </head>
     <body>
 
-        <section class="mySection" data-router-section="main" data-router-src="main" data-router-default="true">Hello World! Page 1</section>
-        <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
-        <div class="mySection" data-router-section="third">Et dolor! Page 3</div>
+        <section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
+        <section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
+        <div class="mySection" data-router-section="third" data-router-src="ajax/third.html"></div>
         <div class="container">
-            <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
+            <div class="mySection" data-router-section="wrapped" data-router-src="ajax/last.html"></div>
         </div>
         <br>
 
@@ -30,13 +30,13 @@
         <button data-router-pagin="-1">Go Backward</button>
         <button data-router-pagin="1">Go Forward</button>
 
-
-        <script src="../dist/esRouter-es5.min.js"></script>
+        <script src="../src/esRouter.js"></script>
         <script>
             "use strict";
 
             var myRouter = new esRouter({
                 log: true,
+                ajax: true,
                 slug: {
                     urlFragmentAppend: "youAreHere="
                 }
@@ -44,7 +44,7 @@
                 before: function(id, router) {
                     console.log("started !", id);
                 },
-                done: function(activeDOM, activeId, activeIndex, router) {
+                done: function(data, activeDOM, activeId, activeIndex, router) {
                     console.log("success !");
                     console.log(arguments);
                     for (let i = 0; i < router.dom.elements.section.length; i++) {
