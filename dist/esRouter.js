@@ -148,10 +148,10 @@
             } else {
                 _this.slugSet(_this.data.activeId);
                 if (_this.options.ajax) {
-                    _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], data => {
-                        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", data);
-                        _this.data.active.innerHTML = data;
-                        _this.callback(_this.events.done, [data, _this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], responseText => {
+                        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", responseText);
+                        _this.data.active.innerHTML = responseText;
+                        _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
                     });
                 } else {
                     _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
