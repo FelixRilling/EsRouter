@@ -58,12 +58,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             return pre + attr[0].toUpperCase() + attr.substr(1);
                         }
                     },
-                    types: ["section", "sectionDefault", "link", "pagination"],
+                    types: ["section", "sectionDefault", "link", "pagination", "source"],
                     corePrefix: options.dataAttr.corePrefix || "router", //Core of the data-router attribute
                     section: options.dataAttr.section || "section", // #coreprefix#-#section# => data-router-section
                     sectionDefault: options.dataAttr.sectionDefault || "default",
                     link: options.dataAttr.link || "href",
                     pagination: options.dataAttr.pagination || "pagin",
+                    source: options.dataAttr.pagination || "src",
                     built: {}
                 },
                 elements: {}
@@ -151,7 +152,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
                 } else {
                     _this.slugSet(_this.data.activeId);
-                    _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    if (_this.options.ajax) {
+                        _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], function (responseText) {
+                            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", responseText);
+                            _this.data.active.innerHTML = responseText;
+                            _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
+                        });
+                    } else {
+                        _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    }
                 }
 
                 _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -251,11 +260,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
             }
         }, {
+            key: "getAJAX",
+            value: function getAJAX(url, fn) {
+                var xhr = new XMLHttpRequest();
+                xhr.addEventListener("load", function (data) {
+                    fn(data.target.response);
+                });
+                xhr.open("GET", url);
+                xhr.send();
+            }
+        }, {
             key: "callback",
             value: function callback(fn, args) {
                 if (typeof fn === "function") {
                     fn.apply(this, args);
                 }
+            }
+        }, {
+            key: "isDefined",
+            value: function isDefined(val) {
+                return typeof val !== "undefined";
             }
         }, {
             key: "writeLog",
@@ -269,11 +293,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function throwError(code) {
                 var _this = this;
                 throw Error("esRouter error: " + code, this);
-            }
-        }, {
-            key: "isDefined",
-            value: function isDefined(val) {
-                return typeof val !== "undefined";
             }
         }]);
 

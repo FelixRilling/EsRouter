@@ -56,12 +56,13 @@
                             return pre + attr[0].toUpperCase() + attr.substr(1);
                         }
                     },
-                    types: ["section", "sectionDefault", "link", "pagination"],
+                    types: ["section", "sectionDefault", "link", "pagination", "source"],
                     corePrefix: options.dataAttr.corePrefix || "router", //Core of the data-router attribute
                     section: options.dataAttr.section || "section", // #coreprefix#-#section# => data-router-section
                     sectionDefault: options.dataAttr.sectionDefault || "default",
                     link: options.dataAttr.link || "href",
                     pagination: options.dataAttr.pagination || "pagin",
+                    source: options.dataAttr.pagination || "src",
                     built: {}
                 },
                 elements: {}
@@ -146,7 +147,16 @@
                 }
             } else {
                 _this.slugSet(_this.data.activeId);
-                _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                if (_this.options.ajax) {
+                    _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], responseText => {
+                        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", responseText);
+                        _this.data.active.innerHTML = responseText;
+                        _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    });
+                } else {
+                    _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                }
+
             }
 
             _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -236,10 +246,21 @@
                 fn(nodelist[i], i);
             }
         }
+        getAJAX(url, fn) {
+            let xhr = new XMLHttpRequest();
+            xhr.addEventListener("load", data => {
+                fn(data.target.response);
+            });
+            xhr.open("GET", url);
+            xhr.send();
+        }
         callback(fn, args) {
             if (typeof fn === "function") {
                 fn.apply(this, args);
             }
+        }
+        isDefined(val) {
+            return typeof val !== "undefined";
         }
         writeLog(type, message) {
             if (this.options.log) {
@@ -250,9 +271,7 @@
             let _this = this;
             throw Error("esRouter error: " + code, this);
         }
-        isDefined(val) {
-            return typeof val !== "undefined";
-        }
+
     };
 
 })(window);
