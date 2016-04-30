@@ -86,7 +86,7 @@
             bindEvents();
 
             function setDefault() {
-                if (_this.isDefined(_this.dom.elements.section)) {
+                if (!_this.isDefined(_this.dom.elements.section)) {
                     _this.throwError.call(this, 0);
                 }
                 if (_this.isDefined(_this.dom.elements.sectionDefault)) {
@@ -141,6 +141,7 @@
                     _this.writeLog("warning", id + " not found");
                     _this.moveTo(_this.data.defaultId, true);
                 } else {
+                    _this.callback(_this.events.fail, [id, _this]);
                     _this.throwError.call(this, 2);
                 }
             } else {
@@ -247,8 +248,7 @@
         }
         throwError(code) {
             let _this = this;
-            _this.callback(_this.events.fail, [code, _this]);
-            throw new Error("esRouter error: " + code, this);
+            throw Error("esRouter error: " + code, this);
         }
         isDefined(val) {
             return typeof val !== "undefined";
