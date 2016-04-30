@@ -21,7 +21,7 @@
     "document": true,
     "window": true
   },
-  "globalstrict": false,
+  "globalstrict": true,
   "immed": true,
   "indent": 4,
   "iterator": false,

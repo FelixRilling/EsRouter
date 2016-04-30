@@ -90,10 +90,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 bindEvents();
 
                 function setDefault() {
-                    if (typeof _this.dom.elements.section === "undefined") {
+                    if (_this.isDefined(_this.dom.elements.section)) {
                         _this.throwError.call(this, 0);
                     }
-                    if (typeof _this.dom.elements.sectionDefault !== "undefined") {
+                    if (_this.isDefined(_this.dom.elements.sectionDefault)) {
                         _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[_this.dom.dataAttr.built.section[1]];
                         var slug = _this.slugGet();
                         _this.writeLog("init", _this.data.defaultId);
@@ -130,7 +130,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var success = function toggleActiveSection(id) {
                     var newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
 
-                    if (typeof newSection !== "undefined") {
+                    if (_this.isDefined(newSection)) {
                         _this.data.activeId = id;
                         _this.data.active = newSection;
                         _this.data.index = _this.getCurrentIndex();
@@ -161,7 +161,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveBy(val) {
                 var _this = this,
                     index = _this.data.index;
-                if (typeof _this.dom.elements.section[index + val] !== "undefined") {
+                if (_this.isDefined(_this.dom.elements.section[index + val])) {
                     return _this.moveTo(_this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]);
                 } else {
                     _this.writeLog("info", "index " + val + " not found");
@@ -269,6 +269,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var _this = this;
                 _this.callback(_this.events.fail, [code, _this]);
                 throw new Error("esRouter error: " + code, this);
+            }
+        }, {
+            key: "isDefined",
+            value: function isDefined(val) {
+                return typeof val !== "undefined";
             }
         }]);
 

@@ -86,10 +86,10 @@
             bindEvents();
 
             function setDefault() {
-                if (typeof _this.dom.elements.section === "undefined") {
+                if (_this.isDefined(_this.dom.elements.section)) {
                     _this.throwError.call(this, 0);
                 }
-                if (typeof _this.dom.elements.sectionDefault !== "undefined") {
+                if (_this.isDefined(_this.dom.elements.sectionDefault)) {
                     _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[
                         _this.dom.dataAttr.built.section[1]
                     ];
@@ -125,7 +125,7 @@
             let success = (function toggleActiveSection(id) {
                 let newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
 
-                if (typeof newSection !== "undefined") {
+                if (_this.isDefined(newSection)) {
                     _this.data.activeId = id;
                     _this.data.active = newSection;
                     _this.data.index = _this.getCurrentIndex();
@@ -154,7 +154,7 @@
         moveBy(val) {
             let _this = this,
                 index = _this.data.index;
-            if (typeof _this.dom.elements.section[index + val] !== "undefined") {
+            if (_this.isDefined(_this.dom.elements.section[index + val])) {
                 return _this.moveTo(
                     _this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]
                 );
@@ -249,6 +249,9 @@
             let _this = this;
             _this.callback(_this.events.fail, [code, _this]);
             throw new Error("esRouter error: " + code, this);
+        }
+        isDefined(val) {
+            return typeof val !== "undefined";
         }
     };
 
