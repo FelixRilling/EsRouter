@@ -111,6 +111,6 @@ Errortypes:
 - 1: Warning
 - 2: Info
 
-  Subtypes:
+Subtypes:
 
 - 0: not found
