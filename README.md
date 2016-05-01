@@ -2,39 +2,6 @@
 
 esRouter is a ES6 based, modern and small library for for DOM routing, with support foir both ajax as well as preloaded routing.
 
-Example (preloaded content):
-
-```javascript
-var myRouter = new esRouter({
-    options
-}, {
-    before: function() {
-        console.log("started!")
-    },
-    done: function(id) {
-        console.log("finished routing to" + id)
-    }
-});
-```
-
-esRouter makes use of html data attributes to manage your routing sections
-
-```html
-<!--Classic preloaded routing-->
-<section class="mySection" data-router-id="main" data-router-default="true">Hello World! Page 1</section>
-<section class="mySection" data-router-id="secondary">Lorem ipsum! Page 2</section>
-<div class="mySection" data-router-id="third">Et dolor! Page 3</div>
-<div class="container">
-    <div class="mySection" data-router-id="wrapped">Im wrapped!</div>
-</div>
-<br>
-
-<a href="javascript:;" data-router-href="main">Go to Main</a>
-<br>
-<a href="javascript:;" data-router-pagin="-1">Go Backward</a>
-<a href="javascript:;" data-router-pagin="1">Go Forward</a>
-```
-
 # Syntax
 
 ```javascript
@@ -64,3 +31,86 @@ var myRouter = new esRouter({
     after: function() {}, //executes after moving
 })
 ```
+
+## Example 1(Preloaded content)
+
+```javascript
+var myRouter = new esRouter({
+}, {
+    before: function() {
+        console.log("started!")
+    },
+    done: function(id) {
+        console.log("finished routing to" + id)
+    }
+});
+```
+
+esRouter makes use of html data attributes to manage your routing sections
+
+```html
+<!--Classic preloaded routing-->
+<section class="mySection" data-router-section="main" data-router-src="main" data-router-default="true">Hello World! Page 1</section>
+<section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
+<div class="mySection" data-router-section="third">Et dolor! Page 3</div>
+<div class="container">
+    <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
+</div>
+<br>
+
+<button data-router-href="main">Go to main</button>
+<br>
+<button data-router-pagin="-1">Go Backward</button>
+<button data-router-pagin="1">Go Forward</button>
+```
+
+## Example 2(AJAX content)
+
+```javascript
+var myRouter = new esRouter({
+  ajax: true
+}, {
+    before: function() {
+        console.log("started!")
+    },
+    done: function(id) {
+        console.log("finished routing to" + id)
+    }
+});
+```
+
+enter the source of the ajax content in the DOM
+
+```html
+<!--Classic preloaded routing-->
+<section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
+<section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
+<div class="mySection" data-router-section="third" data-router-src="ajax/third.html"></div>
+<div class="container">
+    <div class="mySection" data-router-section="wrapped" data-router-src="ajax/last.html"></div>
+</div>
+<br>
+
+<button data-router-href="main">Go to main</button>
+<br>
+<button data-router-pagin="-1">Go Backward</button>
+<button data-router-pagin="1">Go Forward</button>
+```
+
+# Error Codes
+
+esRouter uses Error codes to avoid putting string error messages in the code. Syntax:
+
+```
+esRouter: #errorType#": #subType# #data#
+```
+
+Errortypes:
+
+- 0: Fatal Error
+- 1: Warning
+- 2: Info
+
+  Subtypes:
+
+- 0: not found
