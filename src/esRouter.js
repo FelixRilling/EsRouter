@@ -95,7 +95,7 @@
                         _this.dom.dataAttr.built.section[1]
                     ];
                     let slug = _this.slugGet();
-                    _this.writeLog("init", _this.data.defaultId);
+                    _this.writeLog(2, _this.data.defaultId);
                     _this.moveTo(slug);
                 } else {
                     _this.throwError.call(this, 1);
@@ -122,7 +122,7 @@
         moveTo(id, recursive) {
             let _this = this;
             _this.callback(_this.events.before, [id, _this]);
-            _this.writeLog("move", id);
+            _this.writeLog(2, id);
             let success = (function toggleActiveSection(id) {
                 let newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
 
@@ -139,7 +139,7 @@
             if (!success) {
                 //if not found revert to default
                 if (!recursive) {
-                    _this.writeLog("warning", id + " not found");
+                    _this.writeLog(1, 0, id);
                     _this.moveTo(_this.data.defaultId, true);
                 } else {
                     _this.callback(_this.events.fail, [id, _this]);
@@ -149,7 +149,6 @@
                 _this.slugSet(_this.data.activeId);
                 if (_this.options.ajax) {
                     _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], responseText => {
-                        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", responseText);
                         _this.data.active.innerHTML = responseText;
                         _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
                     });
@@ -170,7 +169,7 @@
                     _this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]
                 );
             } else {
-                _this.writeLog("info", "index " + val + " not found");
+                _this.writeLog(2, 0, val);
                 return false;
             }
         }
@@ -262,14 +261,14 @@
         isDefined(val) {
             return typeof val !== "undefined";
         }
-        writeLog(type, message) {
+        writeLog(type, message, secondary) {
             if (this.options.log) {
-                console.log("esRouter " + type + ": " + message);
+                console.log("esRouter " + type + ": " + message, secondary || "");
             }
         }
         throwError(code) {
             let _this = this;
-            throw Error("esRouter error: " + code, this);
+            throw Error("esRouter 0: " + code, this);
         }
 
     };

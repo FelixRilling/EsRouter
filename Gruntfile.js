@@ -157,7 +157,13 @@ module.exports = function(grunt) {
                         }, {
                             match: /getAJAX/g,
                             replacement: "v"
-                        }
+                        }, {
+                            match: /defaultId/g,
+                            replacement: "w"
+                        }, {
+                            match: /activeId/g,
+                            replacement: "x"
+                        } 
                     ]
                 },
                 files: {
