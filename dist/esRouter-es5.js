@@ -134,7 +134,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 function bindEvents() {
                     _this.iterateDomNode(_this.dom.elements.link, function (link) {
                         link.addEventListener("click", function (ev) {
-                            _this.moveTo(parseInt(ev.target.dataset[_this.dom.dataAttr.built.link[1]]));
+                            _this.moveTo(ev.target.dataset[_this.dom.dataAttr.built.link[1]]);
                         });
                     });
                     _this.iterateDomNode(_this.dom.elements.pagination, function (pagin) {
@@ -154,7 +154,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveTo(id, recursive) {
                 var _this = this;
                 _this.callback(_this.events.before, [id, _this]);
-                var success = function toggleActiveSection(id) {
+                var success = toggleActiveSection(id);
+
+                if (success) {
+                    _this.slugSet(_this.data.activeId);
+                    if (_this.options.ajax) {
+                        _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], function (responseText) {
+                            _this.data.active.innerHTML = responseText;
+                            _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
+                        });
+                    } else {
+                        _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    }
+                } else {
+                    //if not found revert to default
+                    if (!recursive) {
+                        _this.writeLog([1, 1, 0], id);
+                        _this.moveTo(_this.data.defaultId, true);
+                    } else {
+                        _this.callback(_this.events.fail, [id, _this]);
+                        _this.throwError.call(this, 2);
+                    }
+                }
+                _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                return success;
+
+                function toggleActiveSection(id) {
                     var newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
 
                     if (_this.isDefined(newSection)) {
@@ -165,31 +190,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     } else {
                         return false;
                     }
-                }(id);
-
-                if (!success) {
-                    //if not found revert to default
-                    if (!recursive) {
-                        _this.writeLog([1, 1, 0], id);
-                        _this.moveTo(_this.data.defaultId, true);
-                    } else {
-                        _this.callback(_this.events.fail, [id, _this]);
-                        _this.throwError.call(this, 2);
-                    }
-                } else {
-                    _this.slugSet(_this.data.activeId);
-                    if (_this.options.ajax) {
-                        _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], function (responseText) {
-                            _this.data.active.innerHTML = responseText;
-                            _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
-                        });
-                    } else {
-                        _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
-                    }
                 }
-
-                _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
-                return success;
             }
         }, {
             key: "moveBy",
@@ -213,6 +214,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveBackward() {
                 return this.moveBy(-1);
             }
+
             /*##############/
             / Slug functions
             /###############*/
@@ -268,7 +270,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "findData",
             value: function findData(node, data, val) {
-
                 var result = void 0;
                 this.iterateDomNode(node, function (x) {
                     if (x.dataset[data] === val) {
@@ -316,7 +317,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "throwError",
             value: function throwError(type) {
-                var _this = this;
                 throw Error("esRouter: 0:" + type, this);
             }
         }]);

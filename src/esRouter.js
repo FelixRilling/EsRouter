@@ -129,7 +129,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             function bindEvents() {
                 _this.iterateDomNode(_this.dom.elements.link, link => {
                     link.addEventListener("click", ev => {
-                        _this.moveTo(parseInt(ev.target.dataset[_this.dom.dataAttr.built.link[1]]));
+                        _this.moveTo(ev.target.dataset[_this.dom.dataAttr.built.link[1]]);
                     });
                 });
                 _this.iterateDomNode(_this.dom.elements.pagination, pagin => {
@@ -146,29 +146,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         moveTo(id, recursive) {
             let _this = this;
             _this.callback(_this.events.before, [id, _this]);
-            let success = (function toggleActiveSection(id) {
-                let newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
+            let success = toggleActiveSection(id);
 
-                if (_this.isDefined(newSection)) {
-                    _this.data.activeId = id;
-                    _this.data.active = newSection;
-                    _this.data.index = _this.getCurrentIndex();
-                    return true;
-                } else {
-                    return false;
-                }
-            })(id);
-
-            if (!success) {
-                //if not found revert to default
-                if (!recursive) {
-                    _this.writeLog([1, 1, 0], id);
-                    _this.moveTo(_this.data.defaultId, true);
-                } else {
-                    _this.callback(_this.events.fail, [id, _this]);
-                    _this.throwError.call(this, 2);
-                }
-            } else {
+            if (success) {
                 _this.slugSet(_this.data.activeId);
                 if (_this.options.ajax) {
                     _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], responseText => {
@@ -179,10 +159,31 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                 }
 
+            } else {
+                //if not found revert to default
+                if (!recursive) {
+                    _this.writeLog([1, 1, 0], id);
+                    _this.moveTo(_this.data.defaultId, true);
+                } else {
+                    _this.callback(_this.events.fail, [id, _this]);
+                    _this.throwError.call(this, 2);
+                }
             }
-
             _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
             return success;
+
+            function toggleActiveSection(id) {
+                let newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
+
+                if (_this.isDefined(newSection)) {
+                    _this.data.activeId = id;
+                    _this.data.active = newSection;
+                    _this.data.index = _this.getCurrentIndex();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
         moveBy(val) {
             let _this = this,
@@ -200,11 +201,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return this.moveBy(1);
         }
         moveBackward() {
-                return this.moveBy(-1);
-            }
-            /*##############/
-            / Slug functions
-            /###############*/
+            return this.moveBy(-1);
+        }
+
+        /*##############/
+        / Slug functions
+        /###############*/
         slugGet(recursive) {
             let _this = this;
             if (_location.href.lastIndexOf(this.slug.built) > -1) {
@@ -254,7 +256,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return result;
         }
         findData(node, data, val) {
-
             let result;
             this.iterateDomNode(node, (x) => {
                 if (x.dataset[data] === val) {
@@ -290,7 +291,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         }
         throwError(type) {
-            let _this = this;
             throw Error(`esRouter: 0:${type}`, this);
         }
 
