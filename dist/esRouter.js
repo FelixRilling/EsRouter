@@ -26,7 +26,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 "use strict";
 
 (function(window) {
-
     let _location = window.location;
 
     window.esRouter = class {
@@ -51,8 +50,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             };
 
             _this.slug = {
-                preSlash: options.slug.preSlash || false,
-                postSlash: options.slug.postSlash || false,
+                preSlash: options.slug.preSlash || false, //prepend slash?
+                postSlash: options.slug.postSlash || false, //append slash
                 urlFragmentInitator: (typeof options.slug.urlFragmentInitator === "string") ? options.slug.urlFragmentInitator : "#",
                 urlFragmentAppend: (typeof options.slug.urlFragmentAppend === "string") ? options.slug.urlFragmentAppend : "",
             };
@@ -226,17 +225,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         }
         slugSet(id) {
-            _location.href = (_location.href.substr(
-                0,
-                _location.href.lastIndexOf(this.slug.built) +
-                this.slug.built.length
-            ) + id);
+            _location.href = (
+                _location.href.substr(
+                    0,
+                    _location.href.lastIndexOf(this.slug.built) +
+                    this.slug.built.length
+                ) +
+                id
+            );
         }
         slugInit(id) {
             _location.href = (
                 _location.href +
                 this.slug.built +
-                id);
+                id
+            );
         }
 
         /*##############/
@@ -257,7 +260,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
         findData(node, data, val) {
             let result;
-            this.iterateDomNode(node, (x) => {
+            this.iterateDomNode(node, x => {
                 if (x.dataset[data] === val) {
                     result = x;
                 }
@@ -286,19 +289,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         }
         isDefined(val) {
-                return typeof val !== "undefined";
-            }
-            //log
+            return typeof val !== "undefined";
+        }
+
         writeLog(type, content) {
-                if (this.options.log) {
-                    console.log(`esRouter: Type:${type[1]}:${type[2]} in module ${type[0]}`, content);
-                }
+            if (this.options.log) {
+                console.log(`esRouter: Type:${type[1]}:${type[2]} in module ${type[0]}`, content);
             }
-            //!log
+        }
         throwError(type, content) {
             throw Error(`esRouter: 0:${type[1]} in module ${type[0]}`, content);
         }
-
     };
 
 })(window);

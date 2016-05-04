@@ -5,7 +5,6 @@
   ],
   "plugins": {
     "complete_strings": {},
-    "node": {},
     "lint": {},
     "modules": {},
     "es_modules": {},

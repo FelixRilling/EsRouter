@@ -30,7 +30,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function (window) {
-
     var _location = window.location;
 
     window.esRouter = function () {
@@ -54,8 +53,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             };
 
             _this.slug = {
-                preSlash: options.slug.preSlash || false,
-                postSlash: options.slug.postSlash || false,
+                preSlash: options.slug.preSlash || false, //prepend slash?
+                postSlash: options.slug.postSlash || false, //append slash
                 urlFragmentInitator: typeof options.slug.urlFragmentInitator === "string" ? options.slug.urlFragmentInitator : "#",
                 urlFragmentAppend: typeof options.slug.urlFragmentAppend === "string" ? options.slug.urlFragmentAppend : ""
             };
@@ -312,8 +311,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function isDefined(val) {
                 return typeof val !== "undefined";
             }
-            //log
-
         }, {
             key: "writeLog",
             value: function writeLog(type, content) {
@@ -321,8 +318,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     console.log("esRouter: Type:" + type[1] + ":" + type[2] + " in module " + type[0], content);
                 }
             }
-            //!log
-
         }, {
             key: "throwError",
             value: function throwError(type, content) {
