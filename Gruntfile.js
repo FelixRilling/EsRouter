@@ -11,7 +11,7 @@ module.exports = function(grunt) {
                     "src/{,*/}*.js"
                 ],
                 tasks: [
-                    "babel"
+                    "dist"
                 ]
             },
         },
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
         babel: {
             options: {
                 sourceMap: true,
-                presets: ["es2015", "stage-0", "stage-1", "stage-2", "stage-3"]
+                presets: ["es2015"]
             },
             dist: {
                 files: {
@@ -163,7 +163,7 @@ module.exports = function(grunt) {
                         }, {
                             match: /activeId/g,
                             replacement: "x"
-                        } 
+                        }
                     ]
                 },
                 files: {

@@ -1,6 +1,31 @@
+/*
+esRouter v0.2.1
+
+Copyright (c) 2016 Felix Rilling
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
 "use strict";
 
-(function(window) {
+(function (window) {
 
     let _location = window.location;
 
@@ -33,19 +58,21 @@
             };
             _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.urlFragmentInitator + _this.slug.urlFragmentAppend;
 
-
             options.dataAttr = options.dataAttr || {};
             _this.dom = {
-                getElements: function(arr) {
+                getElements: function (arr) {
                     for (var i = 0; i < arr.length; i++) {
                         let attr = _this.dom.dataAttr.buildAttr(_this.dom.dataAttr.corePrefix, _this.dom.dataAttr[arr[i]]);
                         _this.dom.dataAttr.built[arr[i]] = attr;
                         _this.dom.elements[arr[i]] = document.querySelectorAll("[" + attr[0] + "]") || [];
+                        if (!_this.isDefined(_this.dom.elements[arr[i]])) {
+                            _this.writeLog([0, 1, 0], _this.dom.elements[attr[0]]);
+                        }
                     }
                 },
                 dataAttr: {
 
-                    buildAttr: function(pre, attr) {
+                    buildAttr: function (pre, attr) {
                         return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
 
                         function buildDomAttr(pre, attr) {
@@ -69,7 +96,6 @@
 
             };
 
-
             _this.data = {
                 active: null,
                 activeId: null,
@@ -77,7 +103,6 @@
                 index: 0
             };
         }
-
 
         //Initialize & move to url slug
         init() {
@@ -95,7 +120,6 @@
                         _this.dom.dataAttr.built.section[1]
                     ];
                     let slug = _this.slugGet();
-                    _this.writeLog(2, _this.data.defaultId);
                     _this.moveTo(slug);
                 } else {
                     _this.throwError.call(this, 1);
@@ -122,7 +146,6 @@
         moveTo(id, recursive) {
             let _this = this;
             _this.callback(_this.events.before, [id, _this]);
-            _this.writeLog(2, id);
             let success = (function toggleActiveSection(id) {
                 let newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
 
@@ -139,7 +162,7 @@
             if (!success) {
                 //if not found revert to default
                 if (!recursive) {
-                    _this.writeLog(1, 0, id);
+                    _this.writeLog([1, 1, 0], id);
                     _this.moveTo(_this.data.defaultId, true);
                 } else {
                     _this.callback(_this.events.fail, [id, _this]);
@@ -169,7 +192,7 @@
                     _this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]
                 );
             } else {
-                _this.writeLog(2, 0, val);
+                _this.writeLog([1, 2, 0], val);
                 return false;
             }
         }
@@ -261,14 +284,14 @@
         isDefined(val) {
             return typeof val !== "undefined";
         }
-        writeLog(type, message, secondary) {
+        writeLog(type, content) {
             if (this.options.log) {
-                console.log("esRouter " + type + ": " + message, secondary || "");
+                console.log(`esRouter: Type:${type[1]}:${type[2]} in module ${type[0]}`, content);
             }
         }
-        throwError(code) {
+        throwError(type) {
             let _this = this;
-            throw Error("esRouter 0: " + code, this);
+            throw Error(`esRouter: 0:${type}`, this);
         }
 
     };

@@ -1,22 +1,23 @@
 {
   "name": "esRouter",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.2.1",
+  "description": "esRouter is a ES6 based, modern and small library for for DOM routing, with support foir both ajax as well as preloaded routing. ",
   "main": "dist/esRouter.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheBinaryBee/esRouter.git"
+    "url": "git+https://github.com/FelixRilling/esRouter.git"
   },
   "keywords": [
-    "dom",
-    "micro"
+    "esRouter",
+    "router",
+    "es6"
   ],
   "author": "Felix Rilling",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TheBinaryBee/esRouter/issues"
+    "url": "https://github.com/FelixRilling/esRouter/issues"
   },
-  "homepage": "https://github.com/TheBinaryBee/esRouter#readme",
+  "homepage": "https://github.com/TheBinaryBee/FelixRilling#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-0": "^6.5.0",

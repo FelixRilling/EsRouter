@@ -19,7 +19,8 @@
   "globals": {
     "browser": true,
     "document": true,
-    "window": true
+    "window": true,
+    "XMLHttpRequest":true
   },
   "globalstrict": true,
   "immed": true,

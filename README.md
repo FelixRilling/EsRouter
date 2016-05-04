@@ -50,7 +50,7 @@ esRouter makes use of html data attributes to manage your routing sections
 
 ```html
 <!--Classic preloaded routing-->
-<section class="mySection" data-router-section="main" data-router-src="main" data-router-default="true">Hello World! Page 1</section>
+<section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1</section>
 <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
 <div class="mySection" data-router-section="third">Et dolor! Page 3</div>
 <div class="container">
@@ -102,7 +102,7 @@ enter the source of the ajax content in the DOM
 esRouter uses Error codes to avoid putting string error messages in the code. Syntax:
 
 ```
-esRouter: #errorType#": #subType# #data#
+esRouter: #errorType#":#subType# in module #module#, #data#
 ```
 
 Errortypes:
@@ -114,3 +114,10 @@ Errortypes:
 Subtypes:
 
 - 0: not found
+
+
+Modules:
+
+- 0: Initialization
+- 1: Moving
+- 2: Callback
