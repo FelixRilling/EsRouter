@@ -1,6 +1,6 @@
 # esRouter
 
-esRouter is a ES6 based, modern and small library for for DOM routing, with support foir both ajax as well as preloaded routing.
+esRouter is a ES6 based, modern and small library for for DOM routing, with support for both ajax as well as preloaded routing.
 
 # Syntax
 
@@ -9,13 +9,14 @@ var myRouter = new esRouter({
     log: false, //log messages
     ajax: false, //enable ajax routing
     slug: {
-        preSlash: false, //add slash before urlFragment ?
-        postSlash: false, //add slash after urlFragment ?
+        preSlash: false, //add slash before urlFragment?
+        postSlash: false, //add slash after urlFragment?
         urlFragmentInitator: "#", //urlFragment initior, you should not change this
         urlFragmentAppend: "" //you can append custom messages like 'currentSection='
     },
     dom: {
         dataAttr: {
+            //only change this if you need to use non-standard data-tags
             corePrefix: "router", //Core of the data-router attribute
             section: "section", // #coreprefix#-#section# => data-router-section
             sectionDefault: "default",
@@ -37,8 +38,7 @@ var myRouter = new esRouter({
 ## Example 1: Preloaded content
 
 ```javascript
-var myRouter = new esRouter({
-}, {
+var myRouter = new esRouter({},{
     before: function() {
         console.log("started!")
     },
@@ -106,9 +106,10 @@ esRouter uses Error codes to avoid putting string error messages in the code. Sy
 ```
 esRouter: #errorType#":#subType# in module #module#, #data#
 ```
+
 Note: the minified version only shows errors.
 
-### Errortypes:
+## Errortypes:
 
 - 0: Fatal Error
 - 1: Warning
@@ -117,7 +118,7 @@ Note: the minified version only shows errors.
 Subtypes:
 
 - 0: not found
-- 0: recursed to deep
+- 1: recursed to deep
 
 Modules:
 

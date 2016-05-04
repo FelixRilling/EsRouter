@@ -50,19 +50,7 @@ module.exports = function(grunt) {
                         screw_ie8: true
                     }
                 }
-            },
-          /*  unsafe: {
-                files: {
-                    "dist/esRouter-es5.mangled.min.js": ".tmp/esRouter-es5.rpl.js"
-                },
-                options: {
-                    compress: {
-                        drop_console: true,
-                        screw_ie8: true,
-
-                    }
-                }
-            }*/
+            }
         },
 
         copy: {
@@ -90,111 +78,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-        /* UglifyJS doesnt uglify properties, so we do it by hand*
-         * The properties left out are not included for a reason, adding them will break functionality
-         * UPDATE: yep we shouldnt do this, too much work
-         */
-        /*replace: {
-            dist: {
-                options: {
-
-                    patterns: [
-                        //General
-                        {
-                            match: /built/g,
-                            replacement: "a"
-                        },
-                        //Slug
-                        {
-                            match: /urlFragmentInitator/g,
-                            replacement: "b"
-                        }, {
-                            match: /urlFragmentAppend/g,
-                            replacement: "c"
-                        }, {
-                            match: /corePrefix/g,
-                            replacement: "d"
-                        }, {
-                            match: /dataAttr/g,
-                            replacement: "e"
-                        }, {
-                            match: /preSlash/g,
-                            replacement: "f"
-                        }, {
-                            match: /postSlash/g,
-                            replacement: "g"
-                        },
-                        //dom
-                        {
-                            match: /sectionDefault/g,
-                            replacement: "i"
-                        }, {
-                            match: /link/g,
-                            replacement: "j"
-                        }, {
-                            match: /pagination/g,
-                            replacement: "k"
-                        }, {
-                            match: /source/g,
-                            replacement: "t"
-                        },
-                        //callback
-                        {
-                            match: /callback/g,
-                            replacement: "l"
-                        }, {
-                            match: /iterateDomNode/g,
-                            replacement: "m"
-                        }, {
-                            match: /isDefined/g,
-                            replacement: "n"
-                        }, {
-                            match: /\/\/log[^!]+!log|_this.writeLog\([^)]+\);/g,
-                            replacement: ""
-                        }, {
-                            match: /findData/g,
-                            replacement: "p"
-                        }, {
-                            match: /getElementIndex/g,
-                            replacement: "q"
-                        }, {
-                            match: /getCurrentIndex/g,
-                            replacement: "r"
-                        }, {
-                            match: /throwError/g,
-                            replacement: "s"
-                        }, {
-                            match: /responseText/g,
-                            replacement: "u"
-                        }, {
-                            match: /getAJAX/g,
-                            replacement: "v"
-                        }, {
-                            match: /defaultId/g,
-                            replacement: "w"
-                        }, {
-                            match: /activeId/g,
-                            replacement: "x"
-                        }, {
-                            match: /fieldDefault/g,
-                            replacement: "z"
-                        }, {
-                            match: /field/g,
-                            replacement: "y"
-                        }, {
-                            match: /elements/g,
-                            replacement: "h"
-                        },
-
-
-
-                    ]
-                },
-                files: {
-                    ".tmp/esRouter-es5.rpl.js": ".tmp/esRouter-es5.js"
-                }
-            }
-        },*/
 
     });
 
@@ -211,7 +94,7 @@ module.exports = function(grunt) {
     grunt.registerTask("dist", [
         "build",
         "babel:dist",
-       //"replace",
+        //"replace",
         "uglify:main",
         "copy:dist"
     ]);

@@ -1,7 +1,7 @@
 {
   "name": "es-router",
   "version": "v1.0.0-rc1",
-  "description": "esRouter is a ES6 based, modern and small library for for DOM routing, with support foir both ajax as well as preloaded routing.",
+  "description": "esRouter is a ES6 based, modern and small library for for DOM routing, with support for both ajax as well as preloaded routing.",
   "main": "dist/esRouter.js",
   "authors": [
     "Felix Rilling"
