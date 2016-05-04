@@ -1,60 +1,62 @@
 <!doctype html>
-<html lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>esRouter Demo</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
 
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <style>
-            .active {
-                background-color: #ddd;
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>esRouter AJAX Demo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <style>
+        .active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
+    <section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
+    <div class="mySection" data-router-section="third" data-router-src="ajax/third.html"></div>
+    <div class="container">
+        <div class="mySection" data-router-section="wrapped" data-router-src="ajax/last.html"></div>
+    </div>
+    <br>
+
+    <button data-router-href="main">Go to main</button>
+    <button data-router-href="wrapped">Go to Last</button>
+    <br>
+    <button data-router-pagin="-1">Go Backward</button>
+    <button data-router-pagin="1">Go Forward</button>
+
+    <script src="../dist/esRouter-es5.min.js"></script>
+    <script>
+        "use strict";
+
+        var myRouter = new esRouter({
+            log: true,
+            ajax: true,
+            slug: {
+                urlFragmentAppend: "youAreHere="
             }
-
-        </style>
-    </head>
-    <body>
-
-        <section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
-        <section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
-        <div class="mySection" data-router-section="third" data-router-src="ajax/third.html"></div>
-        <div class="container">
-            <div class="mySection" data-router-section="wrapped" data-router-src="ajax/last.html"></div>
-        </div>
-        <br>
-
-        <button data-router-href="main">Go to main</button>
-        <br>
-        <button data-router-pagin="-1">Go Backward</button>
-        <button data-router-pagin="1">Go Forward</button>
-
-        <script src="../dist/esRouter-es5.min.js"></script>
-        <script>
-            "use strict";
-
-            var myRouter = new esRouter({
-                log: true,
-                ajax: true,
-                slug: {
-                    urlFragmentAppend: "youAreHere="
+        }, {
+            before: function (id, router) {
+                console.log("Demo callback on start!", id);
+            },
+            done: function (data, activeDOM, activeId, activeIndex, router) {
+                console.log("Demo callback on finish!");
+                for (let i = 0; i < router.dom.elements.section.length; i++) {
+                    router.dom.elements.section[i].classList.remove("active");
                 }
-            }, {
-                before: function(id, router) {
-                    console.log("started !", id);
-                },
-                done: function(data, activeDOM, activeId, activeIndex, router) {
-                    console.log("success !");
-                    console.log(arguments);
-                    for (let i = 0; i < router.dom.elements.section.length; i++) {
-                        router.dom.elements.section[i].classList.remove("active");
-                    }
-                    activeDOM.classList.add("active");
-                }
-            });
+                activeDOM.classList.add("active");
+            }
+        });
 
-            myRouter.init();
-        </script>
-    </body>
+        myRouter.init();
+    </script>
+</body>
+
 </html>

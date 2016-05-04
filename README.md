@@ -32,7 +32,9 @@ var myRouter = new esRouter({
 })
 ```
 
-## Example 1(Preloaded content)
+# Examples
+
+## Example 1: Preloaded content
 
 ```javascript
 var myRouter = new esRouter({
@@ -64,7 +66,7 @@ esRouter makes use of html data attributes to manage your routing sections
 <button data-router-pagin="1">Go Forward</button>
 ```
 
-## Example 2(AJAX content)
+## Example 2: AJAX content
 
 ```javascript
 var myRouter = new esRouter({
@@ -114,8 +116,6 @@ Errortypes:
 Subtypes:
 
 - 0: not found
-
-
 
 Modules:
 
