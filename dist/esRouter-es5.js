@@ -120,14 +120,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 function setDefault() {
                     if (!_this.isDefined(_this.dom.elements.section)) {
-                        _this.throwError.call(this, 0);
+                        _this.throwError([0, 0], _this);
                     }
                     if (_this.isDefined(_this.dom.elements.sectionDefault)) {
                         _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[_this.dom.dataAttr.built.section[1]];
                         var slug = _this.slugGet();
                         _this.moveTo(slug);
                     } else {
-                        _this.throwError.call(this, 1);
+                        _this.throwError([0, 1], _this);
                     }
                 }
 
@@ -173,7 +173,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         _this.moveTo(_this.data.defaultId, true);
                     } else {
                         _this.callback(_this.events.fail, [id, _this]);
-                        _this.throwError.call(this, 2);
+                        _this.throwError([1, 1], this);
                     }
                 }
                 _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -231,7 +231,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         _this.slugInit(_this.data.defaultId);
                         return _this.slugGet(true);
                     } else {
-                        _this.throwError.call(this, 3);
+                        _this.throwError([1, 1], this);
                     }
                 }
             }
@@ -288,9 +288,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "getAJAX",
             value: function getAJAX(url, fn) {
+                var _this2 = this;
+
                 var xhr = new XMLHttpRequest();
                 xhr.addEventListener("load", function (data) {
                     fn(data.target.response);
+                });
+                xhr.addEventListener("error", function (data) {
+                    _this2.throwError([3, 0], xhr);
                 });
                 xhr.open("GET", url);
                 xhr.send();
@@ -316,8 +321,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }, {
             key: "throwError",
-            value: function throwError(type) {
-                throw Error("esRouter: 0:" + type, this);
+            value: function throwError(type, content) {
+                throw Error("esRouter: 0:" + type[1] + " in module " + type[0], content);
             }
         }]);
 

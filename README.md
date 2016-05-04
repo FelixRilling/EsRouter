@@ -116,9 +116,11 @@ Errortypes:
 Subtypes:
 
 - 0: not found
+- 0: recursed to deep
 
 Modules:
 
 - 0: Initialization
 - 1: Moving
 - 2: Callback
+- 3: AJAX

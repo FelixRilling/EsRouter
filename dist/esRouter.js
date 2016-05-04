@@ -113,7 +113,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             function setDefault() {
                 if (!_this.isDefined(_this.dom.elements.section)) {
-                    _this.throwError.call(this, 0);
+                    _this.throwError([0, 0], _this);
                 }
                 if (_this.isDefined(_this.dom.elements.sectionDefault)) {
                     _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[
@@ -122,7 +122,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     let slug = _this.slugGet();
                     _this.moveTo(slug);
                 } else {
-                    _this.throwError.call(this, 1);
+                    _this.throwError([0, 1], _this);
                 }
             }
 
@@ -166,7 +166,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     _this.moveTo(_this.data.defaultId, true);
                 } else {
                     _this.callback(_this.events.fail, [id, _this]);
-                    _this.throwError.call(this, 2);
+                    _this.throwError([1, 1], this);
                 }
             }
             _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -221,7 +221,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     _this.slugInit(_this.data.defaultId);
                     return _this.slugGet(true);
                 } else {
-                    _this.throwError.call(this, 3);
+                    _this.throwError([1, 1], this);
                 }
             }
         }
@@ -274,6 +274,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             xhr.addEventListener("load", data => {
                 fn(data.target.response);
             });
+            xhr.addEventListener("error", data => {
+                this.throwError([3, 0], xhr);
+            });
             xhr.open("GET", url);
             xhr.send();
         }
@@ -290,8 +293,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 console.log(`esRouter: Type:${type[1]}:${type[2]} in module ${type[0]}`, content);
             }
         }
-        throwError(type) {
-            throw Error(`esRouter: 0:${type}`, this);
+        throwError(type, content) {
+            throw Error(`esRouter: 0:${type[1]} in module ${type[0]}`, content);
         }
 
     };
