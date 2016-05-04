@@ -1,60 +1,61 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>esRouter Content Demo</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .active {
-            background-color: #ddd;
-        }
-    </style>
-</head>
-
-<body>
-
-    <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1</section>
-    <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
-    <div class="mySection" data-router-section="third">Et dolor! Page 3</div>
-    <div class="container">
-        <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
-    </div>
-    <br>
-
-    <button data-router-href="main">Go to main</button>
-    <button data-router-href="wrapped">Go to Last</button>
-    <br>
-    <button data-router-pagin="-1">Go Backward</button>
-    <button data-router-pagin="1">Go Forward</button>
-
-
-    <script src="../dist/esRouter.js"></script>
-    <script>
-        "use strict";
-
-        var myRouter = new esRouter({
-            log: true,
-            slug: {
-                urlFragmentAppend: "youAreHere="
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>esRouter Content Demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .active {
+                background-color: #ddd;
             }
-        }, {
-            before: function (id, router) {
-                console.log("Demo callback on start!", id);
-            },
-            done: function (activeDOM, activeId, activeIndex, router) {
-                console.log("Demo callback on finish!");
-                for (let i = 0; i < router.dom.elements.section.length; i++) {
-                    router.dom.elements.section[i].classList.remove("active");
+
+        </style>
+    </head>
+
+    <body>
+
+        <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1</section>
+        <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
+        <div class="mySection" data-router-section="third">Et dolor! Page 3</div>
+        <div class="container">
+            <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
+        </div>
+        <br>
+
+        <button data-router-href="main">Go to main</button>
+        <button data-router-href="wrapped">Go to Last</button>
+        <br>
+        <button data-router-pagin="-1">Go Backward</button>
+        <button data-router-pagin="1">Go Forward</button>
+
+        <script src="../dist/esRouter.js"></script>
+        <script>
+            "use strict";
+            var demoElements = document.querySelectorAll(".mySection");
+
+            var myRouter = new esRouter({
+                log: true,
+                slug: {
+                    urlFragmentAppend: "youAreHere="
                 }
-                activeDOM.classList.add("active");
-            }
-        });
+            }, {
+                before: function(id, router) {
+                    console.log("Demo callback on start!", id);
+                },
+                done: function(activeDOM, activeId, activeIndex, router) {
+                    console.log("Demo callback on finish!");
+                    for (let i = 0; i < demoElements.length; i++) {
+                        demoElements[i].classList.remove("active");
+                    }
+                    activeDOM.classList.add("active");
+                }
+            });
 
-        myRouter.init();
-    </script>
-</body>
+            myRouter.init();
+        </script>
+    </body>
 
 </html>

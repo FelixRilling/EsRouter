@@ -86,10 +86,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             return pre + attr[0].toUpperCase() + attr.substr(1);
                         }
                     },
-                    types: ["section", "sectionDefault", "link", "pagination", "source"],
+                    types: ["field", "fieldDefault", "link", "pagination", "source"],
                     corePrefix: options.dataAttr.corePrefix || "router", //Core of the data-router attribute
-                    section: options.dataAttr.section || "section", // #coreprefix#-#section# => data-router-section
-                    sectionDefault: options.dataAttr.sectionDefault || "default",
+                    field: options.dataAttr.field || "section", // #coreprefix#-#field# => data-router-field
+                    fieldDefault: options.dataAttr.fieldDefault || "default",
                     link: options.dataAttr.link || "href",
                     pagination: options.dataAttr.pagination || "pagin",
                     source: options.dataAttr.pagination || "src",
@@ -119,11 +119,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 bindEvents();
 
                 function setDefault() {
-                    if (!_this.isDefined(_this.dom.elements.section)) {
+                    if (!_this.isDefined(_this.dom.elements.field)) {
                         _this.throwError([0, 0], _this);
                     }
-                    if (_this.isDefined(_this.dom.elements.sectionDefault)) {
-                        _this.data.defaultId = _this.dom.elements.sectionDefault[0].dataset[_this.dom.dataAttr.built.section[1]];
+                    if (_this.isDefined(_this.dom.elements.fieldDefault)) {
+                        _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[_this.dom.dataAttr.built.field[1]];
                         var slug = _this.slugGet();
                         _this.moveTo(slug);
                     } else {
@@ -154,14 +154,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveTo(id, recursive) {
                 var _this = this;
                 _this.callback(_this.events.before, [id, _this]);
-                var success = toggleActiveSection(id);
+                var success = toggleActivefield(id);
 
                 if (success) {
                     _this.slugSet(_this.data.activeId);
                     if (_this.options.ajax) {
                         _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], function (responseText) {
                             _this.data.active.innerHTML = responseText;
-                            _this.callback(_this.events.done, [responseText, _this.data.active, _this.data.activeId, _this.data.index, _this]);
+                            _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
                         });
                     } else {
                         _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -179,12 +179,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                 return success;
 
-                function toggleActiveSection(id) {
-                    var newSection = _this.findData(_this.dom.elements.section, _this.dom.dataAttr.built.section[1], id);
+                function toggleActivefield(id) {
+                    var newfield = _this.findData(_this.dom.elements.field, _this.dom.dataAttr.built.field[1], id);
 
-                    if (_this.isDefined(newSection)) {
+                    if (_this.isDefined(newfield)) {
                         _this.data.activeId = id;
-                        _this.data.active = newSection;
+                        _this.data.active = newfield;
                         _this.data.index = _this.getCurrentIndex();
                         return true;
                     } else {
@@ -197,8 +197,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveBy(val) {
                 var _this = this,
                     index = _this.data.index;
-                if (_this.isDefined(_this.dom.elements.section[index + val])) {
-                    return _this.moveTo(_this.dom.elements.section[index + val].dataset[_this.dom.dataAttr.built.section[1]]);
+                if (_this.isDefined(_this.dom.elements.field[index + val])) {
+                    return _this.moveTo(_this.dom.elements.field[index + val].dataset[_this.dom.dataAttr.built.field[1]]);
                 } else {
                     _this.writeLog([1, 2, 0], val);
                     return false;
@@ -254,7 +254,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "getCurrentIndex",
             value: function getCurrentIndex() {
                 var _this = this;
-                return _this.getElementIndex(_this.dom.elements.section, _this.data.active);
+                return _this.getElementIndex(_this.dom.elements.field, _this.data.active);
             }
         }, {
             key: "getElementIndex",
@@ -312,6 +312,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function isDefined(val) {
                 return typeof val !== "undefined";
             }
+            //log
+
         }, {
             key: "writeLog",
             value: function writeLog(type, content) {
@@ -319,6 +321,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     console.log("esRouter: Type:" + type[1] + ":" + type[2] + " in module " + type[0], content);
                 }
             }
+            //!log
+
         }, {
             key: "throwError",
             value: function throwError(type, content) {

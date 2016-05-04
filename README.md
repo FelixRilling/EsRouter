@@ -106,8 +106,9 @@ esRouter uses Error codes to avoid putting string error messages in the code. Sy
 ```
 esRouter: #errorType#":#subType# in module #module#, #data#
 ```
+Note: the minified version only shows errors.
 
-Errortypes:
+### Errortypes:
 
 - 0: Fatal Error
 - 1: Warning
