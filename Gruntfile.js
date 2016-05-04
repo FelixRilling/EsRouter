@@ -42,7 +42,7 @@ module.exports = function(grunt) {
         uglify: {
             main: {
                 files: {
-                    "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.rpl.js"
+                    "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.js"
                 },
                 options: {
                     compress: {
@@ -50,7 +50,19 @@ module.exports = function(grunt) {
                         screw_ie8: true
                     }
                 }
-            }
+            },
+          /*  unsafe: {
+                files: {
+                    "dist/esRouter-es5.mangled.min.js": ".tmp/esRouter-es5.rpl.js"
+                },
+                options: {
+                    compress: {
+                        drop_console: true,
+                        screw_ie8: true,
+
+                    }
+                }
+            }*/
         },
 
         copy: {
@@ -82,7 +94,7 @@ module.exports = function(grunt) {
          * The properties left out are not included for a reason, adding them will break functionality
          * UPDATE: yep we shouldnt do this, too much work
          */
-        replace: {
+        /*replace: {
             dist: {
                 options: {
 
@@ -137,8 +149,8 @@ module.exports = function(grunt) {
                             match: /isDefined/g,
                             replacement: "n"
                         }, {
-                            match: /writeLog/g,
-                            replacement: "o"
+                            match: /\/\/log[^!]+!log|_this.writeLog\([^)]+\);/g,
+                            replacement: ""
                         }, {
                             match: /findData/g,
                             replacement: "p"
@@ -163,14 +175,26 @@ module.exports = function(grunt) {
                         }, {
                             match: /activeId/g,
                             replacement: "x"
-                        }
+                        }, {
+                            match: /fieldDefault/g,
+                            replacement: "z"
+                        }, {
+                            match: /field/g,
+                            replacement: "y"
+                        }, {
+                            match: /elements/g,
+                            replacement: "h"
+                        },
+
+
+
                     ]
                 },
                 files: {
                     ".tmp/esRouter-es5.rpl.js": ".tmp/esRouter-es5.js"
                 }
             }
-        },
+        },*/
 
     });
 
@@ -187,7 +211,7 @@ module.exports = function(grunt) {
     grunt.registerTask("dist", [
         "build",
         "babel:dist",
-        "replace",
+       //"replace",
         "uglify:main",
         "copy:dist"
     ]);
