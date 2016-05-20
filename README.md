@@ -1,6 +1,6 @@
 # esRouter
 
-esRouter is a ES6 based, modern and small library for for DOM routing, with support for both ajax as well as preloaded routing.
+esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well
 
 # Syntax
 

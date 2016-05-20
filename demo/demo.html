@@ -1,61 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>esRouter Content Demo</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
-            .active {
-                background-color: #ddd;
-            }
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>esRouter Content Demo</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .container {
+            width: 100vw;
+        }
 
-        </style>
-    </head>
+        .mySection {
+            float: left;
+            width: 20vw;
+            margin: 20px 0;
+            background-color: #eee;
+        }
 
-    <body>
+        .active {
+            background-color: #daa;
+        }
+    </style>
+</head>
 
+<body>
+    <div class="container">
         <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1</section>
         <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
-        <div class="mySection" data-router-section="third">Et dolor! Page 3</div>
-        <div class="container">
-            <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
-        </div>
-        <br>
+        <section class="mySection" data-router-section="middle">Middle ipsum! Page 3</section>
+        <section class="mySection" data-router-section="fourth">Et dolor! Page 3 </section>
+        <section class="mySection" data-router-section="last">Content of Section 4</section>
+    </div>
+    <br>
 
-        <button data-router-href="main">Go to main</button>
-        <button data-router-href="wrapped">Go to Last</button>
-        <br>
-        <button data-router-pagin="-1">Go Backward</button>
-        <button data-router-pagin="1">Go Forward</button>
+    <button data-router-href="main">Go to main</button>
+    <button data-router-href="last">Go to Last</button>
+    <br>
+    <button data-router-pagin="-1">Go Backward</button>
+    <button data-router-pagin="1">Go Forward</button>
 
-        <script src="../dist/esRouter.js"></script>
-        <script>
-            "use strict";
-            var demoElements = document.querySelectorAll(".mySection");
+    <script src="../dist/esRouter.js"></script>
+    <script>
+        "use strict";
+        var demoElements = document.querySelectorAll(".mySection");
 
-            var myRouter = new esRouter({
-                log: true,
-                slug: {
-                    urlFragmentAppend: "youAreHere="
+        var myRouter = new esRouter({
+            log: true,
+            slug: {
+                urlFragmentAppend: "youAreHere="
+            }
+        }, {
+            before: function (id, router) {
+                console.log("Demo callback on start!", id);
+            },
+            done: function (activeDOM, activeId, activeIndex, router) {
+                console.log("Demo callback on finish!");
+                for (let i = 0; i < demoElements.length; i++) {
+                    demoElements[i].classList.remove("active");
                 }
-            }, {
-                before: function(id, router) {
-                    console.log("Demo callback on start!", id);
-                },
-                done: function(activeDOM, activeId, activeIndex, router) {
-                    console.log("Demo callback on finish!");
-                    for (let i = 0; i < demoElements.length; i++) {
-                        demoElements[i].classList.remove("active");
-                    }
-                    activeDOM.classList.add("active");
-                }
-            });
+                activeDOM.classList.add("active");
+            }
+        });
 
-            myRouter.init();
-        </script>
-    </body>
+        myRouter.init();
+    </script>
+</body>
 
 </html>
