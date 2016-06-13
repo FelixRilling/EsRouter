@@ -25,7 +25,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 "use strict";
 
-(function(window) {
+(function (window) {
     let _location = window.location;
 
     window.esRouter = class {
@@ -51,7 +51,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             _this.slug = {
                 preSlash: options.slug.preSlash || false, //prepend slash?
-                postSlash: options.slug.postSlash || false, //append slash
+                postSlash: options.slug.postSlash || false, //append slash?
                 urlFragmentInitator: (typeof options.slug.urlFragmentInitator === "string") ? options.slug.urlFragmentInitator : "#",
                 urlFragmentAppend: (typeof options.slug.urlFragmentAppend === "string") ? options.slug.urlFragmentAppend : "",
             };
@@ -59,7 +59,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             options.dataAttr = options.dataAttr || {};
             _this.dom = {
-                getElements: function(arr) {
+                getElements: function (arr) {
                     for (var i = 0; i < arr.length; i++) {
                         let attr = _this.dom.dataAttr.buildAttr(_this.dom.dataAttr.corePrefix, _this.dom.dataAttr[arr[i]]);
                         _this.dom.dataAttr.built[arr[i]] = attr;
@@ -71,7 +71,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 dataAttr: {
 
-                    buildAttr: function(pre, attr) {
+                    buildAttr: function (pre, attr) {
                         return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
 
                         function buildDomAttr(pre, attr) {
