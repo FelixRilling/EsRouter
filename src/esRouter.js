@@ -25,14 +25,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 "use strict";
 
-(function (window) {
+(function(window) {
     let _location = window.location;
 
     window.esRouter = class {
-        constructor(
-            options,
-            events
-        ) {
+        constructor(options, events) {
             /*##############/
             / Construct Router
             /###############*/
@@ -59,19 +56,19 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             options.dataAttr = options.dataAttr || {};
             _this.dom = {
-                getElements: function (arr) {
+                getElements: function(arr) {
                     for (var i = 0; i < arr.length; i++) {
                         let attr = _this.dom.dataAttr.buildAttr(_this.dom.dataAttr.corePrefix, _this.dom.dataAttr[arr[i]]);
                         _this.dom.dataAttr.built[arr[i]] = attr;
                         _this.dom.elements[arr[i]] = document.querySelectorAll("[" + attr[0] + "]") || [];
                         if (!_this.isDefined(_this.dom.elements[arr[i]])) {
-                            _this.writeLog([0, 1, 0], _this.dom.elements[attr[0]]);
+                            _this.log(1, 0, 1, _this.dom.elements[attr[0]]);
                         }
                     }
                 },
                 dataAttr: {
 
-                    buildAttr: function (pre, attr) {
+                    buildAttr: function(pre, attr) {
                         return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
 
                         function buildDomAttr(pre, attr) {
@@ -112,7 +109,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             function setDefault() {
                 if (!_this.isDefined(_this.dom.elements.field)) {
-                    _this.throwError([0, 0], _this);
+                    _this.log(0, 0, 0, _this);
                 }
                 if (_this.isDefined(_this.dom.elements.fieldDefault)) {
                     _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[
@@ -121,17 +118,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     let slug = _this.slugGet();
                     _this.moveTo(slug);
                 } else {
-                    _this.throwError([0, 1], _this);
+                    _this.log(0, 0, 0, _this);
                 }
             }
 
             function bindEvents() {
-                _this.iterateDomNode(_this.dom.elements.link, link => {
+                _this.each(_this.dom.elements.link, link => {
                     link.addEventListener("click", ev => {
                         _this.moveTo(ev.target.dataset[_this.dom.dataAttr.built.link[1]]);
                     });
                 });
-                _this.iterateDomNode(_this.dom.elements.pagination, pagin => {
+                _this.each(_this.dom.elements.pagination, pagin => {
                     pagin.addEventListener("click", ev => {
                         _this.moveBy(parseInt(ev.target.dataset[_this.dom.dataAttr.built.pagination[1]]));
                     });
@@ -161,11 +158,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             } else {
                 //if not found revert to default
                 if (!recursive) {
-                    _this.writeLog([1, 1, 0], id);
+                    _this.log(1, 1, 0, id);
                     _this.moveTo(_this.data.defaultId, true);
                 } else {
                     _this.callback(_this.events.fail, [id, _this]);
-                    _this.throwError([1, 1], this);
+                    _this.log(0, 1, 1, this);
                 }
             }
             _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -192,7 +189,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     _this.dom.elements.field[index + val].dataset[_this.dom.dataAttr.built.field[1]]
                 );
             } else {
-                _this.writeLog([1, 2, 0], val);
+                _this.log(2, 1, 0, val);
                 return false;
             }
         }
@@ -220,7 +217,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     _this.slugInit(_this.data.defaultId);
                     return _this.slugGet(true);
                 } else {
-                    _this.throwError([1, 1], this);
+                    _this.log(1, 1, 1, this);
                 }
             }
         }
@@ -251,7 +248,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
         getElementIndex(nodelist, node) {
             let result;
-            this.iterateDomNode(nodelist, (x, i) => {
+            this.each(nodelist, (x, i) => {
                 if (x === node) {
                     result = i;
                 }
@@ -260,16 +257,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
         findData(node, data, val) {
             let result;
-            this.iterateDomNode(node, x => {
+            this.each(node, x => {
                 if (x.dataset[data] === val) {
                     result = x;
                 }
             });
             return result;
         }
-        iterateDomNode(nodelist, fn) {
-            for (let i = 0; i < nodelist.length; i++) {
-                fn(nodelist[i], i);
+        each(arr, fn) {
+            for (let i = 0; i < arr.length; i++) {
+                fn(arr[i], i);
             }
         }
         getAJAX(url, fn) {
@@ -278,7 +275,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 fn(data.target.response);
             });
             xhr.addEventListener("error", data => {
-                this.throwError([3, 0], xhr);
+                this.log(1, 3, 0, xhr);
             });
             xhr.open("GET", url);
             xhr.send();
@@ -291,14 +288,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         isDefined(val) {
             return typeof val !== "undefined";
         }
-
-        writeLog(type, content) {
-            if (this.options.log) {
-                console.log(`esRouter: Type:${type[1]}:${type[2]} in module ${type[0]}`, content);
+        log(type, module, name, msg) {
+            let str = `esRouter: ${type}: ${module}=>${name}= ${msg}`;
+            if (type === 0) {
+                throw str;
+            } else if (this.options.log) {
+                if (type === 1) {
+                    console.warn(str);
+                } else {
+                    console.log(str);
+                }
             }
-        }
-        throwError(type, content) {
-            throw Error(`esRouter: 0:${type[1]} in module ${type[0]}`, content);
         }
     };
 

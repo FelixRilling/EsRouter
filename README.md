@@ -109,7 +109,9 @@ esRouter: #errorType#":#subType# in module #module#, #data#
 
 Note: the minified version only shows errors.
 
-## Errortypes:
+## Codes:
+
+Errortypes:
 
 - 0: Fatal Error
 - 1: Warning
