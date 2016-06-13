@@ -104,23 +104,18 @@ enter the source of the ajax content in the DOM
 esRouter uses Error codes to avoid putting string error messages in the code. Syntax:
 
 ```
-esRouter: #errorType#":#subType# in module #module#, #data#
+esRouter: #type#": #module#=>#error#: #msg#, #data#
 ```
 
 Note: the minified version only shows errors.
 
 ## Codes:
 
-Errortypes:
+Types:
 
 - 0: Fatal Error
 - 1: Warning
 - 2: Info
-
-Subtypes:
-
-- 0: not found
-- 1: recursed to deep
 
 Modules:
 
@@ -128,3 +123,8 @@ Modules:
 - 1: Moving
 - 2: Callback
 - 3: AJAX
+
+Errors:
+
+- 0: not found
+- 1: recursed to deep
