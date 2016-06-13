@@ -1,5 +1,5 @@
 /*
-esRouter v1.0.0-rc-1
+esRouter v1.0.0
 
 Copyright (c) 2016 Felix Rilling
 
@@ -54,7 +54,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this.slug = {
                 preSlash: options.slug.preSlash || false, //prepend slash?
-                postSlash: options.slug.postSlash || false, //append slash
+                postSlash: options.slug.postSlash || false, //append slash?
                 urlFragmentInitator: typeof options.slug.urlFragmentInitator === "string" ? options.slug.urlFragmentInitator : "#",
                 urlFragmentAppend: typeof options.slug.urlFragmentAppend === "string" ? options.slug.urlFragmentAppend : ""
             };
@@ -68,7 +68,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         _this.dom.dataAttr.built[arr[i]] = attr;
                         _this.dom.elements[arr[i]] = document.querySelectorAll("[" + attr[0] + "]") || [];
                         if (!_this.isDefined(_this.dom.elements[arr[i]])) {
-                            _this.writeLog([0, 1, 0], _this.dom.elements[attr[0]]);
+                            _this.log(1, 0, 1, _this.dom.elements[attr[0]]);
                         }
                     }
                 },
@@ -119,24 +119,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 function setDefault() {
                     if (!_this.isDefined(_this.dom.elements.field)) {
-                        _this.throwError([0, 0], _this);
+                        _this.log(0, 0, 0, _this);
                     }
                     if (_this.isDefined(_this.dom.elements.fieldDefault)) {
                         _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[_this.dom.dataAttr.built.field[1]];
                         var slug = _this.slugGet();
                         _this.moveTo(slug);
                     } else {
-                        _this.throwError([0, 1], _this);
+                        _this.log(0, 0, 0, _this);
                     }
                 }
 
                 function bindEvents() {
-                    _this.iterateDomNode(_this.dom.elements.link, function (link) {
+                    _this.each(_this.dom.elements.link, function (link) {
                         link.addEventListener("click", function (ev) {
                             _this.moveTo(ev.target.dataset[_this.dom.dataAttr.built.link[1]]);
                         });
                     });
-                    _this.iterateDomNode(_this.dom.elements.pagination, function (pagin) {
+                    _this.each(_this.dom.elements.pagination, function (pagin) {
                         pagin.addEventListener("click", function (ev) {
                             _this.moveBy(parseInt(ev.target.dataset[_this.dom.dataAttr.built.pagination[1]]));
                         });
@@ -168,11 +168,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 } else {
                     //if not found revert to default
                     if (!recursive) {
-                        _this.writeLog([1, 1, 0], id);
+                        _this.log(1, 1, 0, id);
                         _this.moveTo(_this.data.defaultId, true);
                     } else {
                         _this.callback(_this.events.fail, [id, _this]);
-                        _this.throwError([1, 1], this);
+                        _this.log(0, 1, 1, this);
                     }
                 }
                 _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
@@ -199,7 +199,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 if (_this.isDefined(_this.dom.elements.field[index + val])) {
                     return _this.moveTo(_this.dom.elements.field[index + val].dataset[_this.dom.dataAttr.built.field[1]]);
                 } else {
-                    _this.writeLog([1, 2, 0], val);
+                    _this.log(2, 1, 0, val);
                     return false;
                 }
             }
@@ -230,7 +230,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         _this.slugInit(_this.data.defaultId);
                         return _this.slugGet(true);
                     } else {
-                        _this.throwError([1, 1], this);
+                        _this.log(1, 1, 1, this);
                     }
                 }
             }
@@ -259,7 +259,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "getElementIndex",
             value: function getElementIndex(nodelist, node) {
                 var result = void 0;
-                this.iterateDomNode(nodelist, function (x, i) {
+                this.each(nodelist, function (x, i) {
                     if (x === node) {
                         result = i;
                     }
@@ -270,7 +270,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "findData",
             value: function findData(node, data, val) {
                 var result = void 0;
-                this.iterateDomNode(node, function (x) {
+                this.each(node, function (x) {
                     if (x.dataset[data] === val) {
                         result = x;
                     }
@@ -278,10 +278,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 return result;
             }
         }, {
-            key: "iterateDomNode",
-            value: function iterateDomNode(nodelist, fn) {
-                for (var i = 0; i < nodelist.length; i++) {
-                    fn(nodelist[i], i);
+            key: "each",
+            value: function each(arr, fn) {
+                for (var i = 0; i < arr.length; i++) {
+                    fn(arr[i], i);
                 }
             }
         }, {
@@ -294,7 +294,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     fn(data.target.response);
                 });
                 xhr.addEventListener("error", function (data) {
-                    _this2.throwError([3, 0], xhr);
+                    _this2.log(1, 3, 0, xhr);
                 });
                 xhr.open("GET", url);
                 xhr.send();
@@ -312,16 +312,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 return typeof val !== "undefined";
             }
         }, {
-            key: "writeLog",
-            value: function writeLog(type, content) {
-                if (this.options.log) {
-                    console.log("esRouter: Type:" + type[1] + ":" + type[2] + " in module " + type[0], content);
+            key: "log",
+            value: function log(type, module, name, msg) {
+                var str = "esRouter: " + type + ": " + module + "=>" + name + "= " + msg;
+                if (type === 0) {
+                    throw str;
+                } else if (this.options.log) {
+                    if (type === 1) {
+                        console.warn(str);
+                    } else {
+                        console.log(str);
+                    }
                 }
-            }
-        }, {
-            key: "throwError",
-            value: function throwError(type, content) {
-                throw Error("esRouter: 0:" + type[1] + " in module " + type[0], content);
             }
         }]);
 
