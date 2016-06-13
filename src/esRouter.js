@@ -1,5 +1,5 @@
 /*
-esRouter v1.0.0
+esRouter v1.0.1
 
 Copyright (c) 2016 Felix Rilling
 
