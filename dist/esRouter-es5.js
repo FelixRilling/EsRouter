@@ -1,5 +1,5 @@
 /*
-esRouter v1.0.0
+esRouter v1.0.1
 
 Copyright (c) 2016 Felix Rilling
 
@@ -52,13 +52,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 log: options.log || false
             };
 
+            //Everything about changing the URL
             _this.slug = {
                 preSlash: options.slug.preSlash || false, //prepend slash?
                 postSlash: options.slug.postSlash || false, //append slash?
-                urlFragmentInitator: typeof options.slug.urlFragmentInitator === "string" ? options.slug.urlFragmentInitator : "#",
-                urlFragmentAppend: typeof options.slug.urlFragmentAppend === "string" ? options.slug.urlFragmentAppend : ""
+                prepend: typeof options.slug.prepend === "string" ? options.slug.prepend : "#",
+                append: typeof options.slug.append === "string" ? options.slug.append : "",
+                get: function get(recursive) {
+                    if (_location.href.lastIndexOf(_this.slug.built) > -1) {
+                        return _location.href.substr(_location.href.lastIndexOf(_this.slug.built) + _this.slug.built.length + (_this.slug.preSlash ? 1 : 0));
+                    } else {
+                        //Only recurse once, error after that
+                        if (!recursive) {
+                            _this.slug.init(_this.data.defaultId);
+                            return _this.slug.get(true);
+                        } else {
+                            _this.ut.log(1, 1, 1, this);
+                        }
+                    }
+                },
+                set: function set(id) {
+                    _location.href = _location.href.substr(0, _location.href.lastIndexOf(_this.slug.built) + _this.slug.built.length) + id;
+                },
+                init: function init(id) {
+                    _location.href = _location.href + _this.slug.built + id;
+                }
             };
-            _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.urlFragmentInitator + _this.slug.urlFragmentAppend;
+            _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.prepend + _this.slug.append;
 
             options.dataAttr = options.dataAttr || {};
             _this.dom = {
@@ -67,8 +87,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         var attr = _this.dom.dataAttr.buildAttr(_this.dom.dataAttr.corePrefix, _this.dom.dataAttr[arr[i]]);
                         _this.dom.dataAttr.built[arr[i]] = attr;
                         _this.dom.elements[arr[i]] = document.querySelectorAll("[" + attr[0] + "]") || [];
-                        if (!_this.isDefined(_this.dom.elements[arr[i]])) {
-                            _this.log(1, 0, 1, _this.dom.elements[attr[0]]);
+                        if (!_this.ut.isDefined(_this.dom.elements[arr[i]])) {
+                            _this.ut.log(1, 0, 1, _this.dom.elements[attr[0]]);
                         }
                     }
                 },
@@ -104,6 +124,65 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 defaultId: null,
                 index: 0
             };
+
+            _this.ut = {
+                getElementIndex: function getElementIndex(nodelist, node) {
+                    var result = void 0;
+                    _this.ut.each(nodelist, function (x, i) {
+                        if (x === node) {
+                            result = i;
+                        }
+                    });
+                    return result;
+                },
+                findData: function findData(node, data, val) {
+                    var result = void 0;
+                    _this.ut.each(node, function (x) {
+                        if (x.dataset[data] === val) {
+                            result = x;
+                        }
+                    });
+                    return result;
+                },
+                each: function each(arr, fn) {
+                    for (var i = 0; i < arr.length; i++) {
+                        fn(arr[i], i);
+                    }
+                },
+                getAJAX: function getAJAX(url, fn) {
+                    var _this2 = this;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.addEventListener("load", function (data) {
+                        fn(data.target.response);
+                    });
+                    xhr.addEventListener("error", function (data) {
+                        _this2.ut.log(1, 3, 0, xhr);
+                    });
+                    xhr.open("GET", url);
+                    xhr.send();
+                },
+                callback: function callback(fn, args) {
+                    if (typeof fn === "function") {
+                        fn.apply(this, args);
+                    }
+                },
+                isDefined: function isDefined(val) {
+                    return typeof val !== "undefined";
+                },
+                log: function log(type, module, name, msg) {
+                    var str = "esRouter: " + type + ": " + module + "=>" + name + "= " + msg;
+                    if (type === 0) {
+                        throw str;
+                    } else if (_this.options.log) {
+                        if (type === 1) {
+                            console.warn(str);
+                        } else {
+                            console.log(str);
+                        }
+                    }
+                }
+            };
         }
 
         //Initialize & move to url slug
@@ -118,25 +197,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 bindEvents();
 
                 function setDefault() {
-                    if (!_this.isDefined(_this.dom.elements.field)) {
-                        _this.log(0, 0, 0, _this);
+                    if (!_this.ut.isDefined(_this.dom.elements.field)) {
+                        _this.ut.log(0, 0, 0, _this);
                     }
-                    if (_this.isDefined(_this.dom.elements.fieldDefault)) {
+                    if (_this.ut.isDefined(_this.dom.elements.fieldDefault)) {
                         _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[_this.dom.dataAttr.built.field[1]];
-                        var slug = _this.slugGet();
+                        var slug = _this.slug.get();
                         _this.moveTo(slug);
                     } else {
-                        _this.log(0, 0, 0, _this);
+                        _this.ut.log(0, 0, 0, _this);
                     }
                 }
 
                 function bindEvents() {
-                    _this.each(_this.dom.elements.link, function (link) {
+                    _this.ut.each(_this.dom.elements.link, function (link) {
                         link.addEventListener("click", function (ev) {
                             _this.moveTo(ev.target.dataset[_this.dom.dataAttr.built.link[1]]);
                         });
                     });
-                    _this.each(_this.dom.elements.pagination, function (pagin) {
+                    _this.ut.each(_this.dom.elements.pagination, function (pagin) {
                         pagin.addEventListener("click", function (ev) {
                             _this.moveBy(parseInt(ev.target.dataset[_this.dom.dataAttr.built.pagination[1]]));
                         });
@@ -152,36 +231,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "moveTo",
             value: function moveTo(id, recursive) {
                 var _this = this;
-                _this.callback(_this.events.before, [id, _this]);
+                _this.ut.callback(_this.events.before, [id, _this]);
                 var success = toggleActivefield(id);
 
                 if (success) {
-                    _this.slugSet(_this.data.activeId);
+                    _this.slug.set(_this.data.activeId);
                     if (_this.options.ajax) {
-                        _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], function (responseText) {
+                        _this.ut.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], function (responseText) {
                             _this.data.active.innerHTML = responseText;
-                            _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
+                            _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
                         });
                     } else {
-                        _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                        _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                     }
                 } else {
                     //if not found revert to default
                     if (!recursive) {
-                        _this.log(1, 1, 0, id);
+                        _this.ut.log(1, 1, 0, id);
                         _this.moveTo(_this.data.defaultId, true);
                     } else {
-                        _this.callback(_this.events.fail, [id, _this]);
-                        _this.log(0, 1, 1, this);
+                        _this.ut.callback(_this.events.fail, [id, _this]);
+                        _this.ut.log(0, 1, 1, this);
                     }
                 }
-                _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                _this.ut.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                 return success;
 
                 function toggleActivefield(id) {
-                    var newfield = _this.findData(_this.dom.elements.field, _this.dom.dataAttr.built.field[1], id);
+                    var newfield = _this.ut.findData(_this.dom.elements.field, _this.dom.dataAttr.built.field[1], id);
 
-                    if (_this.isDefined(newfield)) {
+                    if (_this.ut.isDefined(newfield)) {
                         _this.data.activeId = id;
                         _this.data.active = newfield;
                         _this.data.index = _this.getCurrentIndex();
@@ -196,10 +275,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveBy(val) {
                 var _this = this,
                     index = _this.data.index;
-                if (_this.isDefined(_this.dom.elements.field[index + val])) {
+                if (_this.ut.isDefined(_this.dom.elements.field[index + val])) {
                     return _this.moveTo(_this.dom.elements.field[index + val].dataset[_this.dom.dataAttr.built.field[1]]);
                 } else {
-                    _this.log(2, 1, 0, val);
+                    _this.ut.log(2, 1, 0, val);
                     return false;
                 }
             }
@@ -213,117 +292,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveBackward() {
                 return this.moveBy(-1);
             }
-
-            /*##############/
-            / Slug functions
-            /###############*/
-
-        }, {
-            key: "slugGet",
-            value: function slugGet(recursive) {
-                var _this = this;
-                if (_location.href.lastIndexOf(this.slug.built) > -1) {
-                    return _location.href.substr(_location.href.lastIndexOf(_this.slug.built) + _this.slug.built.length + (_this.slug.preSlash ? 1 : 0));
-                } else {
-                    //Only recurse once, error after that
-                    if (!recursive) {
-                        _this.slugInit(_this.data.defaultId);
-                        return _this.slugGet(true);
-                    } else {
-                        _this.log(1, 1, 1, this);
-                    }
-                }
-            }
-        }, {
-            key: "slugSet",
-            value: function slugSet(id) {
-                _location.href = _location.href.substr(0, _location.href.lastIndexOf(this.slug.built) + this.slug.built.length) + id;
-            }
-        }, {
-            key: "slugInit",
-            value: function slugInit(id) {
-                _location.href = _location.href + this.slug.built + id;
-            }
-
-            /*##############/
-            / Utility functions
-            /###############*/
-
         }, {
             key: "getCurrentIndex",
             value: function getCurrentIndex() {
                 var _this = this;
-                return _this.getElementIndex(_this.dom.elements.field, _this.data.active);
-            }
-        }, {
-            key: "getElementIndex",
-            value: function getElementIndex(nodelist, node) {
-                var result = void 0;
-                this.each(nodelist, function (x, i) {
-                    if (x === node) {
-                        result = i;
-                    }
-                });
-                return result;
-            }
-        }, {
-            key: "findData",
-            value: function findData(node, data, val) {
-                var result = void 0;
-                this.each(node, function (x) {
-                    if (x.dataset[data] === val) {
-                        result = x;
-                    }
-                });
-                return result;
-            }
-        }, {
-            key: "each",
-            value: function each(arr, fn) {
-                for (var i = 0; i < arr.length; i++) {
-                    fn(arr[i], i);
-                }
-            }
-        }, {
-            key: "getAJAX",
-            value: function getAJAX(url, fn) {
-                var _this2 = this;
-
-                var xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", function (data) {
-                    fn(data.target.response);
-                });
-                xhr.addEventListener("error", function (data) {
-                    _this2.log(1, 3, 0, xhr);
-                });
-                xhr.open("GET", url);
-                xhr.send();
-            }
-        }, {
-            key: "callback",
-            value: function callback(fn, args) {
-                if (typeof fn === "function") {
-                    fn.apply(this, args);
-                }
-            }
-        }, {
-            key: "isDefined",
-            value: function isDefined(val) {
-                return typeof val !== "undefined";
-            }
-        }, {
-            key: "log",
-            value: function log(type, module, name, msg) {
-                var str = "esRouter: " + type + ": " + module + "=>" + name + "= " + msg;
-                if (type === 0) {
-                    throw str;
-                } else if (this.options.log) {
-                    if (type === 1) {
-                        console.warn(str);
-                    } else {
-                        console.log(str);
-                    }
-                }
+                return _this.ut.getElementIndex(_this.dom.elements.field, _this.data.active);
             }
         }]);
 

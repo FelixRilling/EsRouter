@@ -25,7 +25,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 "use strict";
 
-(function(window) {
+(function (window) {
     let _location = window.location;
 
     window.esRouter = class {
@@ -46,29 +46,65 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 log: options.log || false
             };
 
+            //Everything about changing the URL
             _this.slug = {
                 preSlash: options.slug.preSlash || false, //prepend slash?
                 postSlash: options.slug.postSlash || false, //append slash?
-                urlFragmentInitator: (typeof options.slug.urlFragmentInitator === "string") ? options.slug.urlFragmentInitator : "#",
-                urlFragmentAppend: (typeof options.slug.urlFragmentAppend === "string") ? options.slug.urlFragmentAppend : "",
+                prepend: (typeof options.slug.prepend === "string") ? options.slug.prepend : "#",
+                append: (typeof options.slug.append === "string") ? options.slug.append : "",
+                get(recursive) {
+                    if (_location.href.lastIndexOf(_this.slug.built) > -1) {
+                        return _location.href.substr(
+                            _location.href.lastIndexOf(_this.slug.built) +
+                            _this.slug.built.length +
+                            (_this.slug.preSlash ? 1 : 0)
+                        );
+                    } else {
+                        //Only recurse once, error after that
+                        if (!recursive) {
+                            _this.slug.init(_this.data.defaultId);
+                            return _this.slug.get(true);
+                        } else {
+                            _this.ut.log(1, 1, 1, this);
+                        }
+                    }
+                },
+                set(id) {
+                    _location.href = (
+                        _location.href.substr(
+                            0,
+                            _location.href.lastIndexOf(_this.slug.built) +
+                            _this.slug.built.length
+                        ) +
+                        id
+                    );
+                },
+                init(id) {
+                    _location.href = (
+                        _location.href +
+                        _this.slug.built +
+                        id
+                    );
+                }
+
             };
-            _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.urlFragmentInitator + _this.slug.urlFragmentAppend;
+            _this.slug.built = (_this.slug.preSlash ? "/" : "") + _this.slug.prepend + _this.slug.append;
 
             options.dataAttr = options.dataAttr || {};
             _this.dom = {
-                getElements: function(arr) {
+                getElements: function (arr) {
                     for (var i = 0; i < arr.length; i++) {
                         let attr = _this.dom.dataAttr.buildAttr(_this.dom.dataAttr.corePrefix, _this.dom.dataAttr[arr[i]]);
                         _this.dom.dataAttr.built[arr[i]] = attr;
                         _this.dom.elements[arr[i]] = document.querySelectorAll("[" + attr[0] + "]") || [];
-                        if (!_this.isDefined(_this.dom.elements[arr[i]])) {
-                            _this.log(1, 0, 1, _this.dom.elements[attr[0]]);
+                        if (!_this.ut.isDefined(_this.dom.elements[arr[i]])) {
+                            _this.ut.log(1, 0, 1, _this.dom.elements[attr[0]]);
                         }
                     }
                 },
                 dataAttr: {
 
-                    buildAttr: function(pre, attr) {
+                    buildAttr: function (pre, attr) {
                         return [buildDomAttr(pre, attr), buildDataSet(pre, attr)];
 
                         function buildDomAttr(pre, attr) {
@@ -98,6 +134,63 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 defaultId: null,
                 index: 0
             };
+
+            _this.ut = {
+                getElementIndex(nodelist, node) {
+                    let result;
+                    _this.ut.each(nodelist, (x, i) => {
+                        if (x === node) {
+                            result = i;
+                        }
+                    });
+                    return result;
+                },
+                findData(node, data, val) {
+                    let result;
+                    _this.ut.each(node, x => {
+                        if (x.dataset[data] === val) {
+                            result = x;
+                        }
+                    });
+                    return result;
+                },
+                each(arr, fn) {
+                    for (let i = 0; i < arr.length; i++) {
+                        fn(arr[i], i);
+                    }
+                },
+                getAJAX(url, fn) {
+                    let xhr = new XMLHttpRequest();
+                    xhr.addEventListener("load", data => {
+                        fn(data.target.response);
+                    });
+                    xhr.addEventListener("error", data => {
+                        this.ut.log(1, 3, 0, xhr);
+                    });
+                    xhr.open("GET", url);
+                    xhr.send();
+                },
+                callback(fn, args) {
+                    if (typeof fn === "function") {
+                        fn.apply(this, args);
+                    }
+                },
+                isDefined(val) {
+                    return typeof val !== "undefined";
+                },
+                log(type, module, name, msg) {
+                    let str = `esRouter: ${type}: ${module}=>${name}= ${msg}`;
+                    if (type === 0) {
+                        throw str;
+                    } else if (_this.options.log) {
+                        if (type === 1) {
+                            console.warn(str);
+                        } else {
+                            console.log(str);
+                        }
+                    }
+                }
+            };
         }
 
         //Initialize & move to url slug
@@ -108,27 +201,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             bindEvents();
 
             function setDefault() {
-                if (!_this.isDefined(_this.dom.elements.field)) {
-                    _this.log(0, 0, 0, _this);
+                if (!_this.ut.isDefined(_this.dom.elements.field)) {
+                    _this.ut.log(0, 0, 0, _this);
                 }
-                if (_this.isDefined(_this.dom.elements.fieldDefault)) {
+                if (_this.ut.isDefined(_this.dom.elements.fieldDefault)) {
                     _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[
                         _this.dom.dataAttr.built.field[1]
                     ];
-                    let slug = _this.slugGet();
+                    let slug = _this.slug.get();
                     _this.moveTo(slug);
                 } else {
-                    _this.log(0, 0, 0, _this);
+                    _this.ut.log(0, 0, 0, _this);
                 }
             }
 
             function bindEvents() {
-                _this.each(_this.dom.elements.link, link => {
+                _this.ut.each(_this.dom.elements.link, link => {
                     link.addEventListener("click", ev => {
                         _this.moveTo(ev.target.dataset[_this.dom.dataAttr.built.link[1]]);
                     });
                 });
-                _this.each(_this.dom.elements.pagination, pagin => {
+                _this.ut.each(_this.dom.elements.pagination, pagin => {
                     pagin.addEventListener("click", ev => {
                         _this.moveBy(parseInt(ev.target.dataset[_this.dom.dataAttr.built.pagination[1]]));
                     });
@@ -141,37 +234,37 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         /###############*/
         moveTo(id, recursive) {
             let _this = this;
-            _this.callback(_this.events.before, [id, _this]);
+            _this.ut.callback(_this.events.before, [id, _this]);
             let success = toggleActivefield(id);
 
             if (success) {
-                _this.slugSet(_this.data.activeId);
+                _this.slug.set(_this.data.activeId);
                 if (_this.options.ajax) {
-                    _this.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], responseText => {
+                    _this.ut.getAJAX(_this.data.active.dataset[_this.dom.dataAttr.built.source[1]], responseText => {
                         _this.data.active.innerHTML = responseText;
-                        _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
+                        _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
                     });
                 } else {
-                    _this.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                 }
 
             } else {
                 //if not found revert to default
                 if (!recursive) {
-                    _this.log(1, 1, 0, id);
+                    _this.ut.log(1, 1, 0, id);
                     _this.moveTo(_this.data.defaultId, true);
                 } else {
-                    _this.callback(_this.events.fail, [id, _this]);
-                    _this.log(0, 1, 1, this);
+                    _this.ut.callback(_this.events.fail, [id, _this]);
+                    _this.ut.log(0, 1, 1, this);
                 }
             }
-            _this.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+            _this.ut.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
             return success;
 
             function toggleActivefield(id) {
-                let newfield = _this.findData(_this.dom.elements.field, _this.dom.dataAttr.built.field[1], id);
+                let newfield = _this.ut.findData(_this.dom.elements.field, _this.dom.dataAttr.built.field[1], id);
 
-                if (_this.isDefined(newfield)) {
+                if (_this.ut.isDefined(newfield)) {
                     _this.data.activeId = id;
                     _this.data.active = newfield;
                     _this.data.index = _this.getCurrentIndex();
@@ -184,12 +277,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         moveBy(val) {
             let _this = this,
                 index = _this.data.index;
-            if (_this.isDefined(_this.dom.elements.field[index + val])) {
+            if (_this.ut.isDefined(_this.dom.elements.field[index + val])) {
                 return _this.moveTo(
                     _this.dom.elements.field[index + val].dataset[_this.dom.dataAttr.built.field[1]]
                 );
             } else {
-                _this.log(2, 1, 0, val);
+                _this.ut.log(2, 1, 0, val);
                 return false;
             }
         }
@@ -199,107 +292,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         moveBackward() {
             return this.moveBy(-1);
         }
-
-        /*##############/
-        / Slug functions
-        /###############*/
-        slugGet(recursive) {
-            let _this = this;
-            if (_location.href.lastIndexOf(this.slug.built) > -1) {
-                return _location.href.substr(
-                    _location.href.lastIndexOf(_this.slug.built) +
-                    _this.slug.built.length +
-                    (_this.slug.preSlash ? 1 : 0)
-                );
-            } else {
-                //Only recurse once, error after that
-                if (!recursive) {
-                    _this.slugInit(_this.data.defaultId);
-                    return _this.slugGet(true);
-                } else {
-                    _this.log(1, 1, 1, this);
-                }
-            }
-        }
-        slugSet(id) {
-            _location.href = (
-                _location.href.substr(
-                    0,
-                    _location.href.lastIndexOf(this.slug.built) +
-                    this.slug.built.length
-                ) +
-                id
-            );
-        }
-        slugInit(id) {
-            _location.href = (
-                _location.href +
-                this.slug.built +
-                id
-            );
-        }
-
-        /*##############/
-        / Utility functions
-        /###############*/
         getCurrentIndex() {
             let _this = this;
-            return _this.getElementIndex(_this.dom.elements.field, _this.data.active);
+            return _this.ut.getElementIndex(_this.dom.elements.field, _this.data.active);
         }
-        getElementIndex(nodelist, node) {
-            let result;
-            this.each(nodelist, (x, i) => {
-                if (x === node) {
-                    result = i;
-                }
-            });
-            return result;
-        }
-        findData(node, data, val) {
-            let result;
-            this.each(node, x => {
-                if (x.dataset[data] === val) {
-                    result = x;
-                }
-            });
-            return result;
-        }
-        each(arr, fn) {
-            for (let i = 0; i < arr.length; i++) {
-                fn(arr[i], i);
-            }
-        }
-        getAJAX(url, fn) {
-            let xhr = new XMLHttpRequest();
-            xhr.addEventListener("load", data => {
-                fn(data.target.response);
-            });
-            xhr.addEventListener("error", data => {
-                this.log(1, 3, 0, xhr);
-            });
-            xhr.open("GET", url);
-            xhr.send();
-        }
-        callback(fn, args) {
-            if (typeof fn === "function") {
-                fn.apply(this, args);
-            }
-        }
-        isDefined(val) {
-            return typeof val !== "undefined";
-        }
-        log(type, module, name, msg) {
-            let str = `esRouter: ${type}: ${module}=>${name}= ${msg}`;
-            if (type === 0) {
-                throw str;
-            } else if (this.options.log) {
-                if (type === 1) {
-                    console.warn(str);
-                } else {
-                    console.log(str);
-                }
-            }
-        }
+
     };
 
 })(window);

@@ -11,8 +11,8 @@ var myRouter = new esRouter({
     slug: {
         preSlash: false, //add slash before urlFragment?
         postSlash: false, //add slash after urlFragment?
-        urlFragmentInitator: "#", //urlFragment initior, you should not change this
-        urlFragmentAppend: "" //you can append custom messages like 'currentSection='
+        prepend: "#", //urlFragment initior, you should not change this
+        append: "" //you can append custom messages like 'currentSection='
     },
     dom: {
         dataAttr: {
