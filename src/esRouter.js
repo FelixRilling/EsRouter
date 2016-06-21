@@ -1,5 +1,5 @@
 /*
-esRouter v1.0.1
+esRouter v2.0.0
 
 Copyright (c) 2016 Felix Rilling
 
@@ -30,23 +30,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     window.esRouter = class {
         constructor(options = {}, events = {}) {
-            /*##############/
-            / Construct Router
-            /###############*/
             let _this = this;
-            _this.events = {
-                before: events.before,
-                done: events.done,
-                fail: events.fail,
-                always: events.always
-            };
+            _this.$e = events;
 
             _this.options = {
                 ajax: options.ajax || false,
                 log: options.log || false,
                 autoBind: options.autoBind || true
             };
-
             _this.data = {
                 active: null,
                 activeId: null,
@@ -55,31 +46,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             };
 
             //Everything about changing the URL
-            _this.slug = {
+            options.slug = options.slug || {};
+            _this.$s = {
                 preSlash: options.slug.preSlash || false, //prepend slash?
                 postSlash: options.slug.postSlash || false, //append slash?
                 prepend: (typeof options.slug.prepend === "string") ? options.slug.prepend : "",
                 append: (typeof options.slug.append === "string") ? options.slug.append : "",
                 get(recursive, error) {
-                    if (_this.slug.has()) {
+                    if (_this.$s.has()) {
                         return _location.href.substr(
-                            _location.href.lastIndexOf(_this.slug.built) +
-                            _this.slug.built.length +
-                            (_this.slug.preSlash ? 1 : 0)
+                            _location.href.lastIndexOf(_this.$s.built) +
+                            _this.$s.built.length +
+                            (_this.$s.preSlash ? 1 : 0)
                         );
                     } else {
                         error(recursive);
                     }
                 },
                 has() {
-                    return _location.href.lastIndexOf(_this.slug.built) > -1;
+                    return _location.href.lastIndexOf(_this.$s.built) > -1;
                 },
                 set(id) {
                     _location.href = (
                         _location.href.substr(
                             0,
-                            _location.href.lastIndexOf(_this.slug.built) +
-                            _this.slug.built.length
+                            _location.href.lastIndexOf(_this.$s.built) +
+                            _this.$s.built.length
                         ) +
                         id
                     );
@@ -87,16 +79,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 create(id) {
                     _location.href = (
                         _location.href +
-                        _this.slug.built +
+                        _this.$s.built +
                         id
                     );
                 },
                 init(error, done) {
-                    let slug = _this.slug.get(false, recursive => {
+                    let slug = _this.$s.get(false, recursive => {
                         //Only recurse once, error after that
                         if (!recursive) {
-                            _this.slug.create(_this.data.defaultId);
-                            return _this.slug.get(true);
+                            _this.$s.create(_this.data.defaultId);
+                            return _this.$s.get(true);
                         } else {
                             error();
                         }
@@ -105,10 +97,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 built: null
             };
-            _this.slug.built = (_this.slug.preSlash ? "/" : "") + "#" + _this.slug.prepend + _this.slug.append;
+            _this.$s.built = (_this.$s.preSlash ? "/" : "") + "#" + _this.$s.prepend + _this.$s.append;
 
-            _this.dom = {
-                corePrefix: options.corePrefix || "router", //Core of the data-router attribute
+            _this.$d = {
+                corePrefix: options.dataPrefix || "router", //Core of the data-router attribute
                 built: {},
                 elements: {},
                 base: {
@@ -119,14 +111,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     source: "src",
                 },
                 getElements: function (error, done) {
-                    _this.ut.eachObject(_this.dom.base, (item, key, index) => {
-                        let attr = _this.dom.buildAttr(_this.dom.corePrefix, _this.dom.base[key]);
+                    _this.$u.eachObject(_this.$d.base, (item, key, index) => {
+                        let attr = _this.$d.buildAttr(_this.$d.corePrefix, _this.$d.base[key]);
 
-                        _this.dom.built[key] = attr;
-                        _this.dom.elements[key] = document.querySelectorAll("[" + attr[0] + "]") || [];
+                        _this.$d.built[key] = attr;
+                        _this.$d.elements[key] = document.querySelectorAll("[" + attr[0] + "]") || [];
 
-                        if (!_this.ut.isDefined(_this.dom.elements[key])) {
-                            error(_this.dom.elements[key]);
+                        if (!_this.$u.isDefined(_this.$d.elements[key])) {
+                            error(_this.$d.elements[key]);
                         }
                     });
                     done();
@@ -144,83 +136,84 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 autoBind() {
                     if (_this.options.autoBind) {
-                        addClickEvent(_this.dom.elements.link, ev => {
-                            _this.moveTo(ev.target.dataset[_this.dom.built.link[1]]);
+                        addClickEvent(_this.$d.elements.link, ev => {
+                            _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
                         });
-                        addClickEvent(_this.dom.elements.pagination, ev => {
-                            _this.moveBy(parseInt(ev.target.dataset[_this.dom.built.pagination[1]]));
+                        addClickEvent(_this.$d.elements.pagination, ev => {
+                            _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
                         });
                     }
 
                     function addClickEvent(element, fn) {
-                        _this.ut.each(element, link => {
+                        _this.$u.each(element, link => {
                             link.addEventListener("click", fn);
                         });
                     }
                 },
             };
 
-            _this.router = {
+            _this.$r = {
                 init(error) {
                     //Query DOM
-                    _this.dom.getElements(
+                    _this.$d.getElements(
                         key => {
-                            _this.ut.log(1, 0, 1, key);
+                            _this.$u.log(1, 0, 1, key);
                         },
-                        _this.dom.autoBind
+                        _this.$d.autoBind
                     );
 
                     //Read defaults
-                    if (!_this.ut.isDefined(_this.dom.elements.field)) {
-                        _this.ut.log(0, 0, 0, _this);
+                    if (!_this.$u.isDefined(_this.$d.elements.field)) {
+                        _this.$u.log(0, 0, 0, _this);
                     }
-                    if (!_this.ut.isDefined(_this.dom.elements.fieldDefault)) {
-                        _this.ut.log(0, 0, 0, _this);
+                    if (!_this.$u.isDefined(_this.$d.elements.fieldDefault)) {
+                        _this.$u.log(0, 0, 0, _this);
                     } else {
-                        _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[
-                            _this.dom.built.field[1]
+                        _this.data.defaultId = _this.$d.elements.fieldDefault[0].dataset[
+                            _this.$d.built.field[1]
                         ];
                     }
 
                     //Init slug
-                    _this.slug.init(() => {
-                        _this.ut.log(1, 1, 1, _this);
+                    _this.$s.init(() => {
+                        _this.$u.log(1, 1, 1, _this);
                     }, slug => {
                         _this.moveTo(slug);
                     });
                 },
                 move(id, recursive) {
-                    _this.ut.callback(_this.events.before, [id, _this]);
+                    _this.$u.callback(_this.$e.before, [id, _this]);
                     let success = toggleActivefield(id);
 
                     if (success) {
-                        _this.slug.set(_this.data.activeId);
+                        _this.$s.set(_this.data.activeId);
                         if (_this.options.ajax) {
-                            _this.ut.getAJAX(_this.data.active.dataset[_this.dom.built.source[1]], responseText => {
+                            _this.$u.getAJAX(_this.data.active.dataset[_this.$d.built.source[1]], responseText => {
                                 _this.data.active.innerHTML = responseText;
-                                _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
+                                _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
                             });
                         } else {
-                            _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                            _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                         }
 
                     } else {
                         //if not found revert to default
                         if (!recursive) {
-                            _this.ut.log(1, 1, 0, id);
-                            _this.moveTo(_this.data.defaultId, true);
+                            _this.$u.log(1, 1, 0, id);
+                            _this.$r.move(_this.data.defaultId, true);
                         } else {
-                            _this.ut.callback(_this.events.fail, [id, _this]);
-                            _this.ut.log(0, 1, 1, this);
+                            _this.$u.callback(_this.$e.fail, [id, _this]);
+                            _this.$u.log(0, 1, 1, this);
                         }
                     }
-                    _this.ut.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+
+                    _this.$u.callback(_this.$e.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                     return success;
 
                     function toggleActivefield(id) {
-                        let newfield = _this.ut.findData(_this.dom.elements.field, _this.dom.built.field[1], id);
+                        let newfield = _this.$u.findData(_this.$d.elements.field, _this.$d.built.field[1], id);
 
-                        if (_this.ut.isDefined(newfield)) {
+                        if (_this.$u.isDefined(newfield)) {
                             _this.data.activeId = id;
                             _this.data.active = newfield;
                             _this.data.index = _this.getCurrentIndex();
@@ -232,10 +225,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
             };
 
-            _this.ut = {
+            _this.$u = {
                 getElementIndex(nodelist, node) {
                     let result;
-                    _this.ut.each(nodelist, (x, i) => {
+
+                    _this.$u.each(nodelist, (x, i) => {
                         if (x === node) {
                             result = i;
                         }
@@ -244,7 +238,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 findData(node, data, val) {
                     let result;
-                    _this.ut.each(node, x => {
+
+                    _this.$u.each(node, x => {
                         if (x.dataset[data] === val) {
                             result = x;
                         }
@@ -258,13 +253,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 eachObject(object, fn) {
                     let keys = Object.keys(object);
+
                     for (let i = 0, l = keys.length; i < l; i++) {
                         fn(object[keys[i]], keys[i], i);
                     }
                 },
-
                 getAJAX(url, fn) {
                     let xhr = new XMLHttpRequest();
+
                     xhr.addEventListener("load", data => {
                         fn(data.target.response);
                     });
@@ -313,26 +309,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         //Initialize & move to url slug
         init() {
             let _this = this;
-            _this.router.init();
+            _this.$r.init();
             return _this;
         }
         moveTo(id) {
             let _this = this;
-            _this.router.move(id, false);
+            _this.$r.move(id, false);
             return _this;
         }
         moveBy(val) {
             let _this = this;
 
-            if (_this.ut.isDefined(_this.dom.elements.field[_this.data.index + val])) {
-                _this.router.move(
-                    _this.dom.elements.field[_this.data.index + val].dataset[_this.dom.built.field[1]]
+            if (_this.$u.isDefined(_this.$d.elements.field[_this.data.index + val])) {
+                _this.$r.move(
+                    _this.$d.elements.field[_this.data.index + val].dataset[_this.$d.built.field[1]]
                 );
-                return _this;
             } else {
-                _this.ut.log(2, 1, 0, val);
-                return false;
+                _this.$u.log(2, 1, 0, val);
             }
+            return _this;
         }
         moveForward() {
             return this.moveBy(1);
@@ -342,7 +337,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
         getCurrentIndex() {
             let _this = this;
-            return _this.ut.getElementIndex(_this.dom.elements.field, _this.data.active);
+            return _this.$u.getElementIndex(_this.$d.elements.field, _this.data.active);
         }
 
     };

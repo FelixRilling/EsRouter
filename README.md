@@ -8,29 +8,20 @@ esRouter is a ES6 based, modern and small library for for DOM-routing, with supp
 var myRouter = new esRouter({
     log: false, //log messages
     ajax: false, //enable ajax routing
+    autoBind: true, //bind click events to data-router-href/link
+    dataPrefix: "router",
     slug: {
         preSlash: false, //add slash before urlFragment?
         postSlash: false, //add slash after urlFragment?
-        prepend: "#", //urlFragment initior, you should not change this
-        append: "" //you can append custom messages like 'currentSection='
-    },
-    dom: {
-        dataAttr: {
-            //only change this if you need to use non-standard data-tags
-            corePrefix: "router", //Core of the data-router attribute
-            section: "section", // #coreprefix#-#section# => data-router-section
-            sectionDefault: "default",
-            link: "href",
-            pagination: "pagin",
-        }
-    },
-
+        prepend: "",
+        append: ""
+    }
 }, {
     before: function() {}, //executes before moving
     done: function() {}, //executes after moving if successfull
     fail: function() {}, //executes after moving if it errors
     after: function() {}, //executes after moving
-})
+});
 ```
 
 # Examples
@@ -103,8 +94,8 @@ enter the source of the ajax content in the DOM
 
 esRouter uses Error codes to avoid putting string error messages in the code. Syntax:
 
-```
-esRouter: #type#": #module#=>#error#: #msg#, #data#
+```text
+esRouter: #type#: #module#=>#error#: #msg#, #data#
 ```
 
 Note: the minified version only shows errors.
