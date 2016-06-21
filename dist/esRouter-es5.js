@@ -1,5 +1,5 @@
 /*
-esRouter v1.0.1
+esRouter v2.0.0
 
 Copyright (c) 2016 Felix Rilling
 
@@ -39,23 +39,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _classCallCheck(this, _class);
 
-            /*##############/
-            / Construct Router
-            /###############*/
             var _this = this;
-            _this.events = {
-                before: events.before,
-                done: events.done,
-                fail: events.fail,
-                always: events.always
-            };
+            _this.$e = events;
 
             _this.options = {
                 ajax: options.ajax || false,
                 log: options.log || false,
                 autoBind: options.autoBind || true
             };
-
             _this.data = {
                 active: null,
                 activeId: null,
@@ -64,33 +55,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             };
 
             //Everything about changing the URL
-            _this.slug = {
+            options.slug = options.slug || {};
+            _this.$s = {
                 preSlash: options.slug.preSlash || false, //prepend slash?
                 postSlash: options.slug.postSlash || false, //append slash?
                 prepend: typeof options.slug.prepend === "string" ? options.slug.prepend : "",
                 append: typeof options.slug.append === "string" ? options.slug.append : "",
                 get: function get(recursive, error) {
-                    if (_this.slug.has()) {
-                        return _location.href.substr(_location.href.lastIndexOf(_this.slug.built) + _this.slug.built.length + (_this.slug.preSlash ? 1 : 0));
+                    if (_this.$s.has()) {
+                        return _location.href.substr(_location.href.lastIndexOf(_this.$s.built) + _this.$s.built.length + (_this.$s.preSlash ? 1 : 0));
                     } else {
                         error(recursive);
                     }
                 },
                 has: function has() {
-                    return _location.href.lastIndexOf(_this.slug.built) > -1;
+                    return _location.href.lastIndexOf(_this.$s.built) > -1;
                 },
                 set: function set(id) {
-                    _location.href = _location.href.substr(0, _location.href.lastIndexOf(_this.slug.built) + _this.slug.built.length) + id;
+                    _location.href = _location.href.substr(0, _location.href.lastIndexOf(_this.$s.built) + _this.$s.built.length) + id;
                 },
                 create: function create(id) {
-                    _location.href = _location.href + _this.slug.built + id;
+                    _location.href = _location.href + _this.$s.built + id;
                 },
                 init: function init(error, done) {
-                    var slug = _this.slug.get(false, function (recursive) {
+                    var slug = _this.$s.get(false, function (recursive) {
                         //Only recurse once, error after that
                         if (!recursive) {
-                            _this.slug.create(_this.data.defaultId);
-                            return _this.slug.get(true);
+                            _this.$s.create(_this.data.defaultId);
+                            return _this.$s.get(true);
                         } else {
                             error();
                         }
@@ -100,10 +92,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 built: null
             };
-            _this.slug.built = (_this.slug.preSlash ? "/" : "") + "#" + _this.slug.prepend + _this.slug.append;
+            _this.$s.built = (_this.$s.preSlash ? "/" : "") + "#" + _this.$s.prepend + _this.$s.append;
 
-            _this.dom = {
-                corePrefix: options.corePrefix || "router", //Core of the data-router attribute
+            _this.$d = {
+                corePrefix: options.dataPrefix || "router", //Core of the data-router attribute
                 built: {},
                 elements: {},
                 base: {
@@ -114,14 +106,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     source: "src"
                 },
                 getElements: function getElements(error, done) {
-                    _this.ut.eachObject(_this.dom.base, function (item, key, index) {
-                        var attr = _this.dom.buildAttr(_this.dom.corePrefix, _this.dom.base[key]);
+                    _this.$u.eachObject(_this.$d.base, function (item, key, index) {
+                        var attr = _this.$d.buildAttr(_this.$d.corePrefix, _this.$d.base[key]);
 
-                        _this.dom.built[key] = attr;
-                        _this.dom.elements[key] = document.querySelectorAll("[" + attr[0] + "]") || [];
+                        _this.$d.built[key] = attr;
+                        _this.$d.elements[key] = document.querySelectorAll("[" + attr[0] + "]") || [];
 
-                        if (!_this.ut.isDefined(_this.dom.elements[key])) {
-                            error(_this.dom.elements[key]);
+                        if (!_this.$u.isDefined(_this.$d.elements[key])) {
+                            error(_this.$d.elements[key]);
                         }
                     });
                     done();
@@ -139,77 +131,78 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 },
                 autoBind: function autoBind() {
                     if (_this.options.autoBind) {
-                        addClickEvent(_this.dom.elements.link, function (ev) {
-                            _this.moveTo(ev.target.dataset[_this.dom.built.link[1]]);
+                        addClickEvent(_this.$d.elements.link, function (ev) {
+                            _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
                         });
-                        addClickEvent(_this.dom.elements.pagination, function (ev) {
-                            _this.moveBy(parseInt(ev.target.dataset[_this.dom.built.pagination[1]]));
+                        addClickEvent(_this.$d.elements.pagination, function (ev) {
+                            _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
                         });
                     }
 
                     function addClickEvent(element, fn) {
-                        _this.ut.each(element, function (link) {
+                        _this.$u.each(element, function (link) {
                             link.addEventListener("click", fn);
                         });
                     }
                 }
             };
 
-            _this.router = {
+            _this.$r = {
                 init: function init(error) {
                     //Query DOM
-                    _this.dom.getElements(function (key) {
-                        _this.ut.log(1, 0, 1, key);
-                    }, _this.dom.autoBind);
+                    _this.$d.getElements(function (key) {
+                        _this.$u.log(1, 0, 1, key);
+                    }, _this.$d.autoBind);
 
                     //Read defaults
-                    if (!_this.ut.isDefined(_this.dom.elements.field)) {
-                        _this.ut.log(0, 0, 0, _this);
+                    if (!_this.$u.isDefined(_this.$d.elements.field)) {
+                        _this.$u.log(0, 0, 0, _this);
                     }
-                    if (!_this.ut.isDefined(_this.dom.elements.fieldDefault)) {
-                        _this.ut.log(0, 0, 0, _this);
+                    if (!_this.$u.isDefined(_this.$d.elements.fieldDefault)) {
+                        _this.$u.log(0, 0, 0, _this);
                     } else {
-                        _this.data.defaultId = _this.dom.elements.fieldDefault[0].dataset[_this.dom.built.field[1]];
+                        _this.data.defaultId = _this.$d.elements.fieldDefault[0].dataset[_this.$d.built.field[1]];
                     }
 
                     //Init slug
-                    _this.slug.init(function () {
-                        _this.ut.log(1, 1, 1, _this);
+                    _this.$s.init(function () {
+                        _this.$u.log(1, 1, 1, _this);
                     }, function (slug) {
                         _this.moveTo(slug);
                     });
                 },
                 move: function move(id, recursive) {
-                    _this.ut.callback(_this.events.before, [id, _this]);
+                    _this.$u.callback(_this.$e.before, [id, _this]);
                     var success = toggleActivefield(id);
 
                     if (success) {
-                        _this.slug.set(_this.data.activeId);
+                        _this.$s.set(_this.data.activeId);
                         if (_this.options.ajax) {
-                            _this.ut.getAJAX(_this.data.active.dataset[_this.dom.built.source[1]], function (responseText) {
+                            _this.$u.getAJAX(_this.data.active.dataset[_this.$d.built.source[1]], function (responseText) {
                                 _this.data.active.innerHTML = responseText;
-                                _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
+                                _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
                             });
                         } else {
-                            _this.ut.callback(_this.events.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                            _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                         }
                     } else {
                         //if not found revert to default
                         if (!recursive) {
-                            _this.ut.log(1, 1, 0, id);
-                            _this.moveTo(_this.data.defaultId, true);
+                            _this.$u.log(1, 1, 0, id);
+                            _this.$r.move(_this.data.defaultId, true);
                         } else {
-                            _this.ut.callback(_this.events.fail, [id, _this]);
-                            _this.ut.log(0, 1, 1, this);
+                            _this.$u.callback(_this.$e.fail, [id, _this]);
+                            _this.$u.log(0, 1, 1, this);
                         }
                     }
-                    _this.ut.callback(_this.events.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+
+                    _this.$u.callback(_this.$e.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                     return success;
 
                     function toggleActivefield(id) {
-                        var newfield = _this.ut.findData(_this.dom.elements.field, _this.dom.built.field[1], id);
+                        var newfield = _this.$u.findData(_this.$d.elements.field, _this.$d.built.field[1], id);
 
-                        if (_this.ut.isDefined(newfield)) {
+                        if (_this.$u.isDefined(newfield)) {
                             _this.data.activeId = id;
                             _this.data.active = newfield;
                             _this.data.index = _this.getCurrentIndex();
@@ -221,10 +214,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 }
             };
 
-            _this.ut = {
+            _this.$u = {
                 getElementIndex: function getElementIndex(nodelist, node) {
                     var result = void 0;
-                    _this.ut.each(nodelist, function (x, i) {
+
+                    _this.$u.each(nodelist, function (x, i) {
                         if (x === node) {
                             result = i;
                         }
@@ -233,7 +227,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 },
                 findData: function findData(node, data, val) {
                     var result = void 0;
-                    _this.ut.each(node, function (x) {
+
+                    _this.$u.each(node, function (x) {
                         if (x.dataset[data] === val) {
                             result = x;
                         }
@@ -247,6 +242,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 },
                 eachObject: function eachObject(object, fn) {
                     var keys = Object.keys(object);
+
                     for (var i = 0, l = keys.length; i < l; i++) {
                         fn(object[keys[i]], keys[i], i);
                     }
@@ -255,6 +251,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     var _this2 = this;
 
                     var xhr = new XMLHttpRequest();
+
                     xhr.addEventListener("load", function (data) {
                         fn(data.target.response);
                     });
@@ -308,14 +305,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "init",
             value: function init() {
                 var _this = this;
-                _this.router.init();
+                _this.$r.init();
                 return _this;
             }
         }, {
             key: "moveTo",
             value: function moveTo(id) {
                 var _this = this;
-                _this.router.move(id, false);
+                _this.$r.move(id, false);
                 return _this;
             }
         }, {
@@ -323,13 +320,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function moveBy(val) {
                 var _this = this;
 
-                if (_this.ut.isDefined(_this.dom.elements.field[_this.data.index + val])) {
-                    _this.router.move(_this.dom.elements.field[_this.data.index + val].dataset[_this.dom.built.field[1]]);
-                    return _this;
+                if (_this.$u.isDefined(_this.$d.elements.field[_this.data.index + val])) {
+                    _this.$r.move(_this.$d.elements.field[_this.data.index + val].dataset[_this.$d.built.field[1]]);
                 } else {
-                    _this.ut.log(2, 1, 0, val);
-                    return false;
+                    _this.$u.log(2, 1, 0, val);
                 }
+                return _this;
             }
         }, {
             key: "moveForward",
@@ -345,7 +341,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: "getCurrentIndex",
             value: function getCurrentIndex() {
                 var _this = this;
-                return _this.ut.getElementIndex(_this.dom.elements.field, _this.data.active);
+                return _this.$u.getElementIndex(_this.$d.elements.field, _this.data.active);
             }
         }]);
 
