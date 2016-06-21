@@ -322,12 +322,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return _this;
         }
         moveBy(val) {
-            let _this = this,
-                index = _this.data.index;
-            if (_this.ut.isDefined(_this.dom.elements.field[index + val])) {
-                return _this.moveTo(
-                    _this.dom.elements.field[index + val].dataset[_this.dom.built.field[1]]
+            let _this = this;
+
+            if (_this.ut.isDefined(_this.dom.elements.field[_this.data.index + val])) {
+                _this.router.move(
+                    _this.dom.elements.field[_this.data.index + val].dataset[_this.dom.built.field[1]]
                 );
+                return _this;
             } else {
                 _this.ut.log(2, 1, 0, val);
                 return false;
