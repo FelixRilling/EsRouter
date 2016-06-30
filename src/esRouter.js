@@ -30,6 +30,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     window.esRouter = class {
         constructor(options = {}, events = {}) {
+
             let _this = this;
             _this.$e = events;
 
@@ -135,14 +136,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     }
                 },
                 autoBind() {
-                    if (_this.options.autoBind) {
-                        addClickEvent(_this.$d.elements.link, ev => {
-                            _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
-                        });
-                        addClickEvent(_this.$d.elements.pagination, ev => {
-                            _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
-                        });
-                    }
+
+                    addClickEvent(_this.$d.elements.link, ev => {
+                        _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
+                    });
+                    addClickEvent(_this.$d.elements.pagination, ev => {
+                        _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
+                    });
 
                     function addClickEvent(element, fn) {
                         _this.$u.each(element, link => {
@@ -159,7 +159,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         key => {
                             _this.$u.log(1, 0, 1, key);
                         },
-                        _this.$d.autoBind
+                        () => {
+                            if (_this.options.autoBind) {
+                                _this.$d.autoBind();
+                            }
+                        }
                     );
 
                     //Read defaults
@@ -272,25 +276,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 callback(fn, args) {
                     if (typeof fn === "function") {
-                        fn.apply(this, args);
+                        return fn.apply(this, args);
                     }
                 },
                 isDefined(val) {
                     return typeof val !== "undefined";
                 },
-                /*tryCatch(fn, error, sucess) {
-                    let result = true;
-                    try {
-                        fn();
-                    } catch (e) {
-                        result = false;
-                        error(e);
-                    } finally {
-                        if (result) {
-                            sucess();
-                        }
-                    }
-                },*/
                 log(type, module, name, msg) {
                     let str = `esRouter: ${type}: ${module}=>${name}= ${msg}`;
                     if (type === 0) {
@@ -308,14 +299,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Initialize & move to url slug
         init() {
-            let _this = this;
-            _this.$r.init();
-            return _this;
+            this.$r.init();
+            return this;
         }
         moveTo(id) {
-            let _this = this;
-            _this.$r.move(id, false);
-            return _this;
+            this.$r.move(id, false);
+            return this;
         }
         moveBy(val) {
             let _this = this;
@@ -336,8 +325,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return this.moveBy(-1);
         }
         getCurrentIndex() {
-            let _this = this;
-            return _this.$u.getElementIndex(_this.$d.elements.field, _this.data.active);
+            return this.$u.getElementIndex(this.$d.elements.field, this.data.active);
         }
 
     };

@@ -130,14 +130,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
                 },
                 autoBind: function autoBind() {
-                    if (_this.options.autoBind) {
-                        addClickEvent(_this.$d.elements.link, function (ev) {
-                            _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
-                        });
-                        addClickEvent(_this.$d.elements.pagination, function (ev) {
-                            _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
-                        });
-                    }
+
+                    addClickEvent(_this.$d.elements.link, function (ev) {
+                        _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
+                    });
+                    addClickEvent(_this.$d.elements.pagination, function (ev) {
+                        _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
+                    });
 
                     function addClickEvent(element, fn) {
                         _this.$u.each(element, function (link) {
@@ -152,7 +151,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     //Query DOM
                     _this.$d.getElements(function (key) {
                         _this.$u.log(1, 0, 1, key);
-                    }, _this.$d.autoBind);
+                    }, function () {
+                        if (_this.options.autoBind) {
+                            _this.$d.autoBind();
+                        }
+                    });
 
                     //Read defaults
                     if (!_this.$u.isDefined(_this.$d.elements.field)) {
@@ -263,26 +266,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 },
                 callback: function callback(fn, args) {
                     if (typeof fn === "function") {
-                        fn.apply(this, args);
+                        return fn.apply(this, args);
                     }
                 },
                 isDefined: function isDefined(val) {
                     return typeof val !== "undefined";
                 },
-
-                /*tryCatch(fn, error, sucess) {
-                    let result = true;
-                    try {
-                        fn();
-                    } catch (e) {
-                        result = false;
-                        error(e);
-                    } finally {
-                        if (result) {
-                            sucess();
-                        }
-                    }
-                },*/
                 log: function log(type, module, name, msg) {
                     var str = "esRouter: " + type + ": " + module + "=>" + name + "= " + msg;
                     if (type === 0) {
@@ -304,16 +293,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         _createClass(_class, [{
             key: "init",
             value: function init() {
-                var _this = this;
-                _this.$r.init();
-                return _this;
+                this.$r.init();
+                return this;
             }
         }, {
             key: "moveTo",
             value: function moveTo(id) {
-                var _this = this;
-                _this.$r.move(id, false);
-                return _this;
+                this.$r.move(id, false);
+                return this;
             }
         }, {
             key: "moveBy",
@@ -340,8 +327,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "getCurrentIndex",
             value: function getCurrentIndex() {
-                var _this = this;
-                return _this.$u.getElementIndex(_this.$d.elements.field, _this.data.active);
+                return this.$u.getElementIndex(this.$d.elements.field, this.data.active);
             }
         }]);
 
