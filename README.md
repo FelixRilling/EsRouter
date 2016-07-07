@@ -90,6 +90,45 @@ enter the source of the ajax content in the DOM
 <button data-router-pagin="1">Go Forward</button>
 ```
 
+# Data-attributes
+
+esRouter has a number of HTML data-attributes:
+
+## Sections
+
+**section**: used to declare a part/section/page of the router with name. _required_
+
+```html
+<div data-router-section="mySection"></div>
+```
+
+**default**: used to declare the section that the router should start on or go to if an error occurs. _required_
+
+```html
+<div data-router-section="mySection" data-router-default="true"></div>
+```
+
+**src**: AJAX mode only. specify url of the content source .
+
+```html
+<div data-router-section="mySection" data-router-src="content.html"></div>
+```
+
+## Navigation
+
+**href**: contains an id that the router will jump to.
+
+```html
+<a href="javascript:;" data-router-href="mySection">jump to mySection</a>
+```
+
+**pagin**: paginate by the value.
+
+```html
+<a href="javascript:;" data-router-pagin="-1">backward</a>
+<a href="javascript:;" data-router-pagin="1">forward</a>
+```
+
 # Error Codes
 
 esRouter uses Error codes to avoid putting string error messages in the code. Syntax:

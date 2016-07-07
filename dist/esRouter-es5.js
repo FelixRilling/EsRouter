@@ -1,5 +1,5 @@
 /*
-esRouter v2.0.0
+esRouter v2.1.0
 
 Copyright (c) 2016 Felix Rilling
 
@@ -32,14 +32,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function (window) {
     var _location = window.location;
 
-    window.esRouter = function () {
-        function _class() {
+    var esRouter = function () {
+        function esRouter() {
             var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
             var events = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-            _classCallCheck(this, _class);
+            _classCallCheck(this, esRouter);
 
             var _this = this;
+
             _this.$e = events;
 
             _this.options = {
@@ -150,35 +151,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 init: function init(error) {
                     //Query DOM
                     _this.$d.getElements(function (key) {
+                        //throw error if elements cant load
                         _this.$u.log(1, 0, 1, key);
                     }, function () {
-                        if (_this.options.autoBind) {
-                            _this.$d.autoBind();
+                        //continue when dom is selected
+                        if (!_this.$u.isDefined(_this.$d.elements.fieldDefault)) {
+                            //throw error if default is undefined
+                            _this.$u.log(0, 0, 0, _this);
+                        } else {
+                            //else store default id
+                            _this.data.defaultId = _this.$d.elements.fieldDefault[0].dataset[_this.$d.built.field[1]];
+
+                            if (_this.options.autoBind) {
+                                _this.$d.autoBind();
+                            }
+
+                            //Init slug and move to slug
+                            _this.$s.init(function () {
+                                _this.$u.log(1, 1, 1, _this);
+                            }, function (slug) {
+                                _this.moveTo(slug);
+                            });
                         }
-                    });
-
-                    //Read defaults
-                    if (!_this.$u.isDefined(_this.$d.elements.field)) {
-                        _this.$u.log(0, 0, 0, _this);
-                    }
-                    if (!_this.$u.isDefined(_this.$d.elements.fieldDefault)) {
-                        _this.$u.log(0, 0, 0, _this);
-                    } else {
-                        _this.data.defaultId = _this.$d.elements.fieldDefault[0].dataset[_this.$d.built.field[1]];
-                    }
-
-                    //Init slug
-                    _this.$s.init(function () {
-                        _this.$u.log(1, 1, 1, _this);
-                    }, function (slug) {
-                        _this.moveTo(slug);
                     });
                 },
                 move: function move(id, recursive) {
-                    _this.$u.callback(_this.$e.before, [id, _this]);
-                    var success = toggleActivefield(id);
+                    var _this2 = this;
 
-                    if (success) {
+                    _this.$u.callback(_this.$e.before, [id, _this]);
+                    var result = setActive(id, function () {
+                        //error
+                        if (!recursive) {
+                            //recurse one time on error
+                            _this.$u.log(1, 1, 0, id);
+                            _this.$r.move(_this.data.defaultId, true);
+                        } else {
+                            _this.$u.callback(_this.$e.fail, [id, _this]);
+                            _this.$u.log(0, 1, 1, _this2);
+                        }
+                    }, function () {
+                        //sucess
                         _this.$s.set(_this.data.activeId);
                         if (_this.options.ajax) {
                             _this.$u.getAJAX(_this.data.active.dataset[_this.$d.built.source[1]], function (responseText) {
@@ -188,29 +200,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         } else {
                             _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                         }
-                    } else {
-                        //if not found revert to default
-                        if (!recursive) {
-                            _this.$u.log(1, 1, 0, id);
-                            _this.$r.move(_this.data.defaultId, true);
-                        } else {
-                            _this.$u.callback(_this.$e.fail, [id, _this]);
-                            _this.$u.log(0, 1, 1, this);
-                        }
-                    }
+                    });
 
                     _this.$u.callback(_this.$e.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
-                    return success;
+                    return result;
 
-                    function toggleActivefield(id) {
-                        var newfield = _this.$u.findData(_this.$d.elements.field, _this.$d.built.field[1], id);
+                    function setActive(id, error, done) {
+                        var newField = _this.$u.findData(_this.$d.elements.field, _this.$d.built.field[1], id);
 
-                        if (_this.$u.isDefined(newfield)) {
+                        if (_this.$u.isDefined(newField)) {
                             _this.data.activeId = id;
-                            _this.data.active = newfield;
+                            _this.data.active = newField;
                             _this.data.index = _this.getCurrentIndex();
+
+                            done();
+
                             return true;
                         } else {
+                            error();
                             return false;
                         }
                     }
@@ -251,15 +258,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
                 },
                 getAJAX: function getAJAX(url, fn) {
-                    var _this2 = this;
-
                     var xhr = new XMLHttpRequest();
 
                     xhr.addEventListener("load", function (data) {
                         fn(data.target.response);
                     });
                     xhr.addEventListener("error", function (data) {
-                        _this2.ut.log(1, 3, 0, xhr);
+                        _this.$u.log(1, 3, 0, xhr);
                     });
                     xhr.open("GET", url);
                     xhr.send();
@@ -274,6 +279,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 },
                 log: function log(type, module, name, msg) {
                     var str = "esRouter: " + type + ": " + module + "=>" + name + "= " + msg;
+
                     if (type === 0) {
                         throw str;
                     } else if (_this.options.log) {
@@ -290,7 +296,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         //Initialize & move to url slug
 
 
-        _createClass(_class, [{
+        _createClass(esRouter, [{
             key: "init",
             value: function init() {
                 this.$r.init();
@@ -305,10 +311,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: "moveBy",
             value: function moveBy(val) {
-                var _this = this;
+                var _this = this,
+                    newIndex = _this.data.index + val;
 
-                if (_this.$u.isDefined(_this.$d.elements.field[_this.data.index + val])) {
-                    _this.$r.move(_this.$d.elements.field[_this.data.index + val].dataset[_this.$d.built.field[1]]);
+                if (_this.$u.isDefined(_this.$d.elements.field[newIndex])) {
+                    _this.$r.move(_this.$d.elements.field[newIndex].dataset[_this.$d.built.field[1]]);
                 } else {
                     _this.$u.log(2, 1, 0, val);
                 }
@@ -331,7 +338,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }]);
 
-        return _class;
+        return esRouter;
     }();
+
+    ;
+
+    window.esRouter = esRouter;
 })(window);
 //# sourceMappingURL=esRouter-es5.js.map
