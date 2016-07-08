@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     require("time-grunt")(grunt);
     require("jit-grunt")(grunt, {});
 
@@ -42,7 +42,8 @@ module.exports = function(grunt) {
         uglify: {
             main: {
                 files: {
-                    "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.js"
+                    "dist/esRouter-es5.min.js": ".tmp/esRouter-es5.js",
+                    "dist/plugins/esRouter-es5.scroll.min.js": ".tmp/plugins/esRouter-es5.scroll.js"
                 },
                 options: {
                     compress: {
@@ -57,12 +58,15 @@ module.exports = function(grunt) {
             build: {
                 files: {
                     ".tmp/esRouter.js": "src/esRouter.js",
+                    ".tmp/plugins/esRouter.scroll.js": "src/plugins/esRouter.scroll.js",
                 }
             },
             dist: {
                 files: {
                     "dist/esRouter.js": ".tmp/esRouter.js",
-                    "dist/esRouter-es5.js": ".tmp/esRouter-es5.js"
+                    "dist/esRouter-es5.js": ".tmp/esRouter-es5.js",
+                    "dist/plugins/esRouter.scroll.js": ".tmp/plugins/esRouter.scroll.js",
+                    "dist/plugins/esRouter-es5.scroll.js": ".tmp/plugins/esRouter-es5.scroll.js"
                 }
             }
         },
@@ -74,7 +78,8 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    ".tmp/esRouter-es5.js": ".tmp/esRouter.js"
+                    ".tmp/esRouter-es5.js": ".tmp/esRouter.js",
+                    ".tmp/plugins/esRouter-es5.scroll.js": ".tmp/plugins/esRouter.scroll.js"
                 }
             }
         },

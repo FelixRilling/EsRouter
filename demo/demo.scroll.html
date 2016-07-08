@@ -60,9 +60,11 @@
             "use strict";
             var demoElements = document.querySelectorAll(".mySection");
 
-            var myRouter = new esRouterScroll({
+            var myRouter = new esRouter({
                 log: true,
-                scroll: true,
+                scroll: {
+                    enabled: true
+                },
                 slug: {
                     prepend: "youAreHere="
                 }

@@ -41,6 +41,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             var _this = this;
 
+            _this.plugins = [];
+
             _this.$e = events;
 
             _this.options = {
@@ -173,6 +175,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                                 _this.moveTo(slug);
                             });
                         }
+                    });
+
+                    _this.$u.each(_this.plugins, function (plugin) {
+                        plugin.call(_this, _this);
                     });
                 },
                 move: function move(id, recursive) {

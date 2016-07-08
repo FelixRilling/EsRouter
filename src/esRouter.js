@@ -32,6 +32,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         constructor(options = {}, events = {}) {
             let _this = this;
 
+            _this.plugins = [];
+
             _this.$e = events;
 
             _this.options = {
@@ -184,6 +186,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                             }
                         }
                     );
+
+                    _this.$u.each(_this.plugins, plugin => {
+                        plugin.call(_this, _this);
+                    });
                 },
                 move(id, recursive) {
                     _this.$u.callback(_this.$e.before, [id, _this]);
