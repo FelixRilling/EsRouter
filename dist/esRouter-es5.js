@@ -341,8 +341,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return esRouter;
     }();
 
-    ;
-
     window.esRouter = esRouter;
 })(window);
 //# sourceMappingURL=esRouter-es5.js.map

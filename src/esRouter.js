@@ -25,7 +25,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 "use strict";
 
-(function(window) {
+(function (window) {
     let _location = window.location;
 
     class esRouter {
@@ -111,7 +111,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     pagination: "pagin",
                     source: "src",
                 },
-                getElements: function(error, done) {
+                getElements: function (error, done) {
                     _this.$u.eachObject(_this.$d.base, (item, key, index) => {
                         let attr = _this.$d.buildAttr(_this.$d.corePrefix, _this.$d.base[key]);
 
@@ -213,7 +213,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     _this.$u.callback(_this.$e.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                     return result;
 
-
                     function setActive(id, error, done) {
                         let newField = _this.$u.findData(_this.$d.elements.field, _this.$d.built.field[1], id);
 
@@ -302,7 +301,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             };
         }
 
-
         //Initialize & move to url slug
         init() {
             this.$r.init();
@@ -335,7 +333,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return this.$u.getElementIndex(this.$d.elements.field, this.data.active);
         }
 
-    };
+    }
 
     window.esRouter = esRouter;
 })(window);
