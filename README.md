@@ -129,6 +129,23 @@ esRouter has a number of HTML data-attributes:
 <a href="javascript:;" data-router-pagin="1">forward</a>
 ```
 
+# Plugins
+
+right now esRouter only has one plugin: esRouter.scroll
+
+## esRouter.scroll
+
+esRouter.scroll allows scrolling based routing. to enable it (after including the plugin js into your load order), you need to set:
+
+```javascript
+
+scroll: {
+    enabled: true
+},
+```
+
+in the options when creating your router (view the demo.scroll.html in the demo directory for more information).
+
 # Error Codes
 
 esRouter uses Error codes to avoid putting string error messages in the code. Syntax:
