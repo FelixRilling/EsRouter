@@ -7,18 +7,17 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 (function (window) {
-    var baseClass = window.esRouter;
 
-    var esRouter = function (_baseClass) {
-        _inherits(esRouter, _baseClass);
+    window.esRouter = function (_window$esRouter) {
+        _inherits(_class, _window$esRouter);
 
-        function esRouter() {
+        function _class() {
             var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
             var events = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-            _classCallCheck(this, esRouter);
+            _classCallCheck(this, _class);
 
-            var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(esRouter).call(this, options, events));
+            var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(_class).call(this, options, events));
 
             var _this = _this2;
 
@@ -43,7 +42,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                     var result = $l[0],
                         max = Infinity;
 
-                    _this.$u.each($l, function ($e) {
+                    _this.$u.eA($l, function ($e) {
                         var val = inView($e, y);
 
                         if (val < max) {
@@ -59,18 +58,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                     }
                 }
             };
+            _this.$d.scrollToField = function ($e) {
+                $e.scrollIntoView();
+            };
+
             //Plugin inject
-            _this.plugins.push(function () {
-                if (_this.options.scroll.enabled) {
-                    _this.$d.bindScroll();
+            _this.plugins.push({
+                init: function init() {
+                    if (_this.options.scroll.enabled) {
+                        _this.$d.bindScroll();
+                    }
+                },
+                move: function move() {},
+                link: function link($e) {
+                    if (_this.options.scroll.enabled) {
+                        console.log($e);
+                        _this.$d.scrollToField($e);
+                    }
                 }
             });
             return _this2;
         }
 
-        return esRouter;
-    }(baseClass);
-
-    window.esRouter = esRouter;
+        return _class;
+    }(window.esRouter);
 })(window);
 //# sourceMappingURL=esRouter-es5.scroll.js.map

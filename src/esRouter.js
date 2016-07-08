@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function (window) {
     let _location = window.location;
 
-    class esRouter {
+    window.esRouter = class {
         constructor(options = {}, events = {}) {
             let _this = this;
 
@@ -114,7 +114,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     source: "src",
                 },
                 getElements: function (error, done) {
-                    _this.$u.eachObject(_this.$d.base, (item, key, index) => {
+                    _this.$u.eO(_this.$d.base, (item, key, index) => {
                         let attr = _this.$d.buildAttr(_this.$d.corePrefix, _this.$d.base[key]);
 
                         _this.$d.built[key] = attr;
@@ -138,16 +138,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     }
                 },
                 bindNav() {
-
                     addClickEvent(_this.$d.elements.link, ev => {
-                        _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
+                        _this.moveTo(ev.target.dataset[_this.$d.built.link[1]], $e => {
+                            _this.$u.eA(_this.plugins, plugin => {
+                                plugin.link.call(_this, $e);
+                            });
+                        });
                     });
                     addClickEvent(_this.$d.elements.pagination, ev => {
-                        _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]));
+                        _this.moveBy(parseInt(ev.target.dataset[_this.$d.built.pagination[1]]), $e => {
+                            _this.$u.eA(_this.plugins, plugin => {
+                                plugin.link.call(_this, $e);
+                            });
+                        });
                     });
 
                     function addClickEvent(element, fn) {
-                        _this.$u.each(element, link => {
+                        _this.$u.eA(element, link => {
                             link.addEventListener("click", fn);
                         });
                     }
@@ -186,13 +193,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                             }
                         }
                     );
-
-                    _this.$u.each(_this.plugins, plugin => {
-                        plugin.call(_this, _this);
+                    //Call plugin init
+                    _this.$u.eA(_this.plugins, plugin => {
+                        plugin.init.call(_this, _this);
                     });
                 },
-                move(id, recursive) {
-                    _this.$u.callback(_this.$e.before, [id, _this]);
+                move(id, recursive, fn) {
+                    _this.$u.cb(_this.$e.before, [id, _this]);
                     let result = setActive(id, () => {
                         //error
                         if (!recursive) {
@@ -200,7 +207,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                             _this.$u.log(1, 1, 0, id);
                             _this.$r.move(_this.data.defaultId, true);
                         } else {
-                            _this.$u.callback(_this.$e.fail, [id, _this]);
+                            _this.$u.cb(_this.$e.fail, [id, _this]);
                             _this.$u.log(0, 1, 1, this);
                         }
                     }, () => {
@@ -209,14 +216,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         if (_this.options.ajax) {
                             _this.$u.getAJAX(_this.data.active.dataset[_this.$d.built.source[1]], responseText => {
                                 _this.data.active.innerHTML = responseText;
-                                _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
+                                _this.$u.cb(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this, responseText]);
                             });
                         } else {
-                            _this.$u.callback(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                            _this.$u.cb(_this.$e.done, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                         }
+                        //Call plugin move
+                        _this.$u.eA(_this.plugins, plugin => {
+                            plugin.move.call(_this, _this.data.active);
+                        });
+
+                        //Calls internal cb
+                        _this.$u.cb(fn, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                     });
 
-                    _this.$u.callback(_this.$e.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
+                    _this.$u.cb(_this.$e.always, [_this.data.active, _this.data.activeId, _this.data.index, _this]);
                     return result;
 
                     function setActive(id, error, done) {
@@ -242,7 +256,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 getElementIndex(nodelist, node) {
                     let result;
 
-                    _this.$u.each(nodelist, (x, i) => {
+                    _this.$u.eA(nodelist, (x, i) => {
                         if (x === node) {
                             result = i;
                         }
@@ -252,19 +266,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 findData(node, data, val) {
                     let result;
 
-                    _this.$u.each(node, x => {
+                    _this.$u.eA(node, x => {
                         if (x.dataset[data] === val) {
                             result = x;
                         }
                     });
                     return result;
                 },
-                each(arr, fn) {
+                //each Array
+                eA(arr, fn) {
                     for (let i = 0, l = arr.length; i < l; i++) {
                         fn(arr[i], i);
                     }
                 },
-                eachObject(object, fn) {
+                //each Object
+                eO(object, fn) {
                     let keys = Object.keys(object);
 
                     for (let i = 0, l = keys.length; i < l; i++) {
@@ -283,7 +299,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     xhr.open("GET", url);
                     xhr.send();
                 },
-                callback(fn, args) {
+                cb(fn, args) {
                     if (typeof fn === "function") {
                         return fn.apply(this, args);
                     }
@@ -312,34 +328,35 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             this.$r.init();
             return this;
         }
-        moveTo(id) {
-            this.$r.move(id, false);
+        moveTo(id, fn) {
+            this.$r.move(id, false, fn);
             return this;
         }
-        moveBy(val) {
+        moveBy(val, fn) {
             let _this = this,
                 newIndex = _this.data.index + val;
 
             if (_this.$u.isDefined(_this.$d.elements.field[newIndex])) {
                 _this.$r.move(
-                    _this.$d.elements.field[newIndex].dataset[_this.$d.built.field[1]]
+                    _this.$d.elements.field[newIndex].dataset[_this.$d.built.field[1]],
+                    false,
+                    fn
                 );
             } else {
                 _this.$u.log(2, 1, 0, val);
             }
             return _this;
         }
-        moveForward() {
-            return this.moveBy(1);
+        moveForward(fn) {
+            return this.moveBy(1, fn);
         }
-        moveBackward() {
-            return this.moveBy(-1);
+        moveBackward(fn) {
+            return this.moveBy(-1, fn);
         }
         getCurrentIndex() {
             return this.$u.getElementIndex(this.$d.elements.field, this.data.active);
         }
 
-    }
+    };
 
-    window.esRouter = esRouter;
 })(window);

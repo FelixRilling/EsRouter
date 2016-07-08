@@ -1,9 +1,8 @@
 "use strict";
 
 (function (window) {
-    let baseClass = window.esRouter;
 
-    class esRouter extends baseClass {
+    window.esRouter = class extends window.esRouter {
         constructor(options = {}, events = {}) {
             super(options, events);
             let _this = this;
@@ -29,7 +28,7 @@
                     let result = $l[0],
                         max = Infinity;
 
-                    _this.$u.each($l, $e => {
+                    _this.$u.eA($l, $e => {
                         let val = inView($e, y);
 
                         if (val < max) {
@@ -45,15 +44,27 @@
                     }
                 }
             };
+            _this.$d.scrollToField = function ($e) {
+                $e.scrollIntoView();
+            };
+
             //Plugin inject
-            _this.plugins.push(function () {
-                if (_this.options.scroll.enabled) {
-                    _this.$d.bindScroll();
+            _this.plugins.push({
+                init: () => {
+                    if (_this.options.scroll.enabled) {
+                        _this.$d.bindScroll();
+                    }
+                },
+                move: () => {},
+                link: $e => {
+                    if (_this.options.scroll.enabled) {
+                        console.log($e);
+                        _this.$d.scrollToField($e);
+                    }
                 }
             });
         }
 
-    }
+    };
 
-    window.esRouter = esRouter;
 })(window);
