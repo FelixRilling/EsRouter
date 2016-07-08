@@ -1,9 +1,10 @@
 "use strict";
 
 (function (window) {
-    class esRouter extends window.esRouter {
+
+    class esRouterScroll extends window.esRouter {
         constructor(options = {}, events = {}, scroll = {}) {
-            super();
+            super(options, events);
             let _this = this;
 
             _this.options.scroll = {
@@ -12,10 +13,35 @@
             };
 
             _this.$d.bindScroll = function () {
-                document.addEventListener("scroll", _this.$d.scroll);
+                document.addEventListener("scroll", _this.$d.onScroll);
             };
-            _this.$d.scroll = function () {
-                console.log("!!!");
+            _this.$d.onScroll = function (ev) {
+                let element = getElementInView(_this.$d.elements.field, window.scrollY),
+                    id = element.dataset[_this.$d.built.field[1]];
+
+                if (_this.data.active !== element) {
+                    _this.$r.move(id, false);
+                }
+
+                function getElementInView($l, y) {
+                    let result = $l[0],
+                        max = Infinity;
+
+                    for (let i = 0; i < $l.length; i++) {
+                        let val = inView($l[i], y);
+
+                        if (val < max) {
+                            result = $l[i];
+                            max = val;
+                        }
+                    }
+
+                    return result;
+
+                    function inView($e, y) {
+                        return Math.abs($e.getClientRects()[0].top);
+                    }
+                }
             };
         }
         init() {
@@ -25,5 +51,5 @@
         }
     }
 
-    window.esRouter = esRouter;
+    window.esRouterScroll = esRouterScroll;
 })(window);

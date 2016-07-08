@@ -130,7 +130,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         return pre + attr[0].toUpperCase() + attr.substr(1);
                     }
                 },
-                autoBind: function autoBind() {
+                bindNav: function bindNav() {
 
                     addClickEvent(_this.$d.elements.link, function (ev) {
                         _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
@@ -163,7 +163,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                             _this.data.defaultId = _this.$d.elements.fieldDefault[0].dataset[_this.$d.built.field[1]];
 
                             if (_this.options.autoBind) {
-                                _this.$d.autoBind();
+                                _this.$d.bindNav();
                             }
 
                             //Init slug and move to slug

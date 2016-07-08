@@ -135,7 +135,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         return pre + attr[0].toUpperCase() + attr.substr(1);
                     }
                 },
-                autoBind() {
+                bindNav() {
 
                     addClickEvent(_this.$d.elements.link, ev => {
                         _this.moveTo(ev.target.dataset[_this.$d.built.link[1]]);
@@ -172,7 +172,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                                 ];
 
                                 if (_this.options.autoBind) {
-                                    _this.$d.autoBind();
+                                    _this.$d.bindNav();
                                 }
 
                                 //Init slug and move to slug
