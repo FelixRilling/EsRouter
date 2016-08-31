@@ -1,7 +1,6 @@
 "use strict";
 
 export const findData = function (elements, prefix, key, value) {
-    const attr = prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
 
 };
 

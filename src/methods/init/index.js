@@ -1,10 +1,7 @@
 "use strict";
 
 import bind from "../dom/bind";
-import {
-    readData
-} from "../dom/data";
-
+import read from "./read";
 import {
     getSlug
 } from "../slug";
@@ -22,20 +19,7 @@ export default function () {
 
     _this.elements = bind.call(_this);
 
-    //Save Ids
-    [].forEach.call(_this.elements.field, element => {
-        const id = readData(
-            element,
-            _this.options.elements.prefix,
-            _this.options.elements.fields.field
-        );
-
-        _this.data.ids.push(id);
-
-        if (element === _this.elements.fieldDefault[0]) {
-            _this.data.defaultId = id;
-        }
-    });
+    read.call(_this);
 
     //Move to either saved slug or default id
     if (slug !== "") {

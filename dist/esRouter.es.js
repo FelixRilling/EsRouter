@@ -7,21 +7,44 @@ var _window = window;
 var _document = _window.document;
 var _location = _window.location;
 
+var eachNode = function eachNode(elements, fn) {
+    [].forEach.call(elements, function (element) {
+        fn(element);
+    });
+};
+
 function bind() {
     var _this = this;
     var _elements = _this.options.elements;
     var keys = Object.keys(_elements.fields);
+
     var result = {};
+
+    function queryByField(prefix, name) {
+        return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
+    }
+
+    function bindClick(elements, fn) {
+        eachNode(elements, function (element) {
+            element.addEventListener("click", fn, false);
+        });
+    }
 
     keys.forEach(function (key, i) {
         result[key] = queryByField(_elements.prefix, _elements.fields[key]);
     });
 
-    return result;
+    if (_this.options.autobind) {
+        bindClick(result["link"], function () {
+            console.log(1);
+        });
 
-    function queryByField(prefix, name) {
-        return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
+        bindClick(result["pagination"], function () {
+            console.log(2);
+        });
     }
+
+    return result;
 }
 
 var readData = function readData(element, prefix, key) {
@@ -30,6 +53,21 @@ var readData = function readData(element, prefix, key) {
 
 function getAttr(prefix, key) {
     return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
+}
+
+function read() {
+    var _this = this;
+
+    //Save Ids
+    eachNode(_this.elements.field, function (element) {
+        var id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.field);
+
+        _this.data.ids.push(id);
+
+        if (element === _this.elements.fieldDefault[0]) {
+            _this.data.defaultId = id;
+        }
+    });
 }
 
 var setSlug = function setSlug(active) {
@@ -83,16 +121,7 @@ function init() {
 
     _this.elements = bind.call(_this);
 
-    //Save Ids
-    [].forEach.call(_this.elements.field, function (element) {
-        var id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.field);
-
-        _this.data.ids.push(id);
-
-        if (element === _this.elements.fieldDefault[0]) {
-            _this.data.defaultId = id;
-        }
-    });
+    read.call(_this);
 
     //Move to either saved slug or default id
     if (slug !== "") {
