@@ -4,9 +4,7 @@ import {
     _document
 } from "../../constants";
 
-function queryForField(prefix, name) {
-    return _document.querySelectorAll(`[data-${prefix}-${name}]`);
-}
+
 
 export default function () {
     const _this = this;
@@ -15,8 +13,12 @@ export default function () {
     const result = {};
 
     keys.forEach((key, i) => {
-        result[key] = queryForField(_elements.prefix, _elements.fields[key]);
+        result[key] = queryByField(_elements.prefix, _elements.fields[key]);
     });
 
     return result;
+
+    function queryByField(prefix, name) {
+        return _document.querySelectorAll(`[data-${prefix}-${name}]`);
+    }
 }

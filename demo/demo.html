@@ -48,20 +48,18 @@
         <script>
             "use strict";
 
-            const myRouter = new esRouter({
-                log: true
-            }, {
-                init: function() {
-                    console.log("myRouter inited")
+            const myRouter = new esRouter({}, {
+                beforeInit: function() {
+                    console.log("myRouter beforeInit");
                 },
-                bind: function() {
-                    console.log("myRouter bound")
+                afterInit: function() {
+                    console.log("myRouter afterInit");
                 },
-                beforeMove: function() {
-                    console.log("myRouter beforeMove")
+                beforeMove: function(id, index, element) {
+                    console.log("myRouter beforeMove: " + id);
                 },
-                afterMove: function() {
-                    console.log("myRouter afterMove")
+                afterMove: function(id, index, element) {
+                    console.log("myRouter afterMove: " + id);
                 }
             }, []);
 

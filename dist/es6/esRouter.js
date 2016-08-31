@@ -5,10 +5,6 @@ const _window = window;
 const _document = _window.document;
 const _location = _window.location;
 
-function queryForField(prefix, name) {
-    return _document.querySelectorAll(`[data-${prefix}-${name}]`);
-}
-
 function bind () {
     const _this = this;
     const _elements = _this.options.elements;
@@ -16,10 +12,14 @@ function bind () {
     const result = {};
 
     keys.forEach((key, i) => {
-        result[key] = queryForField(_elements.prefix, _elements.fields[key]);
+        result[key] = queryByField(_elements.prefix, _elements.fields[key]);
     });
 
     return result;
+
+    function queryByField(prefix, name) {
+        return _document.querySelectorAll(`[data-${prefix}-${name}]`);
+    }
 }
 
 const readData = function (element, prefix, key) {
@@ -40,18 +40,22 @@ const getSlug = function () {
 function _moveTo (id) {
     const _this = this;
     const index = _this.data.ids.indexOf(id);
+    //beforeMove Callback
+    _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
 
     _this.data.activeId = id;
     _this.data.index = index;
 
     setSlug.call(_this, id);
+
+    //afterMove Callback
+    _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
 }
 
 const moveTo = function (id) {
     const _this = this;
 
     if (_this.data.ids.indexOf(id) > -1) {
-        console.log("MOVE " + id);
         _moveTo.call(_this, id);
     } else {
         console.info("MISSING " + id);
@@ -71,6 +75,9 @@ const moveBackward = function (val) {
 function init () {
     const _this = this;
     const slug = getSlug.call(_this);
+
+    //beforeInit Callback
+    _this.events.beforeInit.call(_this);
 
     _this.elements = bind.call(_this);
 
@@ -95,6 +102,9 @@ function init () {
     } else {
         moveTo.call(_this, _this.data.defaultId);
     }
+
+    //afterInit Callback
+    _this.events.afterInit.call(_this);
 }
 
 /**
@@ -124,10 +134,10 @@ const esRouter = function (options = {}, events = {}, plugins = []) {
         }
     };
     _this.events = {
-        init: events.init || null,
-        bind: events.bind || null,
-        beforeMove: events.beforeMove || null,
-        afterMove: events.afterMove || null
+        beforeInit: events.beforeInit || function () {},
+        afterInit: events.afterInit || function () {},
+        beforeMove: events.beforeMove || function () {},
+        afterMove: events.afterMove || function () {}
     };
     _this.plugins = plugins;
 

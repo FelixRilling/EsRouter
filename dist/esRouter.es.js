@@ -7,10 +7,6 @@ var _window = window;
 var _document = _window.document;
 var _location = _window.location;
 
-function queryForField(prefix, name) {
-    return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
-}
-
 function bind() {
     var _this = this;
     var _elements = _this.options.elements;
@@ -18,10 +14,14 @@ function bind() {
     var result = {};
 
     keys.forEach(function (key, i) {
-        result[key] = queryForField(_elements.prefix, _elements.fields[key]);
+        result[key] = queryByField(_elements.prefix, _elements.fields[key]);
     });
 
     return result;
+
+    function queryByField(prefix, name) {
+        return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
+    }
 }
 
 var readData = function readData(element, prefix, key) {
@@ -42,18 +42,22 @@ var getSlug = function getSlug() {
 function _moveTo(id) {
     var _this = this;
     var index = _this.data.ids.indexOf(id);
+    //beforeMove Callback
+    _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
 
     _this.data.activeId = id;
     _this.data.index = index;
 
     setSlug.call(_this, id);
+
+    //afterMove Callback
+    _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
 }
 
 var moveTo = function moveTo(id) {
     var _this = this;
 
     if (_this.data.ids.indexOf(id) > -1) {
-        console.log("MOVE " + id);
         _moveTo.call(_this, id);
     } else {
         console.info("MISSING " + id);
@@ -74,6 +78,9 @@ function init() {
     var _this = this;
     var slug = getSlug.call(_this);
 
+    //beforeInit Callback
+    _this.events.beforeInit.call(_this);
+
     _this.elements = bind.call(_this);
 
     //Save Ids
@@ -93,6 +100,9 @@ function init() {
     } else {
         moveTo.call(_this, _this.data.defaultId);
     }
+
+    //afterInit Callback
+    _this.events.afterInit.call(_this);
 }
 
 /**
@@ -126,10 +136,10 @@ var esRouter = function esRouter() {
         }
     };
     _this.events = {
-        init: events.init || null,
-        bind: events.bind || null,
-        beforeMove: events.beforeMove || null,
-        afterMove: events.afterMove || null
+        beforeInit: events.beforeInit || function () {},
+        afterInit: events.afterInit || function () {},
+        beforeMove: events.beforeMove || function () {},
+        afterMove: events.afterMove || function () {}
     };
     _this.plugins = plugins;
 

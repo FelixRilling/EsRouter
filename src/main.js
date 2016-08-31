@@ -35,10 +35,10 @@ const esRouter = function (options = {}, events = {}, plugins = []) {
         }
     };
     _this.events = {
-        init: events.init || null,
-        bind: events.bind || null,
-        beforeMove: events.beforeMove || null,
-        afterMove: events.afterMove || null
+        beforeInit: events.beforeInit || function () {},
+        afterInit: events.afterInit || function () {},
+        beforeMove: events.beforeMove || function () {},
+        afterMove: events.afterMove || function () {}
     };
     _this.plugins = plugins;
 

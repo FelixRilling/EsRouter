@@ -17,6 +17,9 @@ export default function () {
     const _this = this;
     const slug = getSlug.call(_this);
 
+    //beforeInit Callback
+    _this.events.beforeInit.call(_this);
+
     _this.elements = bind.call(_this);
 
     //Save Ids
@@ -40,4 +43,7 @@ export default function () {
     } else {
         moveTo.call(_this, _this.data.defaultId);
     }
+
+    //afterInit Callback
+    _this.events.afterInit.call(_this);
 }
