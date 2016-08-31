@@ -13,11 +13,12 @@ export const moveTo = function (id) {
     }
 };
 export const moveBy = function (val) {
-    moveTo.call(this.data.index + val);
+    const _this = this;
+    moveTo.call(_this, _this.data.ids[_this.data.index + val]);
 };
 export const moveForward = function (val) {
-    moveBy.call(1);
+    moveBy.call(this, 1);
 };
 export const moveBackward = function (val) {
-    moveBy.call(-1);
+    moveBy.call(this, -1);
 };

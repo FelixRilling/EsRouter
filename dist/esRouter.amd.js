@@ -60,13 +60,14 @@ define('esrouter', function () {
         }
     };
     var moveBy = function moveBy(val) {
-        moveTo.call(this.data.index + val);
+        var _this = this;
+        moveTo.call(_this, _this.data.ids[_this.data.index + val]);
     };
     var moveForward = function moveForward(val) {
-        moveBy.call(1);
+        moveBy.call(this, 1);
     };
     var moveBackward = function moveBackward(val) {
-        moveBy.call(-1);
+        moveBy.call(this, -1);
     };
 
     function init() {
