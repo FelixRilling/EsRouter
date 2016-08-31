@@ -1,24 +1,23 @@
 {
-  "name": "es-router",
-  "version": "v3.0.0",
+    "name": "es-router",
+    "version": "v3.0.0",
     "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
-  "main": "dist/esRouter.js",
-  "authors": [
-    "Felix Rilling"
-  ],
-  "license": "MIT",
-  "keywords": [
-    "esRouter",
-    "router",
-    "es6"
-  ],
-  "homepage": "https://github.com/FelixRilling/esRouter",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests",
-    ".tmp"
-  ]
+    "main": "dist/esRouter.js",
+    "authors": [
+        "Felix Rilling"
+    ],
+    "license": "MIT",
+    "keywords": [
+        "esRouter",
+        "router",
+        "es6"
+    ],
+    "homepage": "https://github.com/FelixRilling/esRouter",
+    "ignore": [
+        "**/.*",
+        ".git/",
+        ".tmp/",
+        "node_modules",
+        "bower_components",
+    ]
 }

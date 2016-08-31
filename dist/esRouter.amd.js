@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-var esRouter = function () {
+define('esrouter', function () {
     'use strict';
 
     var _window = window;
@@ -8,7 +8,7 @@ var esRouter = function () {
     var _document = _window.document;
 
     function queryForField(prefix, name) {
-        return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
+        return _document.querySelectorAll('[data-' + prefix + '-' + name + ']');
     }
 
     function bind() {
@@ -104,4 +104,4 @@ var esRouter = function () {
     };
 
     return esRouter;
-}();
+});

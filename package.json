@@ -1,36 +1,36 @@
 {
-  "name": "es-router",
-  "version": "v3.0.0",
-  "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
-  "main": "dist/esRouter.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FelixRilling/esRouter.git"
-  },
-  "keywords": [
-    "esRouter",
-    "router",
-    "es6"
-  ],
-  "author": "Felix Rilling",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/FelixRilling/esRouter/issues"
-  },
-  "homepage": "https://github.com/TheBinaryBee/FelixRilling#readme",
-  "devDependencies": {
-    "babel-preset-es2015": "^6.3.13",
-    "grunt": "^0.4.5",
-    "grunt-babel": "^6.0.0",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-copy": "^0.8.2",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-uglify": "^0.11.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "jit-grunt": "^0.9.1",
-    "jshint-stylish": "^1.0.0",
-    "time-grunt": "^1.0.0",
-    "uglify-js": "^2.6.1"
-  },
-  "dependencies": {}
+    "name": "es-router",
+    "version": "v3.0.0",
+    "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
+    "main": "dist/esRouter.js",
+    "scripts": {
+        "start": "npm run bundle && npm run babel && npm run uglify",
+        "bundle": "rollup -c",
+        "babel": "babel ./dist/es6 --out-dir ./dist",
+        "uglify": "uglifyjs ./dist/esRouter.js -o ./dist/esRouter.min.js --screw-ie8 --mangle --compress conditionals"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/FelixRilling/esRouter.git"
+    },
+    "keywords": [
+        "esRouter",
+        "router",
+        "es6"
+    ],
+    "author": "Felix Rilling",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/FelixRilling/esRouter/issues"
+    },
+    "homepage": "https://github.com/TheBinaryBee/FelixRilling#readme",
+    "devDependencies": {
+        "babel-cli": "^6.14.0",
+        "babel-preset-es2015": "^6.14.0",
+        "rollup": "^0.34.0",
+        "rollup-plugin-commonjs": "^3.3.0",
+        "rollup-plugin-node-resolve": "^2.0.0",
+        "uglify-js": "^2.7.0"
+    },
+    "dependencies": {}
 }
