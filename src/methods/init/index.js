@@ -1,5 +1,6 @@
 "use strict";
 
+import query from "../dom/query";
 import bind from "../dom/bind";
 import read from "./read";
 import {
@@ -17,8 +18,10 @@ export default function () {
     //beforeInit Callback
     _this.events.beforeInit.call(_this);
 
-    _this.elements = bind.call(_this);
-
+    _this.elements = query.call(_this);
+    if (_this.options.autobind) {
+        bind.call(_this, _this.elements);
+    }
     read.call(_this);
 
     //Move to either saved slug or default id

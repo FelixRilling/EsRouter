@@ -2,22 +2,32 @@ const _window = window;
 const _document = _window.document;
 const _location = _window.location;
 
+function query () {
+    const _this = this;
+    const _elements = _this.options.elements;
+    const keys = Object.keys(_elements.fields);
+    const result = {};
+
+    function queryByField(prefix, name) {
+        return _document.querySelectorAll(`[data-${prefix}-${name}]`);
+    }
+
+    keys.forEach((key, i) => {
+        result[key] = queryByField(_elements.prefix, _elements.fields[key]);
+    });
+
+    return result;
+}
+
 const eachNode = function (elements, fn) {
     [].forEach.call(elements, element => {
         fn(element);
     });
 };
 
-function bind () {
+function bind (categories) {
     const _this = this;
-    const _elements = _this.options.elements;
-    const keys = Object.keys(_elements.fields);
-
     const result = {};
-
-    function queryByField(prefix, name) {
-        return _document.querySelectorAll(`[data-${prefix}-${name}]`);
-    }
 
     function bindClick(elements, fn) {
         eachNode(elements, element => {
@@ -25,22 +35,13 @@ function bind () {
         });
     }
 
-    keys.forEach((key, i) => {
-        result[key] = queryByField(_elements.prefix, _elements.fields[key]);
+    bindClick(categories["link"], () => {
+        console.log(1);
     });
 
-    if (_this.options.autobind) {
-        bindClick(result["link"], () => {
-            console.log(1);
-        });
-
-        bindClick(result["pagination"], () => {
-            console.log(2);
-        });
-    }
-
-    return result;
-
+    bindClick(categories["pagination"], () => {
+        console.log(2);
+    });
 }
 
 const readData = function (element, prefix, key) {
@@ -119,8 +120,10 @@ function init () {
     //beforeInit Callback
     _this.events.beforeInit.call(_this);
 
-    _this.elements = bind.call(_this);
-
+    _this.elements = query.call(_this);
+    if (_this.options.autobind) {
+        bind.call(_this, _this.elements);
+    }
     read.call(_this);
 
     //Move to either saved slug or default id

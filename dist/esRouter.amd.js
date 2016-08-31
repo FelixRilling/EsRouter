@@ -7,22 +7,32 @@ define('esrouter', function () {
     var _document = _window.document;
     var _location = _window.location;
 
+    function query() {
+        var _this = this;
+        var _elements = _this.options.elements;
+        var keys = Object.keys(_elements.fields);
+        var result = {};
+
+        function queryByField(prefix, name) {
+            return _document.querySelectorAll('[data-' + prefix + '-' + name + ']');
+        }
+
+        keys.forEach(function (key, i) {
+            result[key] = queryByField(_elements.prefix, _elements.fields[key]);
+        });
+
+        return result;
+    }
+
     var eachNode = function eachNode(elements, fn) {
         [].forEach.call(elements, function (element) {
             fn(element);
         });
     };
 
-    function bind() {
+    function bind(categories) {
         var _this = this;
-        var _elements = _this.options.elements;
-        var keys = Object.keys(_elements.fields);
-
         var result = {};
-
-        function queryByField(prefix, name) {
-            return _document.querySelectorAll('[data-' + prefix + '-' + name + ']');
-        }
 
         function bindClick(elements, fn) {
             eachNode(elements, function (element) {
@@ -30,21 +40,13 @@ define('esrouter', function () {
             });
         }
 
-        keys.forEach(function (key, i) {
-            result[key] = queryByField(_elements.prefix, _elements.fields[key]);
+        bindClick(categories["link"], function () {
+            console.log(1);
         });
 
-        if (_this.options.autobind) {
-            bindClick(result["link"], function () {
-                console.log(1);
-            });
-
-            bindClick(result["pagination"], function () {
-                console.log(2);
-            });
-        }
-
-        return result;
+        bindClick(categories["pagination"], function () {
+            console.log(2);
+        });
     }
 
     var readData = function readData(element, prefix, key) {
@@ -119,8 +121,10 @@ define('esrouter', function () {
         //beforeInit Callback
         _this.events.beforeInit.call(_this);
 
-        _this.elements = bind.call(_this);
-
+        _this.elements = query.call(_this);
+        if (_this.options.autobind) {
+            bind.call(_this, _this.elements);
+        }
         read.call(_this);
 
         //Move to either saved slug or default id
