@@ -1,8 +1,6 @@
 "use strict";
 
-import {
-    readData
-} from "../dom/data";
+import readData from "../dom/readData";
 import {
     eachNode
 } from "../../util";

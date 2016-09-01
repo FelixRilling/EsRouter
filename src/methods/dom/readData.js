@@ -1,6 +1,6 @@
 "use strict";
 
-export const readData = function (element, prefix, key) {
+export default function (element, prefix, key) {
     const getAttr = function (prefix, key) {
         return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
     };

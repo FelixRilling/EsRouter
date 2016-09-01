@@ -1,12 +1,7 @@
 "use strict";
 
 import init from "./methods/init";
-import {
-    moveTo,
-    moveBy,
-    moveForward,
-    moveBackward
-} from "./methods/move";
+import moveTo from "./methods/move/moveTo";
 
 /**
  * Basic esRouter Constructor
@@ -57,9 +52,17 @@ const esRouter = function (options = {}, events = {}, plugins = []) {
 esRouter.prototype = {
     init,
     moveTo,
-    moveBy,
-    moveForward,
-    moveBackward
+    moveBy: function (val) {
+        const _this = this;
+
+        _this.moveTo(_this.data.ids[_this.data.index + val]);
+    },
+    moveForward: function () {
+        this.moveBy(1);
+    },
+    moveBackward: function () {
+        this.moveBy(-1);
+    }
 };
 
 export default esRouter;

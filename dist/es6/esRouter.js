@@ -28,7 +28,7 @@ const eachNode = function (elements, fn) {
     });
 };
 
-const readData = function (element, prefix, key) {
+function readData (element, prefix, key) {
     const getAttr = function (prefix, key) {
         return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
     };
@@ -38,7 +38,6 @@ const readData = function (element, prefix, key) {
 
 function bind (categories) {
     const _this = this;
-    const result = {};
 
     function bindClick(elements, fn) {
         eachNode(elements, element => {
@@ -53,6 +52,7 @@ function bind (categories) {
 
         _this.moveTo(id);
     });
+    
     bindClick(categories.pagination, element => {
         const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
 
@@ -86,41 +86,6 @@ const getSlug = function () {
     return _location.hash.replace(this.options.slug.start, "").replace("#", "");
 };
 
-function _moveTo (id) {
-    const _this = this;
-    const index = _this.data.ids.indexOf(id);
-    //beforeMove Callback
-    _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
-
-    _this.data.activeId = id;
-    _this.data.index = index;
-
-    setSlug.call(_this, id);
-
-    //afterMove Callback
-    _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
-}
-
-const moveTo = function (id) {
-    const _this = this;
-
-    if (_this.data.ids.indexOf(id) > -1) {
-        _moveTo.call(_this, id);
-    } else {
-        console.info("MISSING " + id);
-    }
-};
-const moveBy = function (val) {
-    const _this = this;
-    moveTo.call(_this, _this.data.ids[_this.data.index + val]);
-};
-const moveForward = function (val) {
-    moveBy.call(this, 1);
-};
-const moveBackward = function (val) {
-    moveBy.call(this, -1);
-};
-
 function init () {
     const _this = this;
     const slug = getSlug.call(_this);
@@ -128,21 +93,45 @@ function init () {
     //beforeInit Callback
     _this.events.beforeInit.call(_this);
 
+    //Collect DOM elements
     _this.elements = query.call(_this);
     if (_this.options.autobind) {
+        //Bind buttons
         bind.call(_this, _this.elements);
     }
+    //Read default ids
     read.call(_this);
 
     //Move to either saved slug or default id
     if (slug !== "") {
-        moveTo.call(_this, slug);
+        _this.moveTo(slug);
     } else {
-        moveTo.call(_this, _this.data.defaultId);
+        _this.moveTo(_this.data.defaultId);
     }
 
     //afterInit Callback
     _this.events.afterInit.call(_this);
+}
+
+function moveTo (id) {
+    const _this = this;
+
+    if (_this.data.ids.includes(id)) {
+
+        const index = _this.data.ids.indexOf(id);
+        //beforeMove Callback
+        _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
+
+        //Set new section
+        _this.data.activeId = id;
+        _this.data.index = index;
+        setSlug.call(_this, id);
+
+        //afterMove Callback
+        _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+    } else {
+        console.info("MISSING " + id);
+    }
 }
 
 /**
@@ -194,9 +183,17 @@ const esRouter = function (options = {}, events = {}, plugins = []) {
 esRouter.prototype = {
     init,
     moveTo,
-    moveBy,
-    moveForward,
-    moveBackward
+    moveBy: function (val) {
+        const _this = this;
+
+        _this.moveTo(_this.data.ids[_this.data.index + val]);
+    },
+    moveForward: function () {
+        this.moveBy(1);
+    },
+    moveBackward: function () {
+        this.moveBy(-1);
+    }
 };
 
 return esRouter;

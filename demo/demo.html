@@ -67,14 +67,14 @@
                 }
             }, []);
 
-            myRouter.init();
-
             function highlight(element) {
                 [].forEach.call(all, item => {
                     item.classList.remove("active");
                 });
                 element.classList.add("active");
             }
+
+            myRouter.init();
         </script>
     </body>
 
