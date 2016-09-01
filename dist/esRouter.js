@@ -132,6 +132,17 @@ var esRouter = function () {
         }
     }
 
+    function moveBy(val) {
+        var _this = this;
+        var newId = _this.data.ids[_this.data.index + val];
+
+        if (typeof newId !== "undefined") {
+            _this.moveTo(newId);
+        } else {
+            console.info("MISSING " + val);
+        }
+    }
+
     /**
      * Basic esRouter Constructor
      *
@@ -139,11 +150,7 @@ var esRouter = function () {
      * @param {String} id To identify the instance
      * @returns {Object} Returns esRouter instance
      */
-    var esRouter = function esRouter() {
-        var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-        var events = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var plugins = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
-
+    var esRouter = function esRouter(options, events, plugins) {
         var _this = this;
 
         _this.options = {
@@ -185,11 +192,7 @@ var esRouter = function () {
     esRouter.prototype = {
         init: init,
         moveTo: moveTo,
-        moveBy: function moveBy(val) {
-            var _this = this;
-
-            _this.moveTo(_this.data.ids[_this.data.index + val]);
-        },
+        moveBy: moveBy,
         moveForward: function moveForward() {
             this.moveBy(1);
         },

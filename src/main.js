@@ -2,7 +2,7 @@
 
 import init from "./methods/init";
 import moveTo from "./methods/move/moveTo";
-
+import moveBy from "./methods/move/moveBy";
 /**
  * Basic esRouter Constructor
  *
@@ -10,7 +10,7 @@ import moveTo from "./methods/move/moveTo";
  * @param {String} id To identify the instance
  * @returns {Object} Returns esRouter instance
  */
-const esRouter = function (options = {}, events = {}, plugins = []) {
+const esRouter = function (options, events, plugins) {
     const _this = this;
 
     _this.options = {
@@ -52,11 +52,7 @@ const esRouter = function (options = {}, events = {}, plugins = []) {
 esRouter.prototype = {
     init,
     moveTo,
-    moveBy: function (val) {
-        const _this = this;
-
-        _this.moveTo(_this.data.ids[_this.data.index + val]);
-    },
+    moveBy,
     moveForward: function () {
         this.moveBy(1);
     },
