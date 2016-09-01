@@ -30,31 +30,36 @@ define('esrouter', function () {
         });
     };
 
+    var readData = function readData(element, prefix, key) {
+        var getAttr = function getAttr(prefix, key) {
+            return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
+        };
+
+        return element.dataset[getAttr(prefix, key)];
+    };
+
     function bind(categories) {
         var _this = this;
         var result = {};
 
         function bindClick(elements, fn) {
             eachNode(elements, function (element) {
-                element.addEventListener("click", fn, false);
+                element.addEventListener("click", function (ev) {
+                    fn(element, ev);
+                }, false);
             });
         }
 
-        bindClick(categories["link"], function () {
-            console.log(1);
+        bindClick(categories.link, function (element) {
+            var id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.link);
+
+            _this.moveTo(id);
         });
+        bindClick(categories.pagination, function (element) {
+            var val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
 
-        bindClick(categories["pagination"], function () {
-            console.log(2);
+            _this.moveBy(Number(val));
         });
-    }
-
-    var readData = function readData(element, prefix, key) {
-        return element.dataset[getAttr(prefix, key)];
-    };
-
-    function getAttr(prefix, key) {
-        return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
     }
 
     function read() {

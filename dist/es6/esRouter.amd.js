@@ -27,31 +27,36 @@ const eachNode = function (elements, fn) {
     });
 };
 
+const readData = function (element, prefix, key) {
+    const getAttr = function (prefix, key) {
+        return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
+    };
+
+    return element.dataset[getAttr(prefix, key)];
+};
+
 function bind (categories) {
     const _this = this;
     const result = {};
 
     function bindClick(elements, fn) {
         eachNode(elements, element => {
-            element.addEventListener("click", fn, false);
+            element.addEventListener("click", ev => {
+                fn(element, ev);
+            }, false);
         });
     }
 
-    bindClick(categories["link"], () => {
-        console.log(1);
+    bindClick(categories.link, element => {
+        const id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.link);
+
+        _this.moveTo(id);
     });
+    bindClick(categories.pagination, element => {
+        const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
 
-    bindClick(categories["pagination"], () => {
-        console.log(2);
+        _this.moveBy(Number(val));
     });
-}
-
-const readData = function (element, prefix, key) {
-    return element.dataset[getAttr(prefix, key)];
-};
-
-function getAttr(prefix, key) {
-    return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
 }
 
 function read () {

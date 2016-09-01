@@ -3,6 +3,9 @@
 import {
     eachNode
 } from "../../util";
+import {
+    readData
+} from "./data";
 
 export default function (categories) {
     const _this = this;
@@ -10,15 +13,20 @@ export default function (categories) {
 
     function bindClick(elements, fn) {
         eachNode(elements, element => {
-            element.addEventListener("click", fn, false);
+            element.addEventListener("click", ev => {
+                fn(element, ev);
+            }, false);
         });
     }
 
-    bindClick(categories["link"], () => {
-        console.log(1);
-    });
+    bindClick(categories.link, element => {
+        const id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.link);
 
-    bindClick(categories["pagination"], () => {
-        console.log(2);
+        _this.moveTo(id);
+    });
+    bindClick(categories.pagination, element => {
+        const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
+
+        _this.moveBy(Number(val));
     });
 }
