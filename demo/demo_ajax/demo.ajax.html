@@ -1,0 +1,82 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>esRouter Demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <style>
+            .container {
+                width: 250px;
+                margin: auto;
+            }
+
+            .mySection {
+                width: 250px;
+                height: 100px;
+                line-height: 100px;
+                text-align: center;
+                margin: 20px 0;
+                background-color: #eee;
+                padding-left: 10px;
+            }
+
+            .active {
+                background-color: #daa;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div class="container">
+            <section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
+            <section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
+            <section class="mySection" data-router-section="middle" data-router-src="ajax/third.html"></section>
+            <section class="mySection" data-router-section="last" data-router-src="ajax/last.html"></section>
+        </div>
+        <br>
+
+        <button data-router-pagin="-1">Go Backward</button>
+        <button data-router-pagin="1">Go Forward</button>
+        <br>
+        <button data-router-href="main">Jump to main</button>
+        <button data-router-href="last">Jump to Last</button>
+        <script src="../../dist/esRouter.js"></script>
+        <script>
+            "use strict";
+
+            var all = document.querySelectorAll(".mySection");
+            var myRouter = new esRouter({}, {
+                beforeInit: function() {
+                    console.log("myRouter beforeInit");
+                },
+                afterInit: function() {
+                    console.log("myRouter afterInit");
+                },
+                beforeMove: function(id, index, element) {
+                    console.log("myRouter beforeMove: " + id);
+                },
+                afterMove: function(id, index, element) {
+                    console.log("myRouter afterMove: " + id);
+                    highlight(element);
+                }
+            }, []);
+
+            function highlight(element) {
+                [].forEach.call(all, function(item) {
+                    item.classList.remove("active");
+                });
+                element.classList.add("active");
+            }
+
+            myRouter.init();
+        </script>
+    </body>
+
+</html>

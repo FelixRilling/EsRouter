@@ -18,6 +18,8 @@
             .mySection {
                 width: 250px;
                 height: 100px;
+                line-height: 100px;
+                text-align: center;
                 margin: 20px 0;
                 background-color: #eee;
                 padding-left: 10px;
@@ -46,12 +48,12 @@
         <br>
         <button data-router-href="main">Jump to main</button>
         <button data-router-href="last">Jump to Last</button>
-        <script src="../dist/esRouter.js"></script>
+        <script src="../../dist/esRouter.js"></script>
         <script>
             "use strict";
 
-            const all = document.querySelectorAll(".mySection");
-            const myRouter = new esRouter({}, {
+            var all = document.querySelectorAll(".mySection");
+            var myRouter = new esRouter({}, {
                 beforeInit: function() {
                     console.log("myRouter beforeInit");
                 },
@@ -68,7 +70,7 @@
             }, []);
 
             function highlight(element) {
-                [].forEach.call(all, item => {
+                [].forEach.call(all, function(item){
                     item.classList.remove("active");
                 });
                 element.classList.add("active");
