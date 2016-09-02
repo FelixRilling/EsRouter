@@ -51,7 +51,7 @@ function bind (categories) {
 
         _this.moveTo(id);
     });
-    
+
     bindClick(categories.pagination, element => {
         const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
 
@@ -112,22 +112,27 @@ function init () {
     _this.events.afterInit.call(_this);
 }
 
+function move (id) {
+    const _this = this;
+    const index = _this.data.ids.indexOf(id);
+
+    //beforeMove Callback
+    _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
+
+    //Set new section
+    _this.data.activeId = id;
+    _this.data.index = index;
+    setSlug.call(_this, id);
+
+    //afterMove Callback
+    _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+}
+
 function moveTo (id) {
     const _this = this;
 
     if (_this.data.ids.includes(id)) {
-
-        const index = _this.data.ids.indexOf(id);
-        //beforeMove Callback
-        _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
-
-        //Set new section
-        _this.data.activeId = id;
-        _this.data.index = index;
-        setSlug.call(_this, id);
-
-        //afterMove Callback
-        _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+        move.call(_this, id);
     } else {
         console.info("MISSING " + id);
     }
@@ -138,7 +143,7 @@ function moveBy (val) {
     const newId = _this.data.ids[_this.data.index + val];
 
     if (typeof newId !== "undefined") {
-        _this.moveTo(newId);
+        moveTo.call(_this, newId);
     } else {
         console.info("MISSING " + val);
     }

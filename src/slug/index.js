@@ -2,7 +2,7 @@
 
 import {
     _location
-} from "../../constants";
+} from "../constants";
 
 export const setSlug = function (active) {
     _location.hash = this.options.slug.start + active;

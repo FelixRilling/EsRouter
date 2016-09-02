@@ -1,8 +1,8 @@
 "use strict";
 
-import init from "./methods/init";
-import moveTo from "./methods/move/moveTo";
-import moveBy from "./methods/move/moveBy";
+import init from "./init";
+import moveTo from "./move/moveTo";
+import moveBy from "./move/moveBy";
 /**
  * Basic esRouter Constructor
  *

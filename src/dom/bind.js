@@ -2,7 +2,7 @@
 
 import {
     eachNode
-} from "../../util";
+} from "../util";
 import readData from "./readData";
 
 export default function (categories) {
@@ -21,7 +21,7 @@ export default function (categories) {
 
         _this.moveTo(id);
     });
-    
+
     bindClick(categories.pagination, element => {
         const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
 

@@ -2,7 +2,7 @@
 
 import {
     _document
-} from "../../constants";
+} from "../constants";
 
 export default function () {
     const _this = this;

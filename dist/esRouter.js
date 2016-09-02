@@ -111,22 +111,27 @@ var esRouter = function () {
         _this.events.afterInit.call(_this);
     }
 
+    function move(id) {
+        var _this = this;
+        var index = _this.data.ids.indexOf(id);
+
+        //beforeMove Callback
+        _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
+
+        //Set new section
+        _this.data.activeId = id;
+        _this.data.index = index;
+        setSlug.call(_this, id);
+
+        //afterMove Callback
+        _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+    }
+
     function moveTo(id) {
         var _this = this;
 
         if (_this.data.ids.indexOf(id) !== -1) {
-
-            var index = _this.data.ids.indexOf(id);
-            //beforeMove Callback
-            _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
-
-            //Set new section
-            _this.data.activeId = id;
-            _this.data.index = index;
-            setSlug.call(_this, id);
-
-            //afterMove Callback
-            _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+            move.call(_this, id);
         } else {
             console.info("MISSING " + id);
         }
@@ -137,7 +142,7 @@ var esRouter = function () {
         var newId = _this.data.ids[_this.data.index + val];
 
         if (typeof newId !== "undefined") {
-            _this.moveTo(newId);
+            moveTo.call(_this, newId);
         } else {
             console.info("MISSING " + val);
         }

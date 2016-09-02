@@ -3,7 +3,7 @@
 import readData from "../dom/readData";
 import {
     eachNode
-} from "../../util";
+} from "../util";
 
 export default function () {
     const _this = this;
