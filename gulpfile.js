@@ -1,6 +1,7 @@
 "use strict";
 
 const packageJson = require("./package.json");
+const bowerJson = require("./bower.json");
 
 const gulp = require("gulp");
 const shell = require("gulp-shell");
