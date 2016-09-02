@@ -7,21 +7,27 @@ var esRouter = function () {
     var _document = _window.document;
     var _location = _window.location;
 
-    function query() {
-        var _this = this;
-        var _elements = _this.options.elements;
-        var keys = Object.keys(_elements.fields);
+    function query(elements) {
+        var fieldKeys = Object.keys(elements.fields);
         var result = {};
 
         function queryByField(prefix, name) {
             return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
         }
 
-        keys.forEach(function (key, i) {
-            result[key] = queryByField(_elements.prefix, _elements.fields[key]);
+        fieldKeys.forEach(function (key, i) {
+            result[key] = queryByField(elements.prefix, elements.fields[key]);
         });
 
         return result;
+    }
+
+    function readData(element, prefix, key) {
+        function getAttr(prefix, key) {
+            return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
+        }
+
+        return element.dataset[getAttr(prefix, key)];
     }
 
     var eachNode = function eachNode(elements, fn) {
@@ -30,15 +36,7 @@ var esRouter = function () {
         });
     };
 
-    function readData(element, prefix, key) {
-        var getAttr = function getAttr(prefix, key) {
-            return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
-        };
-
-        return element.dataset[getAttr(prefix, key)];
-    };
-
-    function bind(categories) {
+    function bind(categories, elements) {
         var _this = this;
 
         function bindClick(elements, fn) {
@@ -49,14 +47,16 @@ var esRouter = function () {
             });
         }
 
+        //Bind router-link events
         bindClick(categories.link, function (element) {
-            var id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.link);
+            var id = readData(element, elements.prefix, elements.fields.link);
 
             _this.moveTo(id);
         });
 
+        //Bind router-link events
         bindClick(categories.pagination, function (element) {
-            var val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
+            var val = readData(element, elements.prefix, elements.fields.pagination);
 
             _this.moveBy(Number(val));
         });
@@ -92,10 +92,10 @@ var esRouter = function () {
         _this.events.beforeInit.call(_this);
 
         //Collect DOM elements
-        _this.elements = query.call(_this);
+        _this.elements = query(_this.options.elements);
         if (_this.options.autobind) {
             //Bind buttons
-            bind.call(_this, _this.elements);
+            bind.call(_this, _this.elements, _this.options.elements);
         }
         //Read default ids
         read.call(_this);
@@ -132,8 +132,6 @@ var esRouter = function () {
 
         if (_this.data.ids.indexOf(id) !== -1) {
             move.call(_this, id);
-        } else {
-            console.info("MISSING " + id);
         }
     }
 
@@ -143,8 +141,6 @@ var esRouter = function () {
 
         if (typeof newId !== "undefined") {
             moveTo.call(_this, newId);
-        } else {
-            console.info("MISSING " + val);
         }
     }
 

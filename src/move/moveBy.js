@@ -8,7 +8,5 @@ export default function (val) {
 
     if (typeof newId !== "undefined") {
         moveTo.call(_this, newId);
-    } else {
-        console.info("MISSING " + val);
     }
 }

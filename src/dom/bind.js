@@ -1,11 +1,11 @@
 "use strict";
 
+import readData from "./readData";
 import {
     eachNode
 } from "../util";
-import readData from "./readData";
 
-export default function (categories) {
+export default function (categories, elements) {
     const _this = this;
 
     function bindClick(elements, fn) {
@@ -16,14 +16,16 @@ export default function (categories) {
         });
     }
 
+    //Bind router-link events
     bindClick(categories.link, element => {
-        const id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.link);
+        const id = readData(element, elements.prefix, elements.fields.link);
 
         _this.moveTo(id);
     });
 
+    //Bind router-pagination events
     bindClick(categories.pagination, element => {
-        const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
+        const val = readData(element, elements.prefix, elements.fields.pagination);
 
         _this.moveBy(Number(val));
     });

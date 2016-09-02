@@ -4,21 +4,27 @@ const _window = window;
 const _document = _window.document;
 const _location = _window.location;
 
-function query () {
-    const _this = this;
-    const _elements = _this.options.elements;
-    const keys = Object.keys(_elements.fields);
+function query (elements) {
+    const fieldKeys = Object.keys(elements.fields);
     const result = {};
 
     function queryByField(prefix, name) {
         return _document.querySelectorAll(`[data-${prefix}-${name}]`);
     }
 
-    keys.forEach((key, i) => {
-        result[key] = queryByField(_elements.prefix, _elements.fields[key]);
+    fieldKeys.forEach((key, i) => {
+        result[key] = queryByField(elements.prefix, elements.fields[key]);
     });
 
     return result;
+}
+
+function readData (element, prefix, key) {
+    function getAttr(prefix, key) {
+        return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
+    }
+
+    return element.dataset[getAttr(prefix, key)];
 }
 
 const eachNode = function (elements, fn) {
@@ -27,15 +33,7 @@ const eachNode = function (elements, fn) {
     });
 };
 
-function readData (element, prefix, key) {
-    const getAttr = function (prefix, key) {
-        return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
-    };
-
-    return element.dataset[getAttr(prefix, key)];
-};
-
-function bind (categories) {
+function bind (categories, elements) {
     const _this = this;
 
     function bindClick(elements, fn) {
@@ -46,14 +44,16 @@ function bind (categories) {
         });
     }
 
+    //Bind router-link events
     bindClick(categories.link, element => {
-        const id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.link);
+        const id = readData(element, elements.prefix, elements.fields.link);
 
         _this.moveTo(id);
     });
 
+    //Bind router-link events
     bindClick(categories.pagination, element => {
-        const val = readData(element, _this.options.elements.prefix, _this.options.elements.fields.pagination);
+        const val = readData(element, elements.prefix, elements.fields.pagination);
 
         _this.moveBy(Number(val));
     });
@@ -93,10 +93,10 @@ function init () {
     _this.events.beforeInit.call(_this);
 
     //Collect DOM elements
-    _this.elements = query.call(_this);
+    _this.elements = query(_this.options.elements);
     if (_this.options.autobind) {
         //Bind buttons
-        bind.call(_this, _this.elements);
+        bind.call(_this, _this.elements, _this.options.elements);
     }
     //Read default ids
     read.call(_this);
@@ -133,8 +133,6 @@ function moveTo (id) {
 
     if (_this.data.ids.includes(id)) {
         move.call(_this, id);
-    } else {
-        console.info("MISSING " + id);
     }
 }
 
@@ -144,8 +142,6 @@ function moveBy (val) {
 
     if (typeof newId !== "undefined") {
         moveTo.call(_this, newId);
-    } else {
-        console.info("MISSING " + val);
     }
 }
 

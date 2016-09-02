@@ -15,10 +15,10 @@ export default function () {
     _this.events.beforeInit.call(_this);
 
     //Collect DOM elements
-    _this.elements = query.call(_this);
+    _this.elements = query(_this.options.elements);
     if (_this.options.autobind) {
         //Bind buttons
-        bind.call(_this, _this.elements);
+        bind.call(_this, _this.elements, _this.options.elements);
     }
     //Read default ids
     read.call(_this);

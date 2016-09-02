@@ -7,7 +7,5 @@ export default function (id) {
 
     if (_this.data.ids.includes(id)) {
         move.call(_this, id);
-    } else {
-        console.info("MISSING " + id);
     }
 }
