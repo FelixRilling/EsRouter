@@ -11,74 +11,58 @@ esRouter is an ES6 based, modern and small library for for DOM-routing, with sup
 # Syntax
 
 ```javascript
-var myRouter = new esRouter({
-    log: false, //log messages
-    ajax: false, //enable ajax routing
+//Avenue(options,events,plugins)
+var myRouter = new Avenue({
     autoBind: true, //bind click events to data-router-href/link
-    dataPrefix: "router",
-    slug: {
-        preSlash: false, //add slash before urlFragment?
-        postSlash: false, //add slash after urlFragment?
-        prepend: "",
-        append: ""
+    slugPrepend: "", //Prepend to slug, ex:"currentSection="
     }
 }, {
-    before: function() {}, //executes before moving
-    done: function() {}, //executes after moving if successfull
-    fail: function() {}, //executes after moving if it errors
-    after: function() {}, //executes after moving
-});
+    beforeInit: function () {},
+    afterInit: function () {},
+    beforeMove: function () {},
+    afterMove: function () {},
+}, []);
 ```
 
 # Examples
 
-## Example 1: Preloaded content
+## Example 1: Simple router
 
 ```javascript
-var myRouter = new esRouter({},{
-    before: function() {
-        console.log("started!")
-    },
-    done: function(id) {
-        console.log("finished routing to" + id)
-    }
-});
+var myRouter = new Avenue();
 ```
 
-esRouter makes use of html data attributes to manage your routing sections
+Avenue makes use of html data attributes to manage your routing sections
 
 ```html
 <!--Classic preloaded routing-->
-<section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1</section>
-<section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2</section>
-<div class="mySection" data-router-section="third">Et dolor! Page 3</div>
-<div class="container">
-    <div class="mySection" data-router-section="wrapped">Im wrapped!</div>
-</div>
-<br>
+<section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1: Main</section>
+<section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2: Secondary</section>
+<section class="mySection" data-router-section="middle">Et dolor! Page 3: Middle</section>
+<section class="mySection" data-router-section="fourth">sit amet dolor! Page 4: Fourth</section>
+<section class="mySection" data-router-section="last">Bye World! Page 5: Last</section>
 
-<button data-router-href="main">Go to main</button>
-<br>
 <button data-router-pagin="-1">Go Backward</button>
 <button data-router-pagin="1">Go Forward</button>
+<br>
+<button data-router-href="main">Jump to main</button>
+<button data-router-href="last">Jump to Last</button>
 ```
 
-## Example 2: AJAX content
+## Example 2: Options
 
 ```javascript
-var myRouter = new esRouter({
-  ajax: true
-}, {
-    before: function() {
-        console.log("started!")
+var myRouter = new Avenue({
+            slugPrepend: "currentSection=",
+        }
     },
-    done: function(id) {
-        console.log("finished routing to" + id)
-    }
-});
+    {
+        afterMove: function (data) {
+            console.log("Moved to " + data.id)
+        },
+    }, []);
 ```
 
-enter the source of the ajax content in the DOM
 
 ```html
 <!--Classic preloaded routing-->
@@ -98,7 +82,7 @@ enter the source of the ajax content in the DOM
 
 # Data-attributes
 
-esRouter has a number of HTML data-attributes:
+Avenue has a number of HTML data-attributes:
 
 ## Sections
 
@@ -112,12 +96,6 @@ esRouter has a number of HTML data-attributes:
 
 ```html
 <div data-router-section="mySection" data-router-default="true"></div>
-```
-
-**src**: AJAX mode only. specify url of the content source .
-
-```html
-<div data-router-section="mySection" data-router-src="content.html"></div>
 ```
 
 ## Navigation
@@ -134,50 +112,3 @@ esRouter has a number of HTML data-attributes:
 <a href="javascript:;" data-router-pagin="-1">backward</a>
 <a href="javascript:;" data-router-pagin="1">forward</a>
 ```
-
-# Plugins
-
-right now esRouter only has one plugin: esRouter.scroll
-
-## esRouter.scroll
-
-esRouter.scroll allows scrolling based routing. to enable it (after including the plugin js into your load order), you need to set:
-
-```javascript
-
-scroll: {
-    enabled: true
-},
-```
-
-in the options when creating your router (view the demo.scroll.html in the demo directory for more information).
-
-# Error Codes
-
-esRouter uses Error codes to avoid putting string error messages in the code. Syntax:
-
-```text
-esRouter: #type#: #module#=>#error#: #msg#, #data#
-```
-
-Note: the minified version only shows errors.
-
-## Codes:
-
-Types:
-
-- 0: Fatal Error
-- 1: Warning
-- 2: Info
-
-Modules:
-
-- 0: Initialization
-- 1: Moving
-- 2: Callback
-- 3: AJAX
-
-Errors:
-
-- 0: not found
-- 1: recursed to deep

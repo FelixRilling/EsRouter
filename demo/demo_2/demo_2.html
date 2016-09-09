@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Avenue Demo</title>
+        <title>Avenue Demo with Plugin</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -53,6 +53,21 @@
             "use strict";
 
             var all = document.querySelectorAll(".mySection");
+            var myPlugin = {
+                beforeInit: function(data, api, options) {
+                    console.log("# myPlugin beforeInit");
+                },
+                afterInit: function(data, api, options) {
+                    console.log("# myPlugin afterInit");
+                },
+                beforeMove: function(data, api, options) {
+                    console.log("# myPlugin beforeMove");
+                },
+                afterMove: function(data, api, options) {
+                    console.log("# myPlugin afterMove");
+                }
+            };
+
             var myRouter = new Avenue({}, {
                 beforeInit: function() {
                     console.log("myRouter beforeInit");
@@ -60,17 +75,19 @@
                 afterInit: function() {
                     console.log("myRouter afterInit");
                 },
-                beforeMove: function(id, index, element) {
-                    console.log("myRouter beforeMove: " + id);
+                beforeMove: function(data) {
+                    console.log("myRouter beforeMove");
                 },
-                afterMove: function(id, index, element) {
-                    console.log("myRouter afterMove: " + id);
-                    highlight(element);
+                afterMove: function(data) {
+                    console.log("myRouter afterMove");
+                    highlight(data.element);
                 }
-            }, []);
+            }, [
+                [myPlugin, {}]
+            ]);
 
             function highlight(element) {
-                [].forEach.call(all, function(item){
+                [].forEach.call(all, function(item) {
                     item.classList.remove("active");
                 });
                 element.classList.add("active");
