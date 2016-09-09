@@ -1,15 +1,15 @@
 {
-    "name": "es-router",
-    "version": "v3.1.0",
-    "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
-    "main": "dist/es-router.js",
+    "name": "avenuejs",
+    "version": "v3.2.0",
+    "description": "Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation in CMS environments, but can be used with classic websites as well.",
+    "main": "dist/avenue.js",
     "module": {
-        "name": "esRouter",
-        "id": "es-router"
+        "name": "Avenue",
+        "id": "avenue"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/FelixRilling/esRouter.git"
+        "url": "git+https://github.com/FelixRilling/Avenue.git"
     },
     "scripts": {
         "start": "npm run sync  && npm run bundle && npm run babel && npm run uglify",
@@ -25,9 +25,9 @@
     "author": "Felix Rilling",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/FelixRilling/esRouter/issues"
+        "url": "https://github.com/FelixRilling/Avenue/issues"
     },
-    "homepage": "https://github.com/FelixRilling/esRouter#readme",
+    "homepage": "https://github.com/FelixRilling/Avenue#readme",
     "devDependencies": {
         "babel-cli": "^6.14.0",
         "babel-preset-es2015": "^6.14.0",
