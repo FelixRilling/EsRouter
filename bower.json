@@ -1,7 +1,7 @@
 {
-    "name": "es-router",
-    "version": "v3.1.0",
-    "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
+    "name": "avenuejs",
+    "version": "v3.2.0",
+    "description": "Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation.",
     "main": "dist/chevron.js",
     "authors": [
         "Felix Rilling"
@@ -11,7 +11,7 @@
         "dependencies",
         "services"
     ],
-    "homepage": "https://github.com/FelixRilling/esRouter#readme",
+    "homepage": "https://github.com/FelixRilling/Avenue#readme",
     "ignore": [
         "**/.*",
         ".git/",
@@ -23,7 +23,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/FelixRilling/esRouter.git"
+        "url": "git+https://github.com/FelixRilling/Avenue.git"
     },
     "author": "Felix Rilling",
     "bugs": "Felix Rilling"
