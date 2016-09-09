@@ -1,4 +1,4 @@
-# Avenue
+# AvenueJS
 
 Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation in CMS environments, but can be used with classic websites as well.
 

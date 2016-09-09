@@ -23,28 +23,30 @@ export default function (type, data) {
     const _this = this;
 
     function runCallback(fn, options) {
-        const args = [data, {
-            //Avenue API
-            move: {
-                moveTo,
-                moveBy
-            },
-            dom: {
-                queryElements,
-                bindEvents,
-                readData
-            },
-            slug: {
-                getSlug,
-                setSlug
+        if (typeof fn === "function") {
+            const args = [data, {
+                //Avenue API
+                move: {
+                    moveTo,
+                    moveBy
+                },
+                dom: {
+                    queryElements,
+                    bindEvents,
+                    readData
+                },
+                slug: {
+                    getSlug,
+                    setSlug
+                }
+            }];
+
+            if (options) {
+                args.push(options);
             }
-        }];
 
-        if (options) {
-            args.push(options);
+            fn.apply(_this, args);
         }
-
-        fn.apply(_this, args);
     }
 
     //Call plugins

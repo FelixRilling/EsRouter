@@ -177,28 +177,30 @@ var Avenue = function () {
         var _this = this;
 
         function runCallback(fn, options) {
-            var args = [data, {
-                //Avenue API
-                move: {
-                    moveTo: moveTo,
-                    moveBy: moveBy
-                },
-                dom: {
-                    queryElements: queryElements,
-                    bindEvents: bindEvents,
-                    readData: readData
-                },
-                slug: {
-                    getSlug: getSlug,
-                    setSlug: setSlug
+            if (typeof fn === "function") {
+                var args = [data, {
+                    //Avenue API
+                    move: {
+                        moveTo: moveTo,
+                        moveBy: moveBy
+                    },
+                    dom: {
+                        queryElements: queryElements,
+                        bindEvents: bindEvents,
+                        readData: readData
+                    },
+                    slug: {
+                        getSlug: getSlug,
+                        setSlug: setSlug
+                    }
+                }];
+
+                if (options) {
+                    args.push(options);
                 }
-            }];
 
-            if (options) {
-                args.push(options);
+                fn.apply(_this, args);
             }
-
-            fn.apply(_this, args);
         }
 
         //Call plugins
