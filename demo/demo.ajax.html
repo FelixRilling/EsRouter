@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>esRouter AJAX Demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <style>
+            .active {
+                background-color: #ddd;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
+        <section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
+        <div class="mySection" data-router-section="third" data-router-src="ajax/third.html"></div>
+        <div class="container">
+            <div class="mySection" data-router-section="last" data-router-src="ajax/last.html"></div>
+        </div>
+        <br>
+
+        <button data-router-pagin="-1">Go Backward</button>
+        <button data-router-pagin="1">Go Forward</button>
+        <br>
+        <button data-router-href="main">Jump to main</button>
+        <button data-router-href="last">Jump to Last</button>
+
+        <script src="../dist/esRouter-es5.min.js"></script>
+        <script>
+            "use strict";
+            var demoElements = document.querySelectorAll(".mySection");
+
+            var myRouter = new esRouter({
+                log: true,
+                ajax: true,
+                slug: {
+                    urlFragmentAppend: "youAreHere="
+                }
+            }, {
+                before: function(id, router) {
+                    console.log("Demo callback on start!", id);
+                },
+                done: function(activeDOM, activeId, activeIndex, router) {
+                    console.log("Demo callback on finish!");
+                    for (let i = 0; i < demoElements.length; i++) {
+                        demoElements[i].classList.remove("active");
+                    }
+                    activeDOM.classList.add("active");
+                }
+            });
+
+            myRouter.init();
+        </script>
+    </body>
+
+</html>
