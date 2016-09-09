@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>esRouter Demo</title>
+        <title>esRouter Demo with Plugin</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -55,11 +55,17 @@
             var all = document.querySelectorAll(".mySection");
             var myPlugin = {
                 beforeInit: function(data, api, options) {
-                    console.log("myPlugin beforeInit");
+                    console.log("# myPlugin beforeInit");
                 },
-                afterInit: function(data, api, options) {},
-                beforeMove: function(data, api, options) {},
-                afterMove: function(data, api, options) {}
+                afterInit: function(data, api, options) {
+                    console.log("# myPlugin afterInit");
+                },
+                beforeMove: function(data, api, options) {
+                    console.log("# myPlugin beforeMove");
+                },
+                afterMove: function(data, api, options) {
+                    console.log("# myPlugin afterMove");
+                }
             };
 
             var myRouter = new EsRouter({}, {
@@ -70,10 +76,10 @@
                     console.log("myRouter afterInit");
                 },
                 beforeMove: function(data) {
-                    console.log("myRouter beforeMove: ", data);
+                    console.log("myRouter beforeMove");
                 },
                 afterMove: function(data) {
-                    console.log("myRouter afterMove: ", data);
+                    console.log("myRouter afterMove");
                     highlight(data.element);
                 }
             }, [

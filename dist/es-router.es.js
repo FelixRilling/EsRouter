@@ -116,17 +116,72 @@ var getSlug = function getSlug() {
 };
 
 /**
+ * Move to id
+ *
+ * @param {String} id Id to move to
+ * @returns {Object} EsRouter instance
+ */
+function moveTo(id) {
+    var _this = this;
+
+    if (_this.data.ids.indexOf(id) > -1) {
+        var index = _this.data.ids.indexOf(id);
+
+        //beforeMove Callback
+        callback.call(_this, "beforeMove", {
+            id: id,
+            index: index,
+            element: _this.elements.field[index]
+        });
+
+        //Set new section
+        _this.data.activeId = id;
+        _this.data.index = index;
+        setSlug.call(_this, id);
+
+        //afterMove Callback
+        callback.call(_this, "afterMove", {
+            id: id,
+            index: index,
+            element: _this.elements.field[index]
+        });
+    }
+
+    return _this;
+}
+
+/**
+ * Move by Value
+ *
+ * @param {Number} val Value to move by
+ * @returns {Object} EsRouter instance
+ */
+function moveBy(val) {
+    var _this = this;
+    var newId = _this.data.ids[_this.data.index + val];
+
+    if (typeof newId !== "undefined") {
+        return moveTo.call(_this, newId);
+    }
+}
+
+/**
  * Callback user/plugin fn
  *
  * @private
  * @param {String} type Callback function name
- * @param {Object} data to pass
+ * @param {Object} data Object of data to pass
  */
 function callback(type, data) {
     var _this = this;
 
     function runCallback(fn, options) {
         var args = [data, {
+            //EsRouter API
+            move: {
+                moveTo: moveTo,
+                moveBy: moveBy
+            },
             dom: {
                 queryElements: queryElements,
                 bindEvents: bindEvents,
@@ -145,10 +200,12 @@ function callback(type, data) {
         fn.apply(_this, args);
     }
 
+    //Call plugins
     _this.plugins.forEach(function (plugin) {
         runCallback(plugin[0][type], plugin[1]);
     });
 
+    //Call user events
     runCallback(_this.events[type]);
 }
 
@@ -202,56 +259,6 @@ function init() {
     callback.call(_this, "afterInit", {});
 
     return _this;
-}
-
-/**
- * Move to id
- *
- * @param {String} id Id to move to
- * @returns {Object} EsRouter instance
- */
-function moveTo(id) {
-    var _this = this;
-
-    if (_this.data.ids.indexOf(id) > -1) {
-        var index = _this.data.ids.indexOf(id);
-
-        //beforeMove Callback
-        callback.call(_this, "beforeMove", {
-            id: id,
-            index: index,
-            element: _this.elements.field[index]
-        });
-
-        //Set new section
-        _this.data.activeId = id;
-        _this.data.index = index;
-        setSlug.call(_this, id);
-
-        //afterMove Callback
-        callback.call(_this, "afterMove", {
-            id: id,
-            index: index,
-            element: _this.elements.field[index]
-        });
-    }
-
-    return _this;
-}
-
-/**
- * Move by Value
- *
- * @param {Number} val Value to move by
- * @returns {Object} EsRouter instance
- */
-function moveBy(val) {
-    var _this = this;
-    var newId = _this.data.ids[_this.data.index + val];
-
-    if (typeof newId !== "undefined") {
-        return moveTo.call(_this, newId);
-    }
 }
 
 /**
