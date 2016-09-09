@@ -1,0 +1,30 @@
+{
+    "name": "es-router",
+    "version": "v3.1.0",
+    "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
+    "main": "dist/chevron.js",
+    "authors": [
+        "Felix Rilling"
+    ],
+    "license": "Felix Rilling",
+    "keywords": [
+        "dependencies",
+        "services"
+    ],
+    "homepage": "https://github.com/FelixRilling/esRouter#readme",
+    "ignore": [
+        "**/.*",
+        ".git/",
+        ".tmp/",
+        "node_modules/",
+        "npm-debug.*",
+        "chevron-logo.png",
+        "chevron-logo.psd"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/FelixRilling/esRouter.git"
+    },
+    "author": "Felix Rilling",
+    "bugs": "Felix Rilling"
+}

@@ -1,0 +1,40 @@
+{
+    "name": "es-router",
+    "version": "v3.1.0",
+    "description": "esRouter is a ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well",
+    "main": "dist/es-router.js",
+    "module": {
+        "name": "esRouter",
+        "id": "es-router"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/FelixRilling/esRouter.git"
+    },
+    "scripts": {
+        "start": "npm run sync  && npm run bundle && npm run babel && npm run uglify",
+        "sync": "node ./tasks/sync.js",
+        "bundle": "rollup -c",
+        "babel": "babel ./dist/es6 --out-dir ./dist",
+        "uglify": "node ./tasks/uglify.js"
+    },
+    "keywords": [
+        "dependencies",
+        "services"
+    ],
+    "author": "Felix Rilling",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/FelixRilling/esRouter/issues"
+    },
+    "homepage": "https://github.com/FelixRilling/esRouter#readme",
+    "devDependencies": {
+        "babel-cli": "^6.14.0",
+        "babel-preset-es2015": "^6.14.0",
+        "rollup": "^0.34.0",
+        "rollup-plugin-commonjs": "^3.3.0",
+        "rollup-plugin-node-resolve": "^2.0.0",
+        "uglify-js": "^2.7.0"
+    },
+    "dependencies": {}
+}
