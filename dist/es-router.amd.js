@@ -117,6 +117,43 @@ define('es-router', function () {
     };
 
     /**
+     * Callback user/plugin fn
+     *
+     * @private
+     * @param {String} type Callback function name
+     * @param {Object} data to pass
+     */
+    function callback(type, data) {
+        var _this = this;
+
+        function runCallback(fn, options) {
+            var args = [data, {
+                dom: {
+                    queryElements: queryElements,
+                    bindEvents: bindEvents,
+                    readData: readData
+                },
+                slug: {
+                    getSlug: getSlug,
+                    setSlug: setSlug
+                }
+            }];
+
+            if (options) {
+                args.push(options);
+            }
+
+            fn.apply(_this, args);
+        }
+
+        _this.plugins.forEach(function (plugin) {
+            runCallback(plugin[0][type], plugin[1]);
+        });
+
+        runCallback(_this.events[type]);
+    }
+
+    /**
      * Init esRouter instance
      *
      * @returns {Object} EsRouter instance
@@ -126,7 +163,7 @@ define('es-router', function () {
         var slug = getSlug.call(_this);
 
         //beforeInit Callback
-        _this.events.beforeInit.call(_this);
+        callback.call(_this, "beforeInit", {});
 
         /**
          * DOM
@@ -163,7 +200,7 @@ define('es-router', function () {
         }
 
         //afterInit Callback
-        _this.events.afterInit.call(_this);
+        callback.call(_this, "afterInit", {});
 
         return _this;
     }
@@ -181,7 +218,11 @@ define('es-router', function () {
             var index = _this.data.ids.indexOf(id);
 
             //beforeMove Callback
-            _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
+            callback.call(_this, "beforeMove", {
+                id: id,
+                index: index,
+                element: _this.elements.field[index]
+            });
 
             //Set new section
             _this.data.activeId = id;
@@ -189,10 +230,14 @@ define('es-router', function () {
             setSlug.call(_this, id);
 
             //afterMove Callback
-            _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
-
-            return _this;
+            callback.call(_this, "afterMove", {
+                id: id,
+                index: index,
+                element: _this.elements.field[index]
+            });
         }
+
+        return _this;
     }
 
     /**

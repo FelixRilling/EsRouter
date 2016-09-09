@@ -3,12 +3,14 @@
 import queryElements from "../dom/queryElements";
 import bindEvents from "../dom/bindEvents";
 import readData from "../dom/readData";
+import callback from "../api/callback";
 import {
     getSlug
 } from "../slug";
 import {
     eachNode
 } from "../util";
+
 
 /**
  * Init esRouter instance
@@ -20,7 +22,7 @@ export default function () {
     const slug = getSlug.call(_this);
 
     //beforeInit Callback
-    _this.events.beforeInit.call(_this);
+    callback.call(_this, "beforeInit", {});
 
     /**
      * DOM
@@ -61,7 +63,7 @@ export default function () {
     }
 
     //afterInit Callback
-    _this.events.afterInit.call(_this);
+    callback.call(_this, "afterInit", {});
 
     return _this;
 }

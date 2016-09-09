@@ -113,6 +113,43 @@ const getSlug = function () {
 };
 
 /**
+ * Callback user/plugin fn
+ *
+ * @private
+ * @param {String} type Callback function name
+ * @param {Object} data to pass
+ */
+function callback (type, data) {
+    const _this = this;
+
+    function runCallback(fn, options) {
+        const args = [data, {
+            dom: {
+                queryElements,
+                bindEvents,
+                readData
+            },
+            slug: {
+                getSlug,
+                setSlug
+            }
+        }];
+
+        if (options) {
+            args.push(options);
+        }
+
+        fn.apply(_this, args);
+    }
+
+    _this.plugins.forEach(plugin => {
+        runCallback(plugin[0][type], plugin[1]);
+    });
+
+    runCallback(_this.events[type]);
+}
+
+/**
  * Init esRouter instance
  *
  * @returns {Object} EsRouter instance
@@ -122,7 +159,7 @@ function init () {
     const slug = getSlug.call(_this);
 
     //beforeInit Callback
-    _this.events.beforeInit.call(_this);
+    callback.call(_this, "beforeInit", {});
 
     /**
      * DOM
@@ -163,7 +200,7 @@ function init () {
     }
 
     //afterInit Callback
-    _this.events.afterInit.call(_this);
+    callback.call(_this, "afterInit", {});
 
     return _this;
 }
@@ -181,7 +218,11 @@ function moveTo (id) {
         const index = _this.data.ids.indexOf(id);
 
         //beforeMove Callback
-        _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
+        callback.call(_this, "beforeMove", {
+            id,
+            index,
+            element: _this.elements.field[index]
+        });
 
         //Set new section
         _this.data.activeId = id;
@@ -189,10 +230,15 @@ function moveTo (id) {
         setSlug.call(_this, id);
 
         //afterMove Callback
-        _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+        callback.call(_this, "afterMove", {
+            id,
+            index,
+            element: _this.elements.field[index]
+        });
 
-        return _this;
     }
+
+            return _this;
 }
 
 /**

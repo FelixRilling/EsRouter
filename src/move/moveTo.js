@@ -1,5 +1,6 @@
 "use strict";
 
+import callback from "../api/callback";
 import {
     setSlug
 } from "../slug";
@@ -17,7 +18,11 @@ export default function (id) {
         const index = _this.data.ids.indexOf(id);
 
         //beforeMove Callback
-        _this.events.beforeMove.call(_this, id, index, _this.elements.field[index]);
+        callback.call(_this, "beforeMove", {
+            id,
+            index,
+            element: _this.elements.field[index]
+        });
 
         //Set new section
         _this.data.activeId = id;
@@ -25,8 +30,13 @@ export default function (id) {
         setSlug.call(_this, id);
 
         //afterMove Callback
-        _this.events.afterMove.call(_this, id, index, _this.elements.field[index]);
+        callback.call(_this, "afterMove", {
+            id,
+            index,
+            element: _this.elements.field[index]
+        });
 
-        return _this;
     }
+
+            return _this;
 }
