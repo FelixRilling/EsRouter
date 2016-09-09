@@ -4,7 +4,7 @@ const _window = window;
 const _document = _window.document;
 const _location = _window.location;
 
-function query (elements) {
+function queryElements (elements) {
     const fieldKeys = Object.keys(elements.fields);
     const result = {};
 
@@ -33,7 +33,7 @@ const eachNode = function (elements, fn) {
     });
 };
 
-function bind (categories, elements) {
+function bindEvents (categories, elements) {
     const _this = this;
 
     function bindClick(elements, fn) {
@@ -59,10 +59,28 @@ function bind (categories, elements) {
     });
 }
 
-function read () {
-    const _this = this;
+const setSlug = function (active) {
+    _location.hash = this.options.slug.prepend + active;
+};
+const getSlug = function () {
+    return _location.hash.replace(this.options.slug.prepend, "").replace("#", "");
+};
 
-    //Save Ids
+function init () {
+    const _this = this;
+    const slug = getSlug.call(_this);
+
+    //beforeInit Callback
+    _this.events.beforeInit.call(_this);
+
+    //Collect DOM elements
+    _this.elements = queryElements(_this.options.elements);
+    if (_this.options.autobind) {
+        //Bind buttons
+        bindEvents.call(_this, _this.elements, _this.options.elements);
+    }
+
+    //Read default ids
     eachNode(_this.elements.field, element => {
         const id = readData(
             element,
@@ -76,30 +94,6 @@ function read () {
             _this.data.defaultId = id;
         }
     });
-}
-
-const setSlug = function (active) {
-    _location.hash = this.options.slug.start + active;
-};
-const getSlug = function () {
-    return _location.hash.replace(this.options.slug.start, "").replace("#", "");
-};
-
-function init () {
-    const _this = this;
-    const slug = getSlug.call(_this);
-
-    //beforeInit Callback
-    _this.events.beforeInit.call(_this);
-
-    //Collect DOM elements
-    _this.elements = query(_this.options.elements);
-    if (_this.options.autobind) {
-        //Bind buttons
-        bind.call(_this, _this.elements, _this.options.elements);
-    }
-    //Read default ids
-    read.call(_this);
 
     //Move to either saved slug or default id
     if (slug !== "") {
@@ -158,11 +152,14 @@ const esRouter = function (options, events, plugins) {
     _this.options = {
         autobind: options.autobind || true,
         slug: {
-            start: ""
+            //Prepend to slug, ex:"currentSection="
+            prepend: ""
         },
         elements: {
+            //Name of the Data-atributes
             prefix: "router",
             fields: {
+                //ex: prefix="router",field="section" -> "data-router-section"
                 field: "section",
                 fieldDefault: "default",
                 link: "href",

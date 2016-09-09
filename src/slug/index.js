@@ -5,8 +5,8 @@ import {
 } from "../constants";
 
 export const setSlug = function (active) {
-    _location.hash = this.options.slug.start + active;
+    _location.hash = this.options.slug.prepend + active;
 };
 export const getSlug = function () {
-    return _location.hash.replace(this.options.slug.start, "").replace("#", "");
+    return _location.hash.replace(this.options.slug.prepend, "").replace("#", "");
 };

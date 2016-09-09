@@ -3,6 +3,7 @@
 import init from "./init";
 import moveTo from "./move/moveTo";
 import moveBy from "./move/moveBy";
+
 /**
  * Basic esRouter Constructor
  *
@@ -16,11 +17,14 @@ const esRouter = function (options, events, plugins) {
     _this.options = {
         autobind: options.autobind || true,
         slug: {
-            start: ""
+            //Prepend to slug, ex:"currentSection="
+            prepend: ""
         },
         elements: {
+            //Name of the Data-atributes
             prefix: "router",
             fields: {
+                //ex: prefix="router",field="section" -> "data-router-section"
                 field: "section",
                 fieldDefault: "default",
                 link: "href",

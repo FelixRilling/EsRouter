@@ -7,7 +7,7 @@ var esRouter = function () {
     var _document = _window.document;
     var _location = _window.location;
 
-    function query(elements) {
+    function queryElements(elements) {
         var fieldKeys = Object.keys(elements.fields);
         var result = {};
 
@@ -36,7 +36,7 @@ var esRouter = function () {
         });
     };
 
-    function bind(categories, elements) {
+    function bindEvents(categories, elements) {
         var _this = this;
 
         function bindClick(elements, fn) {
@@ -62,26 +62,11 @@ var esRouter = function () {
         });
     }
 
-    function read() {
-        var _this = this;
-
-        //Save Ids
-        eachNode(_this.elements.field, function (element) {
-            var id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.field);
-
-            _this.data.ids.push(id);
-
-            if (element === _this.elements.fieldDefault[0]) {
-                _this.data.defaultId = id;
-            }
-        });
-    }
-
     var setSlug = function setSlug(active) {
-        _location.hash = this.options.slug.start + active;
+        _location.hash = this.options.slug.prepend + active;
     };
     var getSlug = function getSlug() {
-        return _location.hash.replace(this.options.slug.start, "").replace("#", "");
+        return _location.hash.replace(this.options.slug.prepend, "").replace("#", "");
     };
 
     function init() {
@@ -92,13 +77,22 @@ var esRouter = function () {
         _this.events.beforeInit.call(_this);
 
         //Collect DOM elements
-        _this.elements = query(_this.options.elements);
+        _this.elements = queryElements(_this.options.elements);
         if (_this.options.autobind) {
             //Bind buttons
-            bind.call(_this, _this.elements, _this.options.elements);
+            bindEvents.call(_this, _this.elements, _this.options.elements);
         }
+
         //Read default ids
-        read.call(_this);
+        eachNode(_this.elements.field, function (element) {
+            var id = readData(element, _this.options.elements.prefix, _this.options.elements.fields.field);
+
+            _this.data.ids.push(id);
+
+            if (element === _this.elements.fieldDefault[0]) {
+                _this.data.defaultId = id;
+            }
+        });
 
         //Move to either saved slug or default id
         if (slug !== "") {
@@ -157,11 +151,14 @@ var esRouter = function () {
         _this.options = {
             autobind: options.autobind || true,
             slug: {
-                start: ""
+                //Prepend to slug, ex:"currentSection="
+                prepend: ""
             },
             elements: {
+                //Name of the Data-atributes
                 prefix: "router",
                 fields: {
+                    //ex: prefix="router",field="section" -> "data-router-section"
                     field: "section",
                     fieldDefault: "default",
                     link: "href",
