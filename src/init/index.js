@@ -10,6 +10,11 @@ import {
     eachNode
 } from "../util";
 
+/**
+ * Init esRouter instance
+ *
+ * @returns {Object} EsRouter instance
+ */
 export default function () {
     const _this = this;
     const slug = getSlug.call(_this);
@@ -57,4 +62,6 @@ export default function () {
 
     //afterInit Callback
     _this.events.afterInit.call(_this);
+
+    return _this;
 }

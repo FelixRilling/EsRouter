@@ -8,10 +8,12 @@ import moveBy from "./move/moveBy";
  * Basic esRouter Constructor
  *
  * @constructor
- * @param {String} id To identify the instance
+ * @param {Object} options To identify the instance
+ * @param {Object} events To identify the instance
+ * @param {Array} plugins To identify the instance
  * @returns {Object} Returns esRouter instance
  */
-const esRouter = function (options, events, plugins) {
+const EsRouter = function (options, events, plugins) {
     const _this = this;
 
     _this.options = {
@@ -53,16 +55,16 @@ const esRouter = function (options, events, plugins) {
 /**
  * Expose esRouter methods
  */
-esRouter.prototype = {
+EsRouter.prototype = {
     init,
     moveTo,
     moveBy,
     moveForward: function () {
-        this.moveBy(1);
+        return this.moveBy(1);
     },
     moveBackward: function () {
-        this.moveBy(-1);
+        return this.moveBy(-1);
     }
 };
 
-export default esRouter;
+export default EsRouter;
