@@ -24,7 +24,7 @@ export default function (type, data) {
 
     function runCallback(fn, options) {
         const args = [data, {
-            //EsRouter API
+            //Avenue API
             move: {
                 moveTo,
                 moveBy

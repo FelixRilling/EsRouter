@@ -1,12 +1,12 @@
-# EsRouter
+# Avenue
 
-EsRouter is a ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation in CMS environments, but can be used with classic websites as well.
+Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation in CMS environments, but can be used with classic websites as well.
 
 # Syntax
 
 ```javascript
-//EsRouter(options,events,plugins)
-var myRouter = new EsRouter({
+//Avenue(options,events,plugins)
+var myRouter = new Avenue({
     autoBind: true, //bind click events to data-router-href/link
     slugPrepend: "", //Prepend to slug, ex:"currentSection="
     }
@@ -23,10 +23,10 @@ var myRouter = new EsRouter({
 ## Example 1: Simple router
 
 ```javascript
-var myRouter = new EsRouter();
+var myRouter = new Avenue();
 ```
 
-EsRouter makes use of html data attributes to manage your routing sections
+Avenue makes use of html data attributes to manage your routing sections
 
 ```html
 <!--Classic preloaded routing-->
@@ -46,7 +46,7 @@ EsRouter makes use of html data attributes to manage your routing sections
 ## Example 2: Options
 
 ```javascript
-var myRouter = new EsRouter({
+var myRouter = new Avenue({
             slugPrepend: "currentSection=",
         }
     },
@@ -76,7 +76,7 @@ var myRouter = new EsRouter({
 
 # Data-attributes
 
-EsRouter has a number of HTML data-attributes:
+Avenue has a number of HTML data-attributes:
 
 ## Sections
 
@@ -90,12 +90,6 @@ EsRouter has a number of HTML data-attributes:
 
 ```html
 <div data-router-section="mySection" data-router-default="true"></div>
-```
-
-**src**: AJAX mode only. specify url of the content source .
-
-```html
-<div data-router-section="mySection" data-router-src="content.html"></div>
 ```
 
 ## Navigation

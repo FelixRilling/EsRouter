@@ -5,15 +5,15 @@ import moveTo from "./move/moveTo";
 import moveBy from "./move/moveBy";
 
 /**
- * Basic esRouter Constructor
+ * Basic Avenue Constructor
  *
  * @constructor
  * @param {Object} options To identify the instance
  * @param {Object} events To identify the instance
  * @param {Array} plugins To identify the instance
- * @returns {Object} Returns esRouter instance
+ * @returns {Object} Returns Avenue instance
  */
-const EsRouter = function (options, events, plugins) {
+const Avenue = function (options, events, plugins) {
     const _this = this;
 
     /**
@@ -70,9 +70,9 @@ const EsRouter = function (options, events, plugins) {
 };
 
 /**
- * Expose esRouter methods
+ * Expose Avenue methods
  */
-EsRouter.prototype = {
+Avenue.prototype = {
     init,
     moveTo,
     moveBy,
@@ -84,4 +84,4 @@ EsRouter.prototype = {
     }
 };
 
-export default EsRouter;
+export default Avenue;

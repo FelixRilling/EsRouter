@@ -9,7 +9,7 @@ import {
  * Move to id
  *
  * @param {String} id Id to move to
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 export default function (id) {
     const _this = this;

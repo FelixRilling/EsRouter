@@ -1,11 +1,9 @@
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 /**
  * Store Constants
  */
+
 var _window = window;
 var _document = _window.document;
 var _location = _window.location;
@@ -119,7 +117,7 @@ var getSlug = function getSlug() {
  * Move to id
  *
  * @param {String} id Id to move to
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 function moveTo(id) {
     var _this = this;
@@ -154,7 +152,7 @@ function moveTo(id) {
  * Move by Value
  *
  * @param {Number} val Value to move by
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 function moveBy(val) {
     var _this = this;
@@ -177,7 +175,7 @@ function callback(type, data) {
 
     function runCallback(fn, options) {
         var args = [data, {
-            //EsRouter API
+            //Avenue API
             move: {
                 moveTo: moveTo,
                 moveBy: moveBy
@@ -210,9 +208,9 @@ function callback(type, data) {
 }
 
 /**
- * Init esRouter instance
+ * Init Avenue instance
  *
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 function init() {
     var _this = this;
@@ -262,15 +260,15 @@ function init() {
 }
 
 /**
- * Basic esRouter Constructor
+ * Basic Avenue Constructor
  *
  * @constructor
  * @param {Object} options To identify the instance
  * @param {Object} events To identify the instance
  * @param {Array} plugins To identify the instance
- * @returns {Object} Returns esRouter instance
+ * @returns {Object} Returns Avenue instance
  */
-var EsRouter = function EsRouter(options, events, plugins) {
+var Avenue = function Avenue(options, events, plugins) {
     var _this = this;
 
     /**
@@ -327,9 +325,9 @@ var EsRouter = function EsRouter(options, events, plugins) {
 };
 
 /**
- * Expose esRouter methods
+ * Expose Avenue methods
  */
-EsRouter.prototype = {
+Avenue.prototype = {
     init: init,
     moveTo: moveTo,
     moveBy: moveBy,
@@ -341,4 +339,4 @@ EsRouter.prototype = {
     }
 };
 
-exports.default = EsRouter;
+module.exports = Avenue;

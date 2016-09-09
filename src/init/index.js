@@ -13,9 +13,9 @@ import {
 
 
 /**
- * Init esRouter instance
+ * Init Avenue instance
  *
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 export default function () {
     const _this = this;

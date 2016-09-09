@@ -1,5 +1,4 @@
-var EsRouter = (function () {
-'use strict';
+define('avenue', function () { 'use strict';
 
 /**
  * Store Constants
@@ -117,7 +116,7 @@ const getSlug = function () {
  * Move to id
  *
  * @param {String} id Id to move to
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 function moveTo (id) {
     const _this = this;
@@ -153,7 +152,7 @@ function moveTo (id) {
  * Move by Value
  *
  * @param {Number} val Value to move by
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 function moveBy (val) {
     const _this = this;
@@ -176,7 +175,7 @@ function callback (type, data) {
 
     function runCallback(fn, options) {
         const args = [data, {
-            //EsRouter API
+            //Avenue API
             move: {
                 moveTo,
                 moveBy
@@ -209,9 +208,9 @@ function callback (type, data) {
 }
 
 /**
- * Init esRouter instance
+ * Init Avenue instance
  *
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 function init () {
     const _this = this;
@@ -265,15 +264,15 @@ function init () {
 }
 
 /**
- * Basic esRouter Constructor
+ * Basic Avenue Constructor
  *
  * @constructor
  * @param {Object} options To identify the instance
  * @param {Object} events To identify the instance
  * @param {Array} plugins To identify the instance
- * @returns {Object} Returns esRouter instance
+ * @returns {Object} Returns Avenue instance
  */
-const EsRouter = function (options, events, plugins) {
+const Avenue = function (options, events, plugins) {
     const _this = this;
 
     /**
@@ -330,9 +329,9 @@ const EsRouter = function (options, events, plugins) {
 };
 
 /**
- * Expose esRouter methods
+ * Expose Avenue methods
  */
-EsRouter.prototype = {
+Avenue.prototype = {
     init,
     moveTo,
     moveBy,
@@ -344,6 +343,6 @@ EsRouter.prototype = {
     }
 };
 
-return EsRouter;
+return Avenue;
 
-}());
+});

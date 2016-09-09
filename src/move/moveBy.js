@@ -6,7 +6,7 @@ import moveTo from "./moveTo";
  * Move by Value
  *
  * @param {Number} val Value to move by
- * @returns {Object} EsRouter instance
+ * @returns {Object} Avenue instance
  */
 export default function (val) {
     const _this = this;

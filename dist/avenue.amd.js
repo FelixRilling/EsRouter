@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-var EsRouter = function () {
+define('avenue', function () {
     'use strict';
 
     /**
@@ -23,7 +23,7 @@ var EsRouter = function () {
         var result = {};
 
         function queryByField(prefix, name) {
-            return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
+            return _document.querySelectorAll('[data-' + prefix + '-' + name + ']');
         }
 
         fieldKeys.forEach(function (key, i) {
@@ -120,7 +120,7 @@ var EsRouter = function () {
      * Move to id
      *
      * @param {String} id Id to move to
-     * @returns {Object} EsRouter instance
+     * @returns {Object} Avenue instance
      */
     function moveTo(id) {
         var _this = this;
@@ -155,7 +155,7 @@ var EsRouter = function () {
      * Move by Value
      *
      * @param {Number} val Value to move by
-     * @returns {Object} EsRouter instance
+     * @returns {Object} Avenue instance
      */
     function moveBy(val) {
         var _this = this;
@@ -178,7 +178,7 @@ var EsRouter = function () {
 
         function runCallback(fn, options) {
             var args = [data, {
-                //EsRouter API
+                //Avenue API
                 move: {
                     moveTo: moveTo,
                     moveBy: moveBy
@@ -211,9 +211,9 @@ var EsRouter = function () {
     }
 
     /**
-     * Init esRouter instance
+     * Init Avenue instance
      *
-     * @returns {Object} EsRouter instance
+     * @returns {Object} Avenue instance
      */
     function init() {
         var _this = this;
@@ -263,15 +263,15 @@ var EsRouter = function () {
     }
 
     /**
-     * Basic esRouter Constructor
+     * Basic Avenue Constructor
      *
      * @constructor
      * @param {Object} options To identify the instance
      * @param {Object} events To identify the instance
      * @param {Array} plugins To identify the instance
-     * @returns {Object} Returns esRouter instance
+     * @returns {Object} Returns Avenue instance
      */
-    var EsRouter = function EsRouter(options, events, plugins) {
+    var Avenue = function Avenue(options, events, plugins) {
         var _this = this;
 
         /**
@@ -328,9 +328,9 @@ var EsRouter = function () {
     };
 
     /**
-     * Expose esRouter methods
+     * Expose Avenue methods
      */
-    EsRouter.prototype = {
+    Avenue.prototype = {
         init: init,
         moveTo: moveTo,
         moveBy: moveBy,
@@ -342,5 +342,5 @@ var EsRouter = function () {
         }
     };
 
-    return EsRouter;
-}();
+    return Avenue;
+});
