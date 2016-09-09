@@ -16,12 +16,13 @@ import moveBy from "./move/moveBy";
 const EsRouter = function (options, events, plugins) {
     const _this = this;
 
+    /**
+     * Options
+     */
+    options = options || {};
     _this.options = {
-        autobind: options.autobind || true,
-        slug: {
-            //Prepend to slug, ex:"currentSection="
-            prepend: ""
-        },
+        autobind: options.autobind || true, //bind click events to data-router-href/link
+        slugPrepend: options.slugPrepend || "", //Prepend to slug, ex:"currentSection="
         elements: {
             //Name of the Data-atributes
             prefix: "router",
@@ -35,20 +36,36 @@ const EsRouter = function (options, events, plugins) {
             }
         }
     };
+
+    /**
+     * Events
+     */
+    events = events || {};
     _this.events = {
         beforeInit: events.beforeInit || function () {},
         afterInit: events.afterInit || function () {},
         beforeMove: events.beforeMove || function () {},
         afterMove: events.afterMove || function () {}
     };
-    _this.plugins = plugins;
 
+    /**
+     * Plugins
+     */
+    _this.plugins = plugins || [];
+
+    /**
+     * Data
+     */
     _this.data = {
         ids: [],
         activeId: null,
         defaultId: null,
         index: 0
     };
+
+    /**
+     * Elements
+     */
     _this.elements = {};
 };
 

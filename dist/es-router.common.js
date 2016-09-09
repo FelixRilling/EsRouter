@@ -100,7 +100,7 @@ function bindEvents(elements, options) {
  * @param {String} active Slug to set
  */
 var setSlug = function setSlug(active) {
-    _location.hash = this.options.slug.prepend + active;
+    _location.hash = this.options.slugPrepend + active;
 };
 
 /**
@@ -110,7 +110,7 @@ var setSlug = function setSlug(active) {
  * @returns {String} Returns slug value
  */
 var getSlug = function getSlug() {
-    return _location.hash.replace(this.options.slug.prepend, "").replace("#", "");
+    return _location.hash.replace(this.options.slugPrepend, "").replace("#", "");
 };
 
 /**
@@ -271,12 +271,13 @@ function init() {
 var EsRouter = function EsRouter(options, events, plugins) {
     var _this = this;
 
+    /**
+     * Options
+     */
+    options = options || {};
     _this.options = {
-        autobind: options.autobind || true,
-        slug: {
-            //Prepend to slug, ex:"currentSection="
-            prepend: ""
-        },
+        autobind: options.autobind || true, //bind click events to data-router-href/link
+        slugPrepend: options.slugPrepend || "", //Prepend to slug, ex:"currentSection="
         elements: {
             //Name of the Data-atributes
             prefix: "router",
@@ -290,20 +291,36 @@ var EsRouter = function EsRouter(options, events, plugins) {
             }
         }
     };
+
+    /**
+     * Events
+     */
+    events = events || {};
     _this.events = {
         beforeInit: events.beforeInit || function () {},
         afterInit: events.afterInit || function () {},
         beforeMove: events.beforeMove || function () {},
         afterMove: events.afterMove || function () {}
     };
-    _this.plugins = plugins;
 
+    /**
+     * Plugins
+     */
+    _this.plugins = plugins || [];
+
+    /**
+     * Data
+     */
     _this.data = {
         ids: [],
         activeId: null,
         defaultId: null,
         index: 0
     };
+
+    /**
+     * Elements
+     */
     _this.elements = {};
 };
 

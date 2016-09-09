@@ -11,7 +11,7 @@ import {
  * @param {String} active Slug to set
  */
 export const setSlug = function (active) {
-    _location.hash = this.options.slug.prepend + active;
+    _location.hash = this.options.slugPrepend + active;
 };
 
 /**
@@ -21,5 +21,5 @@ export const setSlug = function (active) {
  * @returns {String} Returns slug value
  */
 export const getSlug = function () {
-    return _location.hash.replace(this.options.slug.prepend, "").replace("#", "");
+    return _location.hash.replace(this.options.slugPrepend, "").replace("#", "");
 };
