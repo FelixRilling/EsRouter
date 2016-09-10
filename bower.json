@@ -13,11 +13,12 @@
     ],
     "homepage": "https://github.com/FelixRilling/Avenue#readme",
     "ignore": [
-        "**/.*",
         ".git/",
         ".tmp/",
         "node_modules/",
+        "bower_components/",
         "npm-debug.*",
+        ".DS_Store",
         "chevron-logo.png",
         "chevron-logo.psd"
     ],

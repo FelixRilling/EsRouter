@@ -1,3 +1,10 @@
+/**
+ * Avenue v3.3.0
+ * Author: Felix Rilling
+ * Homepage: https://github.com/FelixRilling/Avenue#readme
+ * License: MIT
+ */
+
 'use strict';
 
 /**
@@ -15,7 +22,7 @@ var _location = _window.location;
  * @param {Object} elements The Options elements property
  * @returns {Object} Object of query results
  */
-function queryElements(elements) {
+function queryElements (elements) {
     var fieldKeys = Object.keys(elements.fields);
     var result = {};
 
@@ -39,7 +46,8 @@ function queryElements(elements) {
  * @param {String} key The attribute key
  * @returns {String} the value of the attribute
  */
-function readData(element, prefix, key) {
+
+function readData (element, prefix, key) {
     function getAttr(prefix, key) {
         return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
     }
@@ -54,6 +62,7 @@ function readData(element, prefix, key) {
  * @param {NodeList} elements NodeList to iterate trough
  * @param {Function} fn to call
  */
+
 var eachNode = function eachNode(elements, fn) {
     [].forEach.call(elements, function (element) {
         fn(element);
@@ -67,7 +76,7 @@ var eachNode = function eachNode(elements, fn) {
  * @param {Object} elements The Elements property
  * @param {Object} options The Options elements property
  */
-function bindEvents(elements, options) {
+function bindEvents (elements, options) {
     var _this = this;
 
     function bindClick(elements, fn) {
@@ -119,7 +128,7 @@ var getSlug = function getSlug() {
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */
-function moveTo(id) {
+function moveTo (id) {
     var _this = this;
 
     if (_this.data.ids.indexOf(id) > -1) {
@@ -154,7 +163,7 @@ function moveTo(id) {
  * @param {Number} val Value to move by
  * @returns {Object} Avenue instance
  */
-function moveBy(val) {
+function moveBy (val) {
     var _this = this;
     var newId = _this.data.ids[_this.data.index + val];
 
@@ -170,7 +179,7 @@ function moveBy(val) {
  * @param {String} type Callback function name
  * @param {Object} data Object of data to pass
  */
-function callback(type, data) {
+function callback (type, data) {
     var _this = this;
 
     function runCallback(fn, options) {
@@ -214,7 +223,7 @@ function callback(type, data) {
  *
  * @returns {Object} Avenue instance
  */
-function init() {
+function init () {
     var _this = this;
     var slug = getSlug.call(_this);
 

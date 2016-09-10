@@ -1,4 +1,11 @@
 /**
+ * Avenue v3.3.0
+ * Author: Felix Rilling
+ * Homepage: https://github.com/FelixRilling/Avenue#readme
+ * License: MIT
+ */
+
+/**
  * Store Constants
  */
 const _window = window;
