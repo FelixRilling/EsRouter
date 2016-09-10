@@ -11,14 +11,14 @@ import {
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */
-export default function (id) {
+export default function(id) {
     const _this = this;
 
     if (_this.data.ids.indexOf(id) > -1) {
         const index = _this.data.ids.indexOf(id);
 
         //beforeMove Callback
-        callback.call(_this, "beforeMove", {
+        callback("beforeMove", _this, {
             id,
             index,
             element: _this.elements.field[index]
@@ -27,10 +27,10 @@ export default function (id) {
         //Set new section
         _this.data.activeId = id;
         _this.data.index = index;
-        setSlug.call(_this, id);
+        setSlug(_this.options.slugPrepend, id);
 
         //afterMove Callback
-        callback.call(_this, "afterMove", {
+        callback("afterMove", _this, {
             id,
             index,
             element: _this.elements.field[index]
@@ -38,5 +38,5 @@ export default function (id) {
 
     }
 
-            return _this;
+    return _this;
 }

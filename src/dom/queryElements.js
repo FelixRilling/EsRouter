@@ -8,11 +8,11 @@ import {
  * Query router elements
  *
  * @private
- * @param {Object} elements The Options elements property
+ * @param {Object} attributes The Options attributes property
  * @returns {Object} Object of query results
  */
-export default function (elements) {
-    const fieldKeys = Object.keys(elements.fields);
+export default function(attributes) {
+    const fieldKeys = Object.keys(attributes.types);
     const result = {};
 
     function queryByField(prefix, name) {
@@ -20,7 +20,7 @@ export default function (elements) {
     }
 
     fieldKeys.forEach((key, i) => {
-        result[key] = queryByField(elements.prefix, elements.fields[key]);
+        result[key] = queryByField(attributes.prefix, attributes.types[key]);
     });
 
     return result;

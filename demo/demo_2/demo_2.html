@@ -1,100 +1,99 @@
 <!doctype html>
 <html class="no-js" lang="">
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Avenue Demo with Plugin</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Avenue Demo with Plugin</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <style>
-            .container {
-                width: 250px;
-                margin: auto;
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <style>
+        .container {
+            width: 250px;
+            margin: auto;
+        }
+
+        .mySection {
+            width: 250px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            margin: 20px 0;
+            background-color: #eee;
+            padding-left: 10px;
+        }
+
+        .active {
+            background-color: #daa;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1: Main</section>
+        <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2: Secondary</section>
+        <section class="mySection" data-router-section="middle">Et dolor! Page 3: Middle</section>
+        <section class="mySection" data-router-section="fourth">sit amet dolor! Page 4: Fourth</section>
+        <section class="mySection" data-router-section="last">Bye World! Page 5: Last</section>
+    </div>
+    <br>
+
+    <button data-router-pagin="-1">Go Backward</button>
+    <button data-router-pagin="1">Go Forward</button>
+    <br>
+    <button data-router-href="main">Jump to main</button>
+    <button data-router-href="last">Jump to Last</button>
+    <script src="../../dist/avenue.js"></script>
+    <script>
+        "use strict";
+
+        var all = document.querySelectorAll(".mySection");
+        var myPlugin = {
+            beforeInit: function(data, api, options) {
+                console.log("# myPlugin beforeInit");
+            },
+            afterInit: function(data, api, options) {
+                console.log("# myPlugin afterInit");
+            },
+            beforeMove: function(data, api, options) {
+                console.log("# myPlugin beforeMove");
+            },
+            afterMove: function(data, api, options) {
+                console.log("# myPlugin afterMove", api);
             }
+        };
 
-            .mySection {
-                width: 250px;
-                height: 100px;
-                line-height: 100px;
-                text-align: center;
-                margin: 20px 0;
-                background-color: #eee;
-                padding-left: 10px;
+        var myRouter = new Avenue({}, {
+            beforeInit: function() {
+                console.log("myRouter beforeInit");
+            },
+            afterInit: function() {
+                console.log("myRouter afterInit");
+            },
+            beforeMove: function(data) {
+                console.log("myRouter beforeMove");
+            },
+            afterMove: function(data) {
+                console.log("myRouter afterMove");
+                highlight(data.element);
             }
+        }, [
+            [myPlugin, {}]
+        ]);
 
-            .active {
-                background-color: #daa;
-            }
+        function highlight(element) {
+            [].forEach.call(all, function(item) {
+                item.classList.remove("active");
+            });
+            element.classList.add("active");
+        }
 
-        </style>
-
-    </head>
-
-    <body>
-        <div class="container">
-            <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1: Main</section>
-            <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2: Secondary</section>
-            <section class="mySection" data-router-section="middle">Et dolor! Page 3: Middle</section>
-            <section class="mySection" data-router-section="fourth">sit amet dolor! Page 4: Fourth</section>
-            <section class="mySection" data-router-section="last">Bye World! Page 5: Last</section>
-        </div>
-        <br>
-
-        <button data-router-pagin="-1">Go Backward</button>
-        <button data-router-pagin="1">Go Forward</button>
-        <br>
-        <button data-router-href="main">Jump to main</button>
-        <button data-router-href="last">Jump to Last</button>
-        <script src="../../dist/avenue.js"></script>
-        <script>
-            "use strict";
-
-            var all = document.querySelectorAll(".mySection");
-            var myPlugin = {
-                beforeInit: function(data, api, options) {
-                    console.log("# myPlugin beforeInit");
-                },
-                afterInit: function(data, api, options) {
-                    console.log("# myPlugin afterInit");
-                },
-                beforeMove: function(data, api, options) {
-                    console.log("# myPlugin beforeMove");
-                },
-                afterMove: function(data, api, options) {
-                    console.log("# myPlugin afterMove");
-                }
-            };
-
-            var myRouter = new Avenue({}, {
-                beforeInit: function() {
-                    console.log("myRouter beforeInit");
-                },
-                afterInit: function() {
-                    console.log("myRouter afterInit");
-                },
-                beforeMove: function(data) {
-                    console.log("myRouter beforeMove");
-                },
-                afterMove: function(data) {
-                    console.log("myRouter afterMove");
-                    highlight(data.element);
-                }
-            }, [
-                [myPlugin, {}]
-            ]);
-
-            function highlight(element) {
-                [].forEach.call(all, function(item) {
-                    item.classList.remove("active");
-                });
-                element.classList.add("active");
-            }
-
-            myRouter.init();
-        </script>
-    </body>
+        myRouter.init();
+    </script>
+</body>
 
 </html>

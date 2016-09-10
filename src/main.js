@@ -13,7 +13,7 @@ import moveBy from "./move/moveBy";
  * @param {Array} plugins To identify the instance
  * @returns {Object} Returns Avenue instance
  */
-const Avenue = function (options, events, plugins) {
+const Avenue = function(options, events, plugins) {
     const _this = this;
 
     /**
@@ -23,10 +23,10 @@ const Avenue = function (options, events, plugins) {
     _this.options = {
         autobind: options.autobind || true, //bind click events to data-router-href/link
         slugPrepend: options.slugPrepend || "", //Prepend to slug, ex:"currentSection="
-        elements: {
+        attributes: {
             //Name of the Data-atributes
             prefix: "router",
-            fields: {
+            types: {
                 //ex: prefix="router",field="section" -> "data-router-section"
                 field: "section",
                 fieldDefault: "default",
@@ -42,10 +42,10 @@ const Avenue = function (options, events, plugins) {
      */
     events = events || {};
     _this.events = {
-        beforeInit: events.beforeInit || function () {},
-        afterInit: events.afterInit || function () {},
-        beforeMove: events.beforeMove || function () {},
-        afterMove: events.afterMove || function () {}
+        beforeInit: events.beforeInit || function() {},
+        afterInit: events.afterInit || function() {},
+        beforeMove: events.beforeMove || function() {},
+        afterMove: events.afterMove || function() {}
     };
 
     /**
@@ -76,10 +76,10 @@ Avenue.prototype = {
     init,
     moveTo,
     moveBy,
-    moveForward: function () {
+    moveForward: function() {
         return this.moveBy(1);
     },
-    moveBackward: function () {
+    moveBackward: function() {
         return this.moveBy(-1);
     }
 };

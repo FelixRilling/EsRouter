@@ -10,8 +10,8 @@ import {
  * @private
  * @param {String} active Slug to set
  */
-export const setSlug = function (active) {
-    _location.hash = this.options.slugPrepend + active;
+export const setSlug = function(slugPrepend, active) {
+    _location.hash = slugPrepend + active;
 };
 
 /**
@@ -20,6 +20,6 @@ export const setSlug = function (active) {
  * @private
  * @returns {String} Returns slug value
  */
-export const getSlug = function () {
-    return _location.hash.replace(this.options.slugPrepend, "").replace("#", "");
+export const getSlug = function(slugPrepend) {
+    return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
