@@ -1,5 +1,5 @@
 /**
- * Avenue v3.3.1
+ * Avenue v3.4.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -13,6 +13,30 @@ const _document = _window.document;
 const _location = _window.location;
 
 /**
+ * Get data query for dom element
+ *
+ * @private
+ * @param {String} prefix Data prefix
+ * @param {String} name Data name
+ * @returns {String} query Selector query
+ */
+const getDataDom = function(prefix, name) {
+    return `[data-${prefix}-${name}]`;
+};
+
+/**
+ * Get data query for node property
+ *
+ * @private
+ * @param {String} prefix Data prefix
+ * @param {String} name Data name
+ * @returns {String} query Selector query
+ */
+const getDataProp = function(prefix, name) {
+    return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
+};
+
+/**
  * Query router elements
  *
  * @private
@@ -23,12 +47,10 @@ function queryElements(attributes) {
     const fieldKeys = Object.keys(attributes.types);
     const result = {};
 
-    function queryByField(prefix, name) {
-        return _document.querySelectorAll(`[data-${prefix}-${name}]`);
-    }
-
     fieldKeys.forEach((key, i) => {
-        result[key] = queryByField(attributes.prefix, attributes.type[key]);
+        const query = getDataDom(attributes.prefix, attributes.types[key]);
+
+        result[key] = _document.querySelectorAll(query);
     });
 
     return result;
@@ -54,9 +76,9 @@ const eachNode = function (elements, fn) {
  * @param {Object} elements The Elements property
  * @param {Object} fn The Event function
  */
-function bindClick(elements, fn) {
+function bind(elements, type, fn) {
     eachNode(elements, element => {
-        element.addEventListener("click", ev => {
+        element.addEventListener(type, ev => {
             fn(element, ev);
         }, false);
     });
@@ -71,12 +93,8 @@ function bindClick(elements, fn) {
  * @param {String} key The attribute key
  * @returns {String} the value of the attribute
  */
-function readData (element, prefix, key) {
-    function getAttr(prefix, key) {
-        return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
-    }
-
-    return element.dataset[getAttr(prefix, key)];
+function readData(element, prefix, name) {
+    return element.dataset[getDataProp(prefix, name)];
 }
 
 /**
@@ -99,10 +117,6 @@ const getSlug = function(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
 
-//import queryElements from "../dom/queryElements";
-//import bindEvents from "../dom/bindEvents";
-//import readData from "../dom/readData";
-
 /**
  * Callback user/plugin fn
  *
@@ -110,13 +124,24 @@ const getSlug = function(slugPrepend) {
  * @param {String} type Callback function name
  * @param {Object} data Object of data to pass
  */
-function callback(type, data) {
-    const _this = this;
-
+function callback(type, context, data) {
     function runCallback(fn, options) {
         const api = {
             //Avenue API
-            instance: _this,
+            data: context.data,
+            options: context.options,
+            elements: context.elements,
+            methods: {
+                dom: {
+                    queryElements,
+                    readData,
+                    bind,
+                },
+                slug: {
+                    setSlug,
+                    getSlug
+                }
+            }
         };
         const args = [data, api];
 
@@ -124,11 +149,11 @@ function callback(type, data) {
             args.push(options);
         }
 
-        fn.apply(_this, args);
+        fn.apply(context, args);
     }
 
     //Call plugins
-    _this.plugins.forEach(plugin => {
+    context.plugins.forEach(plugin => {
         const fn = plugin[0][type];
         if (fn) {
             runCallback(fn, plugin[1]);
@@ -136,7 +161,7 @@ function callback(type, data) {
     });
 
     //Call user events
-    runCallback(_this.events[type]);
+    runCallback(context.events[type]);
 }
 
 /**
@@ -146,28 +171,28 @@ function callback(type, data) {
  */
 function init() {
     const _this = this;
+    const _options = _this.options;
     const slug = getSlug(_this.options.slugPrepend);
 
     //beforeInit Callback
-    //callback.call(_this, "beforeInit", {});
+    callback("beforeInit", _this, {});
 
     /**
      * DOM
      */
     //Collect DOM elements
-    _this.elements = queryElements(_this.options.attributes);
-    if (_this.options.autobind) {
-        //Bind buttons
+    _this.elements = queryElements(_options.attributes);
+    if (_options.autobind) {
         //Bind router-link events
-        bindClick(_this.elements.link, element => {
-            const id = readData(element, _this.options.prefix, _this.options.type.link);
+        bind(_this.elements.link, "click", element => {
+            const id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
 
             _this.moveTo(id);
         });
 
         //Bind router-pagination events
-        bindClick(_this.element.pagination, element => {
-            const val = readData(element, _this.options.prefix, _this.options.type.pagination);
+        bind(_this.elements.pagination, "click", element => {
+            const val = readData(element, _options.attributes.prefix, _options.attributes.types.pagination);
 
             _this.moveBy(Number(val));
         });
@@ -176,33 +201,33 @@ function init() {
     /**
      * Data
      */
-    //Read default ids
-    /*eachNode(_this.elements.field, element => {
+    //Read ids
+    eachNode(_this.elements.field, element => {
         const id = readData(
             element,
-            _this.options.elements.prefix,
-            _this.options.elements.fields.field
+            _options.attributes.prefix,
+            _options.attributes.types.field
         );
-
-        _this.data.ids.push(id);
 
         if (element === _this.elements.fieldDefault[0]) {
             _this.data.defaultId = id;
         }
-    });*/
+
+        _this.data.ids.push(id);
+    });
 
     /**
      * Move
      */
     //Move to either saved slug or default id
     if (slug !== "") {
-        //  _this.moveTo(slug);
+        _this.moveTo(slug);
     } else {
-        //_this.moveTo(_this.data.defaultId);
+        _this.moveTo(_this.data.defaultId);
     }
 
     //afterInit Callback
-    //callback.call(_this, "afterInit", {});
+    callback("afterInit", _this, {});
 
     return _this;
 }
@@ -220,7 +245,7 @@ function moveTo(id) {
         const index = _this.data.ids.indexOf(id);
 
         //beforeMove Callback
-        callback.call(_this, "beforeMove", {
+        callback("beforeMove", _this, {
             id,
             index,
             element: _this.elements.field[index]
@@ -229,10 +254,10 @@ function moveTo(id) {
         //Set new section
         _this.data.activeId = id;
         _this.data.index = index;
-        setSlug.call(_this.options.slugPrepend, id);
+        setSlug(_this.options.slugPrepend, id);
 
         //afterMove Callback
-        callback.call(_this, "afterMove", {
+        callback("afterMove", _this, {
             id,
             index,
             element: _this.elements.field[index]
@@ -280,7 +305,7 @@ const Avenue = function(options, events, plugins) {
         attributes: {
             //Name of the Data-atributes
             prefix: "router",
-            type: {
+            types: {
                 //ex: prefix="router",field="section" -> "data-router-section"
                 field: "section",
                 fieldDefault: "default",

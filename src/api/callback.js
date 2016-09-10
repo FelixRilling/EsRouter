@@ -1,9 +1,9 @@
 "use strict";
 
 
-//import queryElements from "../dom/queryElements";
-//import bindEvents from "../dom/bindEvents";
-//import readData from "../dom/readData";
+import queryElements from "../dom/queryElements";
+import bind from "../dom/bind";
+import readData from "../dom/readData";
 
 import {
     getSlug,
@@ -21,7 +21,20 @@ export default function(type, context, data) {
     function runCallback(fn, options) {
         const api = {
             //Avenue API
-            instance: context,
+            data: context.data,
+            options: context.options,
+            elements: context.elements,
+            methods: {
+                dom: {
+                    queryElements,
+                    readData,
+                    bind,
+                },
+                slug: {
+                    setSlug,
+                    getSlug
+                }
+            }
         };
         const args = [data, api];
 

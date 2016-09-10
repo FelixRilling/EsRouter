@@ -3,6 +3,10 @@
 import {
     _document
 } from "../constants";
+import {
+    getDataDom
+} from "./dataQuery";
+
 
 /**
  * Query router elements
@@ -15,12 +19,10 @@ export default function(attributes) {
     const fieldKeys = Object.keys(attributes.types);
     const result = {};
 
-    function queryByField(prefix, name) {
-        return _document.querySelectorAll(`[data-${prefix}-${name}]`);
-    }
-
     fieldKeys.forEach((key, i) => {
-        result[key] = queryByField(attributes.prefix, attributes.types[key]);
+        const query = getDataDom(attributes.prefix, attributes.types[key]);
+
+        result[key] = _document.querySelectorAll(query);
     });
 
     return result;

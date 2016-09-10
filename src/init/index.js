@@ -1,7 +1,7 @@
 "use strict";
 
 import queryElements from "../dom/queryElements";
-import bindClick from "../dom/bindClick";
+import bind from "../dom/bind";
 import readData from "../dom/readData";
 import callback from "../api/callback";
 import {
@@ -32,14 +32,14 @@ export default function() {
     _this.elements = queryElements(_options.attributes);
     if (_options.autobind) {
         //Bind router-link events
-        bindClick(_this.elements.link, element => {
+        bind(_this.elements.link, "click", element => {
             const id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
 
             _this.moveTo(id);
         });
 
         //Bind router-pagination events
-        bindClick(_this.elements.pagination, element => {
+        bind(_this.elements.pagination, "click", element => {
             const val = readData(element, _options.attributes.prefix, _options.attributes.types.pagination);
 
             _this.moveBy(Number(val));

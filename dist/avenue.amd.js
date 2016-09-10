@@ -1,3 +1,10 @@
+/**
+ * Avenue v3.4.0
+ * Author: Felix Rilling
+ * Homepage: https://github.com/FelixRilling/Avenue#readme
+ * License: MIT
+ */
+
 define('avenue', function () { 'use strict';
 
 /**
@@ -7,6 +14,31 @@ define('avenue', function () { 'use strict';
 var _window = window;
 var _document = _window.document;
 var _location = _window.location;
+
+/**
+ * Get data query for dom element
+ *
+ * @private
+ * @param {String} prefix Data prefix
+ * @param {String} name Data name
+ * @returns {String} query Selector query
+ */
+
+var getDataDom = function getDataDom(prefix, name) {
+  return "[data-" + prefix + "-" + name + "]";
+};
+
+/**
+ * Get data query for node property
+ *
+ * @private
+ * @param {String} prefix Data prefix
+ * @param {String} name Data name
+ * @returns {String} query Selector query
+ */
+var getDataProp = function getDataProp(prefix, name) {
+  return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
+};
 
 /**
  * Query router elements
@@ -19,12 +51,10 @@ function queryElements (attributes) {
     var fieldKeys = Object.keys(attributes.types);
     var result = {};
 
-    function queryByField(prefix, name) {
-        return _document.querySelectorAll("[data-" + prefix + "-" + name + "]");
-    }
-
     fieldKeys.forEach(function (key, i) {
-        result[key] = queryByField(attributes.prefix, attributes.types[key]);
+        var query = getDataDom(attributes.prefix, attributes.types[key]);
+
+        result[key] = _document.querySelectorAll(query);
     });
 
     return result;
@@ -51,9 +81,9 @@ var eachNode = function eachNode(elements, fn) {
  * @param {Object} elements The Elements property
  * @param {Object} fn The Event function
  */
-function bindClick (elements, fn) {
+function bind (elements, type, fn) {
     eachNode(elements, function (element) {
-        element.addEventListener("click", function (ev) {
+        element.addEventListener(type, function (ev) {
             fn(element, ev);
         }, false);
     });
@@ -68,14 +98,8 @@ function bindClick (elements, fn) {
  * @param {String} key The attribute key
  * @returns {String} the value of the attribute
  */
-
-function readData (element, prefix, key) {
-
-    function getAttr(prefix, key) {
-        return prefix + key.substr(0, 1).toUpperCase() + key.substr(1);
-    }
-
-    return element.dataset[getAttr(prefix, key)];
+function readData (element, prefix, name) {
+    return element.dataset[getDataProp(prefix, name)];
 }
 
 /**
@@ -98,10 +122,6 @@ var getSlug = function getSlug(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
 
-//import queryElements from "../dom/queryElements";
-//import bindEvents from "../dom/bindEvents";
-//import readData from "../dom/readData";
-
 /**
  * Callback user/plugin fn
  *
@@ -110,12 +130,23 @@ var getSlug = function getSlug(slugPrepend) {
  * @param {Object} data Object of data to pass
  */
 function callback (type, context, data) {
-    console.log(type);
-
     function runCallback(fn, options) {
         var api = {
             //Avenue API
-            instance: context
+            data: context.data,
+            options: context.options,
+            elements: context.elements,
+            methods: {
+                dom: {
+                    queryElements: queryElements,
+                    readData: readData,
+                    bind: bind
+                },
+                slug: {
+                    setSlug: setSlug,
+                    getSlug: getSlug
+                }
+            }
         };
         var args = [data, api];
 
@@ -158,14 +189,14 @@ function init () {
     _this.elements = queryElements(_options.attributes);
     if (_options.autobind) {
         //Bind router-link events
-        bindClick(_this.elements.link, function (element) {
+        bind(_this.elements.link, "click", function (element) {
             var id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
 
             _this.moveTo(id);
         });
 
         //Bind router-pagination events
-        bindClick(_this.elements.pagination, function (element) {
+        bind(_this.elements.pagination, "click", function (element) {
             var val = readData(element, _options.attributes.prefix, _options.attributes.types.pagination);
 
             _this.moveBy(Number(val));
