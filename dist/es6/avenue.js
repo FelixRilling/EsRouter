@@ -1,5 +1,5 @@
 /**
- * Avenue v3.3.0
+ * Avenue v3.3.1
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
