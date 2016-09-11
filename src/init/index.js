@@ -2,8 +2,10 @@
 
 import queryElements from "../dom/queryElements";
 import bind from "../dom/bind";
-import readData from "../dom/readData";
 import callback from "../api/callback";
+import {
+    readData
+} from "../dom/data";
 import {
     getSlug
 } from "../slug";

@@ -3,8 +3,10 @@
 
 import queryElements from "../dom/queryElements";
 import bind from "../dom/bind";
-import readData from "../dom/readData";
-
+import {
+    readData,
+    writeData
+} from "../dom/data";
 import {
     getSlug,
     setSlug
@@ -27,8 +29,9 @@ export default function(type, context, data) {
             methods: {
                 dom: {
                     queryElements,
-                    readData,
                     bind,
+                    readData,
+                    writeData
                 },
                 slug: {
                     setSlug,

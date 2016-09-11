@@ -1,5 +1,5 @@
 /**
- * Avenue v3.4.0
+ * Avenue v3.5.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -22,7 +22,7 @@ var _location = _window.location;
  * @returns {String} query Selector query
  */
 
-var getDataDom = function getDataDom(prefix, name) {
+var getDataQueryDom = function getDataQueryDom(prefix, name) {
   return "[data-" + prefix + "-" + name + "]";
 };
 
@@ -34,8 +34,34 @@ var getDataDom = function getDataDom(prefix, name) {
  * @param {String} name Data name
  * @returns {String} query Selector query
  */
-var getDataProp = function getDataProp(prefix, name) {
+var getDataQueryProp = function getDataQueryProp(prefix, name) {
   return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
+};
+
+/**
+ * Read value of element data attribute
+ *
+ * @private
+ * @param {Node} element The element node to check
+ * @param {String} prefix The attribute prefix
+ * @param {String} key The attribute key
+ * @returns {String} the value of the attribute
+ */
+var readData = function readData(element, prefix, name) {
+  return element.dataset[getDataQueryProp(prefix, name)];
+};
+
+/**
+ * Set value of element data attribute
+ *
+ * @private
+ * @param {Node} element The element node to check
+ * @param {String} prefix The attribute prefix
+ * @param {String} key The attribute key
+ * @param {String} value The attribute value
+ */
+var writeData = function writeData(element, prefix, name, value) {
+  element.dataset[getDataQueryProp(prefix, name)] = value;
 };
 
 /**
@@ -50,7 +76,7 @@ function queryElements (attributes) {
     var result = {};
 
     fieldKeys.forEach(function (key, i) {
-        var query = getDataDom(attributes.prefix, attributes.types[key]);
+        var query = getDataQueryDom(attributes.prefix, attributes.types[key]);
 
         result[key] = _document.querySelectorAll(query);
     });
@@ -85,19 +111,6 @@ function bind (elements, type, fn) {
             fn(element, ev);
         }, false);
     });
-}
-
-/**
- * Read value of element data attribute
- *
- * @private
- * @param {Node} element The element node to check
- * @param {String} prefix The attribute prefix
- * @param {String} key The attribute key
- * @returns {String} the value of the attribute
- */
-function readData (element, prefix, name) {
-    return element.dataset[getDataProp(prefix, name)];
 }
 
 /**
@@ -137,8 +150,9 @@ function callback (type, context, data) {
             methods: {
                 dom: {
                     queryElements: queryElements,
+                    bind: bind,
                     readData: readData,
-                    bind: bind
+                    writeData: writeData
                 },
                 slug: {
                     setSlug: setSlug,

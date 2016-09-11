@@ -4,8 +4,8 @@ import {
     _document
 } from "../constants";
 import {
-    getDataDom
-} from "./dataQuery";
+    getDataQueryDom
+} from "./data";
 
 
 /**
@@ -20,7 +20,7 @@ export default function(attributes) {
     const result = {};
 
     fieldKeys.forEach((key, i) => {
-        const query = getDataDom(attributes.prefix, attributes.types[key]);
+        const query = getDataQueryDom(attributes.prefix, attributes.types[key]);
 
         result[key] = _document.querySelectorAll(query);
     });
