@@ -7,7 +7,6 @@ import {
 
 /**
  * Bind UI Events
- *
  * @private
  * @param {Object} elements The Elements property
  * @param {Object} fn The Event function

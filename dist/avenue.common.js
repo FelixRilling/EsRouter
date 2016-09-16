@@ -1,5 +1,5 @@
 /**
- * Avenue v3.5.0
+ * Avenue v3.6.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -17,11 +17,10 @@ var _location = _window.location;
 
 /**
  * Get data query for dom element
- *
  * @private
  * @param {String} prefix Data prefix
  * @param {String} name Data name
- * @returns {String} query Selector query
+ * @returns {String} Selector query
  */
 
 var getDataQueryDom = function getDataQueryDom(prefix, name) {
@@ -30,11 +29,10 @@ var getDataQueryDom = function getDataQueryDom(prefix, name) {
 
 /**
  * Get data query for node property
- *
  * @private
  * @param {String} prefix Data prefix
  * @param {String} name Data name
- * @returns {String} query Selector query
+ * @returns {String} Prop query
  */
 var getDataQueryProp = function getDataQueryProp(prefix, name) {
   return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
@@ -42,12 +40,11 @@ var getDataQueryProp = function getDataQueryProp(prefix, name) {
 
 /**
  * Read value of element data attribute
- *
  * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
  * @param {String} key The attribute key
- * @returns {String} the value of the attribute
+ * @returns {String} Value of the attribute
  */
 var readData = function readData(element, prefix, name) {
   return element.dataset[getDataQueryProp(prefix, name)];
@@ -55,7 +52,6 @@ var readData = function readData(element, prefix, name) {
 
 /**
  * Set value of element data attribute
- *
  * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
@@ -68,12 +64,11 @@ var writeData = function writeData(element, prefix, name, value) {
 
 /**
  * Query router elements
- *
  * @private
  * @param {Object} attributes The Options attributes property
  * @returns {Object} Object of query results
  */
-function queryElements (attributes) {
+var queryElements = function (attributes) {
     var fieldKeys = Object.keys(attributes.types);
     var result = {};
 
@@ -88,10 +83,9 @@ function queryElements (attributes) {
 
 /**
  * NodeList iterate
- *
  * @private
  * @param {NodeList} elements NodeList to iterate trough
- * @param {Function} fn to call
+ * @param {Function} fn Function to call
  */
 
 var eachNode = function eachNode(elements, fn) {
@@ -102,12 +96,11 @@ var eachNode = function eachNode(elements, fn) {
 
 /**
  * Bind UI Events
- *
  * @private
  * @param {Object} elements The Elements property
  * @param {Object} fn The Event function
  */
-function bind (elements, type, fn) {
+var bind = function (elements, type, fn) {
     eachNode(elements, function (element) {
         element.addEventListener(type, function (ev) {
             fn(element, ev);
@@ -117,7 +110,6 @@ function bind (elements, type, fn) {
 
 /**
  * Set new slug
- *
  * @private
  * @param {String} active Slug to set
  */
@@ -127,9 +119,8 @@ var setSlug = function setSlug(slugPrepend, active) {
 
 /**
  * Read current slug
- *
  * @private
- * @returns {String} Returns slug value
+ * @returns {String} Slug value
  */
 var getSlug = function getSlug(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
@@ -137,12 +128,12 @@ var getSlug = function getSlug(slugPrepend) {
 
 /**
  * Callback user/plugin fn
- *
  * @private
  * @param {String} type Callback function name
+ * @param {Object} context The Avenue instance
  * @param {Object} data Object of data to pass
  */
-function callback (type, context, data) {
+var callback = function (type, context, data) {
     function runCallback(fn, options) {
         var api = {
             //Avenue API
@@ -150,15 +141,15 @@ function callback (type, context, data) {
             options: context.options,
             elements: context.elements,
             methods: {
+                slug: {
+                    setSlug: setSlug,
+                    getSlug: getSlug
+                },
                 dom: {
                     queryElements: queryElements,
                     bind: bind,
                     readData: readData,
                     writeData: writeData
-                },
-                slug: {
-                    setSlug: setSlug,
-                    getSlug: getSlug
                 }
             }
         };
@@ -185,10 +176,9 @@ function callback (type, context, data) {
 
 /**
  * Init Avenue instance
- *
  * @returns {Object} Avenue instance
  */
-function init () {
+var init = function () {
     var _this = this;
     var _options = _this.options;
     var slug = getSlug(_this.options.slugPrepend);
@@ -249,11 +239,10 @@ function init () {
 
 /**
  * Move to id
- *
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */
-function moveTo (id) {
+var moveTo = function (id) {
     var _this = this;
 
     if (_this.data.ids.indexOf(id) > -1) {
@@ -284,11 +273,10 @@ function moveTo (id) {
 
 /**
  * Move by Value
- *
  * @param {Number} val Value to move by
  * @returns {Object} Avenue instance
  */
-function moveBy (val) {
+var moveBy = function (val) {
     var _this = this;
     var newId = _this.data.ids[_this.data.index + val];
 
@@ -299,19 +287,16 @@ function moveBy (val) {
 
 /**
  * Basic Avenue Constructor
- *
  * @constructor
- * @param {Object} options To identify the instance
- * @param {Object} events To identify the instance
- * @param {Array} plugins To identify the instance
- * @returns {Object} Returns Avenue instance
+ * @param {Object} options Options to use
+ * @param {Object} events Events to use
+ * @param {Array} plugins Array of plugins
+ * @returns {Object} Avenue instance
  */
 var Avenue = function Avenue(options, events, plugins) {
     var _this = this;
 
-    /**
-     * Options
-     */
+    //Options
     options = options || {};
     _this.options = {
         autobind: options.autobind || true, //bind click events to data-router-href/link
@@ -330,9 +315,7 @@ var Avenue = function Avenue(options, events, plugins) {
         }
     };
 
-    /**
-     * Events
-     */
+    //Events
     events = events || {};
     _this.events = {
         beforeInit: events.beforeInit || function () {},
@@ -341,14 +324,10 @@ var Avenue = function Avenue(options, events, plugins) {
         afterMove: events.afterMove || function () {}
     };
 
-    /**
-     * Plugins
-     */
+    //Plugins
     _this.plugins = plugins || [];
 
-    /**
-     * Data
-     */
+    //Data
     _this.data = {
         ids: [],
         activeId: null,
@@ -356,9 +335,7 @@ var Avenue = function Avenue(options, events, plugins) {
         index: 0
     };
 
-    /**
-     * Elements
-     */
+    //Elements
     _this.elements = {};
 };
 

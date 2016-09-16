@@ -60,12 +60,12 @@
                 afterInit: function() {
                     console.log("myRouter afterInit");
                 },
-                beforeMove: function(id, index, element) {
-                    console.log("myRouter beforeMove: " + id);
+                beforeMove: function(data) {
+                    console.log("myRouter beforeMove");
                 },
-                afterMove: function(id, index, element) {
-                    console.log("myRouter afterMove: " + id);
-                    highlight(element);
+                afterMove: function(data) {
+                    console.log("myRouter afterMove");
+                    highlight(data.element);
                 }
             }, []);
 

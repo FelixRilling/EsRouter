@@ -1,6 +1,5 @@
 "use strict";
 
-
 import queryElements from "../dom/queryElements";
 import bind from "../dom/bind";
 import {
@@ -14,9 +13,9 @@ import {
 
 /**
  * Callback user/plugin fn
- *
  * @private
  * @param {String} type Callback function name
+ * @param {Object} context The Avenue instance
  * @param {Object} data Object of data to pass
  */
 export default function(type, context, data) {
@@ -27,15 +26,15 @@ export default function(type, context, data) {
             options: context.options,
             elements: context.elements,
             methods: {
+                slug: {
+                    setSlug,
+                    getSlug
+                },
                 dom: {
                     queryElements,
                     bind,
                     readData,
                     writeData
-                },
-                slug: {
-                    setSlug,
-                    getSlug
                 }
             }
         };

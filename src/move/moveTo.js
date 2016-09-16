@@ -7,7 +7,6 @@ import {
 
 /**
  * Move to id
- *
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */

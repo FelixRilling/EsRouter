@@ -6,7 +6,6 @@ import {
 
 /**
  * Set new slug
- *
  * @private
  * @param {String} active Slug to set
  */
@@ -16,9 +15,8 @@ export const setSlug = function(slugPrepend, active) {
 
 /**
  * Read current slug
- *
  * @private
- * @returns {String} Returns slug value
+ * @returns {String} Slug value
  */
 export const getSlug = function(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");

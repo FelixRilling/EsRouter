@@ -6,19 +6,16 @@ import moveBy from "./move/moveBy";
 
 /**
  * Basic Avenue Constructor
- *
  * @constructor
- * @param {Object} options To identify the instance
- * @param {Object} events To identify the instance
- * @param {Array} plugins To identify the instance
- * @returns {Object} Returns Avenue instance
+ * @param {Object} options Options to use
+ * @param {Object} events Events to use
+ * @param {Array} plugins Array of plugins
+ * @returns {Object} Avenue instance
  */
 const Avenue = function(options, events, plugins) {
     const _this = this;
 
-    /**
-     * Options
-     */
+    //Options
     options = options || {};
     _this.options = {
         autobind: options.autobind || true, //bind click events to data-router-href/link
@@ -37,9 +34,7 @@ const Avenue = function(options, events, plugins) {
         }
     };
 
-    /**
-     * Events
-     */
+    //Events
     events = events || {};
     _this.events = {
         beforeInit: events.beforeInit || function() {},
@@ -48,14 +43,10 @@ const Avenue = function(options, events, plugins) {
         afterMove: events.afterMove || function() {}
     };
 
-    /**
-     * Plugins
-     */
+    //Plugins
     _this.plugins = plugins || [];
 
-    /**
-     * Data
-     */
+    //Data
     _this.data = {
         ids: [],
         activeId: null,
@@ -63,9 +54,7 @@ const Avenue = function(options, events, plugins) {
         index: 0
     };
 
-    /**
-     * Elements
-     */
+    //Elements
     _this.elements = {};
 };
 

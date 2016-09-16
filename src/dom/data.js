@@ -3,11 +3,10 @@
 
 /**
  * Get data query for dom element
- *
  * @private
  * @param {String} prefix Data prefix
  * @param {String} name Data name
- * @returns {String} query Selector query
+ * @returns {String} Selector query
  */
 export const getDataQueryDom = function(prefix, name) {
     return `[data-${prefix}-${name}]`;
@@ -15,11 +14,10 @@ export const getDataQueryDom = function(prefix, name) {
 
 /**
  * Get data query for node property
- *
  * @private
  * @param {String} prefix Data prefix
  * @param {String} name Data name
- * @returns {String} query Selector query
+ * @returns {String} Prop query
  */
 export const getDataQueryProp = function(prefix, name) {
     return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
@@ -27,12 +25,11 @@ export const getDataQueryProp = function(prefix, name) {
 
 /**
  * Read value of element data attribute
- *
  * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
  * @param {String} key The attribute key
- * @returns {String} the value of the attribute
+ * @returns {String} Value of the attribute
  */
 export const readData = function(element, prefix, name) {
     return element.dataset[getDataQueryProp(prefix, name)];
@@ -40,7 +37,6 @@ export const readData = function(element, prefix, name) {
 
 /**
  * Set value of element data attribute
- *
  * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix

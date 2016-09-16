@@ -10,7 +10,6 @@ import {
 
 /**
  * Query router elements
- *
  * @private
  * @param {Object} attributes The Options attributes property
  * @returns {Object} Object of query results

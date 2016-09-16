@@ -4,7 +4,6 @@ import moveTo from "./moveTo";
 
 /**
  * Move by Value
- *
  * @param {Number} val Value to move by
  * @returns {Object} Avenue instance
  */

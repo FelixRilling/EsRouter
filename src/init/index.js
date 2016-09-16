@@ -16,7 +16,6 @@ import {
 
 /**
  * Init Avenue instance
- *
  * @returns {Object} Avenue instance
  */
 export default function() {
