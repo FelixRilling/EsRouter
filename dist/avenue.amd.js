@@ -1,5 +1,5 @@
 /**
- * Avenue v3.8.0
+ * Avenue v3.8.1
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -138,6 +138,54 @@ var getSlug = function getSlug(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
 
+/**
+ * Move to id
+ * @param {String} id Id to move to
+ * @returns {Object} Avenue instance
+ */
+var moveTo = function (id) {
+    var _this = this;
+
+    if (_this.data.ids.indexOf(id) > -1) {
+        var index = _this.data.ids.indexOf(id);
+
+        //beforeMove Callback
+        runCallbacks(_this, "beforeMove", {
+            id: id,
+            index: index,
+            element: _this.elements.field[index]
+        });
+
+        //Set new section
+        _this.data.activeId = id;
+        _this.data.index = index;
+        setSlug(_this.options.slugPrepend, id);
+
+        //afterMove Callback
+        runCallbacks(_this, "afterMove", {
+            id: id,
+            index: index,
+            element: _this.elements.field[index]
+        });
+    }
+
+    return _this;
+}
+
+/**
+ * Move by Value
+ * @param {Number} val Value to move by
+ * @returns {Object} Avenue instance
+ */
+var moveBy = function (val) {
+    var _this = this;
+    var newId = _this.data.ids[_this.data.index + val];
+
+    if (typeof newId !== "undefined") {
+        return moveTo.call(_this, newId);
+    }
+}
+
 var getApi = function (context) {
     //Avenue API
     return {
@@ -146,6 +194,13 @@ var getApi = function (context) {
         elements: context.elements,
         methods: {
             callback: callback,
+            util: {
+                eachNode: eachNode
+            },
+            move: {
+                moveBy: moveBy,
+                moveTo: moveTo
+            },
             slug: {
                 setSlug: setSlug,
                 getSlug: getSlug
@@ -250,54 +305,6 @@ var init = function () {
     runCallbacks(_this, "afterInit", {});
 
     return _this;
-}
-
-/**
- * Move to id
- * @param {String} id Id to move to
- * @returns {Object} Avenue instance
- */
-var moveTo = function (id) {
-    var _this = this;
-
-    if (_this.data.ids.indexOf(id) > -1) {
-        var index = _this.data.ids.indexOf(id);
-
-        //beforeMove Callback
-        runCallbacks(_this, "beforeMove", {
-            id: id,
-            index: index,
-            element: _this.elements.field[index]
-        });
-
-        //Set new section
-        _this.data.activeId = id;
-        _this.data.index = index;
-        setSlug(_this.options.slugPrepend, id);
-
-        //afterMove Callback
-        runCallbacks(_this, "afterMove", {
-            id: id,
-            index: index,
-            element: _this.elements.field[index]
-        });
-    }
-
-    return _this;
-}
-
-/**
- * Move by Value
- * @param {Number} val Value to move by
- * @returns {Object} Avenue instance
- */
-var moveBy = function (val) {
-    var _this = this;
-    var newId = _this.data.ids[_this.data.index + val];
-
-    if (typeof newId !== "undefined") {
-        return moveTo.call(_this, newId);
-    }
 }
 
 /**
