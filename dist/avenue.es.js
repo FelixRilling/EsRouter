@@ -1,5 +1,5 @@
 /**
- * Avenue v3.7.0
+ * Avenue v3.8.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -103,6 +103,22 @@ var bind = function (elements, type, fn) {
 }
 
 /**
+ * Runs callback with injected API
+ * @param {Object} context Instance context
+ * @param {Function} fn Callback function
+ * @param {Object} data Callback data
+ * @param {Object} options Callback options
+ */
+
+function callback(fn, data, api, options, subEvents) {
+    if (typeof fn === "function") {
+        var args = [data, api, options, subEvents];
+
+        fn.apply(null, args);
+    }
+}
+
+/**
  * Set new slug
  * @param {String} slugPrepend Slug prefix
  * @param {String} active Slug to set
@@ -120,44 +136,26 @@ var getSlug = function getSlug(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
 
-/**
- * Runs callback with injected API
- * @param {Object} context Instance context
- * @param {Function} fn Callback function
- * @param {Object} data Callback data
- * @param {Object} options Callback options
- */
-function callback(context, fn, data, options, subEvents) {
-    if (typeof fn === "function") {
-        var args = [data, {
-            //Avenue API
-            data: context.data,
-            options: context.options,
-            elements: context.elements,
-            methods: {
-                callback: callback,
-                slug: {
-                    setSlug: setSlug,
-                    getSlug: getSlug
-                },
-                dom: {
-                    queryElements: queryElements,
-                    bind: bind,
-                    readData: readData,
-                    writeData: writeData
-                }
+var getApi = function (context) {
+    //Avenue API
+    return {
+        data: context.data,
+        options: context.options,
+        elements: context.elements,
+        methods: {
+            callback: callback,
+            slug: {
+                setSlug: setSlug,
+                getSlug: getSlug
+            },
+            dom: {
+                queryElements: queryElements,
+                bind: bind,
+                readData: readData,
+                writeData: writeData
             }
-        }];
-
-        if (options) {
-            args.push(options);
         }
-        if (subEvents) {
-            args.push(subEvents);
-        }
-
-        fn.apply(context, args);
-    }
+    };
 }
 
 /**
@@ -168,6 +166,7 @@ function callback(context, fn, data, options, subEvents) {
  */
 var runCallbacks = function (context, type, data) {
     var _plugins = context.plugins;
+    var api = getApi(context);
 
     //Call plugins
     _plugins.active.forEach(function (plugin) {
@@ -177,7 +176,7 @@ var runCallbacks = function (context, type, data) {
             var fn = pluginObj[type];
             //Check if plugin event exists
             if (fn) {
-                callback(context, fn, data, plugin.options, plugin.events);
+                callback(fn, data, api, plugin.options, plugin.events);
             }
         } else {
             throw "Missing plugin " + plugin.name;
@@ -185,7 +184,7 @@ var runCallbacks = function (context, type, data) {
     });
 
     //Call user events
-    callback(context, context.events[type], data);
+    callback(context.events[type], data, api);
 }
 
 /**

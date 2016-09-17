@@ -1,6 +1,6 @@
 {
     "name": "avenuejs",
-    "version": "v3.7.0",
+    "version": "v3.8.0",
     "description": "Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation.",
     "main": "dist/chevron.js",
     "authors": [

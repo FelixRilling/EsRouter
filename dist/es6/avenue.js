@@ -1,5 +1,5 @@
 /**
- * Avenue v3.7.0
+ * Avenue v3.8.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -103,6 +103,21 @@ var bind = function(elements, type, fn) {
 }
 
 /**
+ * Runs callback with injected API
+ * @param {Object} context Instance context
+ * @param {Function} fn Callback function
+ * @param {Object} data Callback data
+ * @param {Object} options Callback options
+ */
+function callback(fn, data, api, options, subEvents) {
+    if (typeof fn === "function") {
+        const args = [data, api, options, subEvents];
+
+        fn.apply(null, args);
+    }
+}
+
+/**
  * Set new slug
  * @param {String} slugPrepend Slug prefix
  * @param {String} active Slug to set
@@ -120,44 +135,26 @@ const getSlug = function(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
 
-/**
- * Runs callback with injected API
- * @param {Object} context Instance context
- * @param {Function} fn Callback function
- * @param {Object} data Callback data
- * @param {Object} options Callback options
- */
-function callback(context, fn, data, options, subEvents) {
-    if (typeof fn === "function") {
-        const args = [data, {
-            //Avenue API
-            data: context.data,
-            options: context.options,
-            elements: context.elements,
-            methods: {
-                callback,
-                slug: {
-                    setSlug,
-                    getSlug
-                },
-                dom: {
-                    queryElements,
-                    bind,
-                    readData,
-                    writeData
-                }
+var getApi = function(context) {
+    //Avenue API
+    return {
+        data: context.data,
+        options: context.options,
+        elements: context.elements,
+        methods: {
+            callback,
+            slug: {
+                setSlug,
+                getSlug
+            },
+            dom: {
+                queryElements,
+                bind,
+                readData,
+                writeData
             }
-        }];
-
-        if (options) {
-            args.push(options);
         }
-        if (subEvents) {
-            args.push(subEvents);
-        }
-
-        fn.apply(context, args);
-    }
+    };
 }
 
 /**
@@ -168,6 +165,7 @@ function callback(context, fn, data, options, subEvents) {
  */
 var runCallbacks = function(context, type, data) {
     const _plugins = context.plugins;
+    const api = getApi(context);
 
     //Call plugins
     _plugins.active.forEach(plugin => {
@@ -177,7 +175,7 @@ var runCallbacks = function(context, type, data) {
             const fn = pluginObj[type];
             //Check if plugin event exists
             if (fn) {
-                callback(context, fn, data, plugin.options, plugin.events);
+                callback(fn, data, api, plugin.options, plugin.events);
             }
         } else {
             throw `Missing plugin ${plugin.name}`;
@@ -185,7 +183,7 @@ var runCallbacks = function(context, type, data) {
     });
 
     //Call user events
-    callback(context, context.events[type], data);
+    callback(context.events[type], data, api);
 }
 
 /**

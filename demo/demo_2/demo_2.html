@@ -72,7 +72,7 @@
                         foo: "foo"
                     };
 
-                    api.methods.callback(this, events.myEvent, eventData, options);
+                    api.methods.callback(events.myEvent, eventData, {}, options);
                 }
             };
 
@@ -96,7 +96,7 @@
                     options: {},
                     events: {
                         myEvent: function(data, api, options) {
-                            console.log(options);
+                            console.log(data);
                             console.log("myPlugin myEvent " + data.foo);
                         }
                     }

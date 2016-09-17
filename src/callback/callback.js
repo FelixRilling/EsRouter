@@ -1,15 +1,5 @@
 "use strict";
 
-import queryElements from "../dom/queryElements";
-import bind from "../dom/bind";
-import {
-    readData,
-    writeData
-} from "../dom/data";
-import {
-    getSlug,
-    setSlug
-} from "../slug";
 
 /**
  * Runs callback with injected API
@@ -18,35 +8,10 @@ import {
  * @param {Object} data Callback data
  * @param {Object} options Callback options
  */
-export default function callback(context, fn, data, options, subEvents) {
+export default function callback(fn, data, api, options, subEvents) {
     if (typeof fn === "function") {
-        const args = [data, {
-            //Avenue API
-            data: context.data,
-            options: context.options,
-            elements: context.elements,
-            methods: {
-                callback,
-                slug: {
-                    setSlug,
-                    getSlug
-                },
-                dom: {
-                    queryElements,
-                    bind,
-                    readData,
-                    writeData
-                }
-            }
-        }];
+        const args = [data, api, options, subEvents];
 
-        if (options) {
-            args.push(options);
-        }
-        if (subEvents) {
-            args.push(subEvents);
-        }
-
-        fn.apply(context, args);
+        fn.apply(null, args);
     }
 }
