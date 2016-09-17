@@ -6,7 +6,7 @@ import {
 
 /**
  * Set new slug
- * @private
+ * @param {String} slugPrepend Slug prefix
  * @param {String} active Slug to set
  */
 export const setSlug = function(slugPrepend, active) {
@@ -15,7 +15,7 @@ export const setSlug = function(slugPrepend, active) {
 
 /**
  * Read current slug
- * @private
+ * @param {String} slugPrepend Slug prefix
  * @returns {String} Slug value
  */
 export const getSlug = function(slugPrepend) {

@@ -25,10 +25,9 @@ export const getDataQueryProp = function(prefix, name) {
 
 /**
  * Read value of element data attribute
- * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
- * @param {String} key The attribute key
+ * @param {String} name The attribute name
  * @returns {String} Value of the attribute
  */
 export const readData = function(element, prefix, name) {
@@ -37,10 +36,9 @@ export const readData = function(element, prefix, name) {
 
 /**
  * Set value of element data attribute
- * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
- * @param {String} key The attribute key
+ * @param {String} name The attribute name
  * @param {String} value The attribute value
  */
 export const writeData = function(element, prefix, name, value) {

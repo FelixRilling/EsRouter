@@ -1,5 +1,5 @@
 /**
- * Avenue v3.6.0
+ * Avenue v3.7.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -36,10 +36,9 @@ const getDataQueryProp = function(prefix, name) {
 
 /**
  * Read value of element data attribute
- * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
- * @param {String} key The attribute key
+ * @param {String} name The attribute name
  * @returns {String} Value of the attribute
  */
 const readData = function(element, prefix, name) {
@@ -48,10 +47,9 @@ const readData = function(element, prefix, name) {
 
 /**
  * Set value of element data attribute
- * @private
  * @param {Node} element The element node to check
  * @param {String} prefix The attribute prefix
- * @param {String} key The attribute key
+ * @param {String} name The attribute name
  * @param {String} value The attribute value
  */
 const writeData = function(element, prefix, name, value) {
@@ -60,7 +58,6 @@ const writeData = function(element, prefix, name, value) {
 
 /**
  * Query router elements
- * @private
  * @param {Object} attributes The Options attributes property
  * @returns {Object} Object of query results
  */
@@ -91,7 +88,6 @@ const eachNode = function (elements, fn) {
 
 /**
  * Bind UI Events
- * @private
  * @param {Object} elements The Elements property
  * @param {Object} fn The Event function
  */
@@ -105,7 +101,7 @@ var bind = function(elements, type, fn) {
 
 /**
  * Set new slug
- * @private
+ * @param {String} slugPrepend Slug prefix
  * @param {String} active Slug to set
  */
 const setSlug = function(slugPrepend, active) {
@@ -114,7 +110,7 @@ const setSlug = function(slugPrepend, active) {
 
 /**
  * Read current slug
- * @private
+ * @param {String} slugPrepend Slug prefix
  * @returns {String} Slug value
  */
 const getSlug = function(slugPrepend) {
@@ -122,20 +118,21 @@ const getSlug = function(slugPrepend) {
 };
 
 /**
- * Callback user/plugin fn
- * @private
- * @param {String} type Callback function name
- * @param {Object} context The Avenue instance
- * @param {Object} data Object of data to pass
+ * Runs callback with injected API
+ * @param {Object} context Instance context
+ * @param {Function} fn Callback function
+ * @param {Object} data Callback data
+ * @param {Object} options Callback options
  */
-var callback = function(type, context, data) {
-    function runCallback(fn, options) {
-        const api = {
+function callback(context, fn, data, options, subEvents) {
+    if (typeof fn === "function") {
+        const args = [data, {
             //Avenue API
             data: context.data,
             options: context.options,
             elements: context.elements,
             methods: {
+                callback,
                 slug: {
                     setSlug,
                     getSlug
@@ -147,26 +144,45 @@ var callback = function(type, context, data) {
                     writeData
                 }
             }
-        };
-        const args = [data, api];
+        }];
 
         if (options) {
             args.push(options);
         }
+        if (subEvents) {
+            args.push(subEvents);
+        }
 
         fn.apply(context, args);
     }
+}
+
+/**
+ * Runs Plugin/User events
+ * @param {Object} context Instance context
+ * @param {String} type Event type
+ * @param {Object} data Event data
+ */
+var runCallbacks = function(context, type, data) {
+    const _plugins = context.plugins;
 
     //Call plugins
-    context.plugins.forEach(plugin => {
-        const fn = plugin[0][type];
-        if (fn) {
-            runCallback(fn, plugin[1]);
+    _plugins.active.forEach(plugin => {
+        const pluginObj = _plugins.container[plugin.name];
+        //Check if requested plugin exists
+        if (pluginObj) {
+            const fn = pluginObj[type];
+            //Check if plugin event exists
+            if (fn) {
+                callback(context, fn, data, plugin.options, plugin.events);
+            }
+        } else {
+            throw `Missing plugin ${plugin.name}`;
         }
     });
 
     //Call user events
-    runCallback(context.events[type]);
+    callback(context, context.events[type], data);
 }
 
 /**
@@ -179,7 +195,7 @@ var init = function() {
     const slug = getSlug(_this.options.slugPrepend);
 
     //beforeInit Callback
-    callback("beforeInit", _this, {});
+    runCallbacks(_this, "beforeInit", {});
 
     /**
      * DOM
@@ -231,7 +247,7 @@ var init = function() {
     }
 
     //afterInit Callback
-    callback("afterInit", _this, {});
+    runCallbacks(_this, "afterInit", {});
 
     return _this;
 }
@@ -248,7 +264,7 @@ var moveTo = function(id) {
         const index = _this.data.ids.indexOf(id);
 
         //beforeMove Callback
-        callback("beforeMove", _this, {
+        runCallbacks(_this, "beforeMove", {
             id,
             index,
             element: _this.elements.field[index]
@@ -260,7 +276,7 @@ var moveTo = function(id) {
         setSlug(_this.options.slugPrepend, id);
 
         //afterMove Callback
-        callback("afterMove", _this, {
+        runCallbacks(_this, "afterMove", {
             id,
             index,
             element: _this.elements.field[index]
@@ -318,14 +334,19 @@ const Avenue = function(options, events, plugins) {
     //Events
     events = events || {};
     _this.events = {
-        beforeInit: events.beforeInit || function() {},
-        afterInit: events.afterInit || function() {},
-        beforeMove: events.beforeMove || function() {},
-        afterMove: events.afterMove || function() {}
+        beforeInit: events.beforeInit,
+        afterInit: events.afterInit,
+        beforeMove: events.beforeMove,
+        afterMove: events.afterMove
     };
 
-    //Plugins
-    _this.plugins = plugins || [];
+    //Instance Plugins
+    _this.plugins = {
+        active: plugins || [],
+        //Ref plugins from global constructor
+        container: Avenue.plugins
+    };
+
 
     //Data
     _this.data = {
@@ -338,6 +359,9 @@ const Avenue = function(options, events, plugins) {
     //Elements
     _this.elements = {};
 };
+
+//Plugins Container
+Avenue.plugins = {};
 
 /**
  * Expose Avenue methods

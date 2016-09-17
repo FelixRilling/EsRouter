@@ -37,14 +37,19 @@ const Avenue = function(options, events, plugins) {
     //Events
     events = events || {};
     _this.events = {
-        beforeInit: events.beforeInit || function() {},
-        afterInit: events.afterInit || function() {},
-        beforeMove: events.beforeMove || function() {},
-        afterMove: events.afterMove || function() {}
+        beforeInit: events.beforeInit,
+        afterInit: events.afterInit,
+        beforeMove: events.beforeMove,
+        afterMove: events.afterMove
     };
 
-    //Plugins
-    _this.plugins = plugins || [];
+    //Instance Plugins
+    _this.plugins = {
+        active: plugins || [],
+        //Ref plugins from global constructor
+        container: Avenue.plugins
+    };
+
 
     //Data
     _this.data = {
@@ -57,6 +62,9 @@ const Avenue = function(options, events, plugins) {
     //Elements
     _this.elements = {};
 };
+
+//Plugins Container
+Avenue.plugins = {};
 
 /**
  * Expose Avenue methods

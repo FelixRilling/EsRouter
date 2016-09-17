@@ -1,6 +1,6 @@
 "use strict";
 
-import callback from "../api/callback";
+import runCallbacks from "../callback/runCallbacks";
 import {
     setSlug
 } from "../slug";
@@ -17,7 +17,7 @@ export default function(id) {
         const index = _this.data.ids.indexOf(id);
 
         //beforeMove Callback
-        callback("beforeMove", _this, {
+        runCallbacks(_this, "beforeMove", {
             id,
             index,
             element: _this.elements.field[index]
@@ -29,7 +29,7 @@ export default function(id) {
         setSlug(_this.options.slugPrepend, id);
 
         //afterMove Callback
-        callback("afterMove", _this, {
+        runCallbacks(_this, "afterMove", {
             id,
             index,
             element: _this.elements.field[index]

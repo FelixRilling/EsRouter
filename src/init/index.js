@@ -2,7 +2,7 @@
 
 import queryElements from "../dom/queryElements";
 import bind from "../dom/bind";
-import callback from "../api/callback";
+import runCallbacks from "../callback/runCallbacks";
 import {
     readData
 } from "../dom/data";
@@ -24,7 +24,7 @@ export default function() {
     const slug = getSlug(_this.options.slugPrepend);
 
     //beforeInit Callback
-    callback("beforeInit", _this, {});
+    runCallbacks(_this, "beforeInit", {});
 
     /**
      * DOM
@@ -76,7 +76,7 @@ export default function() {
     }
 
     //afterInit Callback
-    callback("afterInit", _this, {});
+    runCallbacks(_this, "afterInit", {});
 
     return _this;
 }
