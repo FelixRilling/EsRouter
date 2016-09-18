@@ -1,9 +1,8 @@
 "use strict";
 
-import getApi from "./api/getApi";
 import init from "./init";
-import moveTo from "./move/moveTo";
-import moveBy from "./move/moveBy";
+import _moveTo from "./move/moveTo";
+import _moveBy from "./move/moveBy";
 
 /**
  * Basic Avenue Constructor
@@ -62,8 +61,6 @@ const Avenue = function(options, events, plugins) {
 
     //Elements
     _this.elements = {};
-
-    _this.api = getApi(_this);
 };
 
 //Plugins Container
@@ -75,16 +72,16 @@ Avenue.plugins = {};
 Avenue.prototype = {
     init,
     moveTo: function(id) {
-        return moveBy(this, id);
+        return _moveBy(this, id);
     },
     moveBy: function(val) {
-        return moveBy(this, val);
+        return _moveBy(this, val);
     },
     moveForward: function() {
-        return moveBy(this, 1);
+        return _moveBy(this, 1);
     },
     moveBackward: function() {
-        return moveBy(this, -1);
+        return _moveBy(this, -1);
     }
 };
 

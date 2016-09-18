@@ -11,7 +11,6 @@ import {
  * @returns {Object} Avenue instance
  */
 export default function(instance, id) {
-
     if (instance.data.ids.indexOf(id) > -1) {
         const index = instance.data.ids.indexOf(id);
         const element = instance.elements.field[index];

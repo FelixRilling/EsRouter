@@ -1,5 +1,5 @@
 /**
- * Avenue v3.9.0
+ * Avenue v3.10.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -7,30 +7,6 @@
 
 var Avenue = (function () {
 'use strict';
-
-/**
- * Runs callback with injected API
- * @param {Object} context Instance context
- * @param {Function} fn Callback function
- * @param {Object} data Callback data
- * @param {Object} options Callback options
- * @param {Object} subEvents Callback subEvents
- */
-
-function callback(fn, data, api, options, subEvents) {
-    if (typeof fn === "function") {
-        var args = [data, api];
-
-        if (options) {
-            args.push(options);
-        }
-        if (subEvents) {
-            args.push(subEvents);
-        }
-
-        fn.apply(null, args);
-    }
-}
 
 /**
  * Store Constants
@@ -131,27 +107,27 @@ var bind = function (elements, type, fn) {
 }
 
 /**
- * Runs Plugin/User events
+ * Runs callback with injected API
  * @param {Object} context Instance context
- * @param {String} type Event type
- * @param {Object} data Event data
+ * @param {Function} fn Callback function
+ * @param {Object} data Callback data
+ * @param {Object} options Callback options
+ * @param {Object} subEvents Callback subEvents
  */
-var runCallbacks = function (instance, type, data) {
-    var _plugins = instance.plugins;
 
-    //Call plugins
-    _plugins.active.forEach(function (plugin) {
-        var pluginObj = _plugins.container[plugin.name];
-        //Check if requested plugin exists
-        if (pluginObj) {
-            callback(pluginObj[type], data, instance.api, plugin.options, plugin.events);
-        } else {
-            throw "Missing plugin " + plugin.name;
+function callback(fn, data, api, options, subEvents) {
+    if (typeof fn === "function") {
+        var args = [data, api];
+
+        if (options) {
+            args.push(options);
         }
-    });
+        if (subEvents) {
+            args.push(subEvents);
+        }
 
-    //Call user events
-    callback(instance.events[type], data, instance.api);
+        fn.apply(null, args);
+    }
 }
 
 /**
@@ -178,7 +154,6 @@ var getSlug = function getSlug(slugPrepend) {
  * @returns {Object} Avenue instance
  */
 var moveTo$1 = function (instance, id) {
-
     if (instance.data.ids.indexOf(id) > -1) {
         var index = instance.data.ids.indexOf(id);
         var element = instance.elements.field[index];
@@ -211,7 +186,7 @@ var moveTo$1 = function (instance, id) {
  * @param {Number} val Value to move by
  * @returns {Object} Avenue instance
  */
-var moveBy$1 = function (instance, val) {
+var _moveBy = function (instance, val) {
     var newId = instance.data.ids[instance.data.index + val];
 
     if (typeof newId !== "undefined") {
@@ -231,32 +206,55 @@ var getApi = function (instance) {
         data: instance.data,
         options: instance.options,
         elements: instance.elements,
-        methods: {
-            callback: callback,
-            util: {
-                eachNode: eachNode
+        callback: callback,
+        util: {
+            eachNode: eachNode
+        },
+        move: {
+            //Instance specific, needs context bind
+            moveTo: function moveTo(id) {
+                return moveTo$1(instance, id);
             },
-            move: {
-                //Instance specific, needs context bind
-                moveTo: function moveTo(id) {
-                    return moveTo$1(instance, id);
-                },
-                moveBy: function moveBy$1(val) {
-                    return moveTo$1(instance, val);
-                }
-            },
-            slug: {
-                setSlug: setSlug,
-                getSlug: getSlug
-            },
-            dom: {
-                queryElements: queryElements,
-                bind: bind,
-                readData: readData,
-                writeData: writeData
+            moveBy: function moveBy(val) {
+                return _moveBy(instance, val);
             }
+        },
+        slug: {
+            setSlug: setSlug,
+            getSlug: getSlug
+        },
+        dom: {
+            queryElements: queryElements,
+            bind: bind,
+            readData: readData,
+            writeData: writeData
         }
     };
+}
+
+/**
+ * Runs Plugin/User events
+ * @param {Object} context Instance context
+ * @param {String} type Event type
+ * @param {Object} data Event data
+ */
+var runCallbacks = function (instance, type, data) {
+    var _plugins = instance.plugins;
+    var _api = getApi(instance);
+
+    //Call plugins
+    _plugins.active.forEach(function (plugin) {
+        var pluginObj = _plugins.container[plugin.name];
+        //Check if requested plugin exists
+        if (pluginObj) {
+            callback(pluginObj[type], data, _api, plugin.options, plugin.events);
+        } else {
+            throw "Missing plugin " + plugin.name;
+        }
+    });
+
+    //Call user events
+    callback(instance.events[type], data, _api);
 }
 
 /**
@@ -288,7 +286,7 @@ var init = function () {
         bind(_this.elements.pagination, "click", function (element) {
             var val = Number(readData(element, _options.attributes.prefix, _options.attributes.types.pagination));
 
-            moveBy$1(_this, val);
+            _moveBy(_this, val);
         });
     }
 
@@ -378,8 +376,6 @@ var Avenue = function Avenue(options, events, plugins) {
 
     //Elements
     _this.elements = {};
-
-    _this.api = getApi(_this);
 };
 
 //Plugins Container
@@ -390,17 +386,17 @@ Avenue.plugins = {};
  */
 Avenue.prototype = {
     init: init,
-    moveTo: function moveTo$1(id) {
-        return moveBy$1(this, id);
+    moveTo: function moveTo(id) {
+        return _moveBy(this, id);
     },
     moveBy: function moveBy(val) {
-        return moveBy$1(this, val);
+        return _moveBy(this, val);
     },
     moveForward: function moveForward() {
-        return moveBy$1(this, 1);
+        return _moveBy(this, 1);
     },
     moveBackward: function moveBackward() {
-        return moveBy$1(this, -1);
+        return _moveBy(this, -1);
     }
 };
 

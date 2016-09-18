@@ -3,8 +3,8 @@
 import callback from "./callback";
 import queryElements from "../dom/queryElements";
 import bind from "../dom/bind";
-import moveTo from "../move/moveTo";
-import moveBy from "../move/moveBy";
+import _moveTo from "../move/moveTo";
+import _moveBy from "../move/moveBy";
 import {
     eachNode
 } from "../util";
@@ -29,30 +29,28 @@ export default function(instance) {
         data: instance.data,
         options: instance.options,
         elements: instance.elements,
-        methods: {
-            callback,
-            util: {
-                eachNode
+        callback,
+        util: {
+            eachNode
+        },
+        move: {
+            //Instance specific, needs context bind
+            moveTo: function(id) {
+                return _moveTo(instance, id);
             },
-            move: {
-                //Instance specific, needs context bind
-                moveTo: function(id) {
-                    return moveTo(instance, id);
-                },
-                moveBy: function(val) {
-                    return moveTo(instance, val);
-                }
-            },
-            slug: {
-                setSlug,
-                getSlug
-            },
-            dom: {
-                queryElements,
-                bind,
-                readData,
-                writeData
+            moveBy: function(val) {
+                return _moveBy(instance, val);
             }
+        },
+        slug: {
+            setSlug,
+            getSlug
+        },
+        dom: {
+            queryElements,
+            bind,
+            readData,
+            writeData
         }
     };
 }

@@ -3,8 +3,8 @@
 import queryElements from "../dom/queryElements";
 import bind from "../dom/bind";
 import runCallbacks from "../api/runCallbacks";
-import moveTo from "../move/moveTo";
-import moveBy from "../move/moveBy";
+import _moveTo from "../move/moveTo";
+import _moveBy from "../move/moveBy";
 import {
     readData
 } from "../dom/data";
@@ -38,14 +38,14 @@ export default function() {
         bind(_this.elements.link, "click", element => {
             const id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
 
-            moveTo(_this, id);
+            _moveTo(_this, id);
         });
 
         //Bind router-pagination events
         bind(_this.elements.pagination, "click", element => {
             const val = Number(readData(element, _options.attributes.prefix, _options.attributes.types.pagination));
 
-            moveBy(_this, val);
+            _moveBy(_this, val);
         });
     }
 
@@ -72,9 +72,9 @@ export default function() {
      */
     //Move to either saved slug or default id
     if (slug !== "") {
-        moveTo(_this, slug);
+        _moveTo(_this, slug);
     } else {
-        moveTo(_this, _this.data.defaultId);
+        _moveTo(_this, _this.data.defaultId);
     }
 
     //afterInit Callback
