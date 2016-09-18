@@ -1,7 +1,6 @@
 "use strict";
 
 import callback from "./callback";
-import getApi from "./getApi";
 
 /**
  * Runs Plugin/User events
@@ -9,25 +8,20 @@ import getApi from "./getApi";
  * @param {String} type Event type
  * @param {Object} data Event data
  */
-export default function(context, type, data) {
-    const _plugins = context.plugins;
-    const api = getApi(context);
+export default function(instance, type, data) {
+    const _plugins = instance.plugins;
 
     //Call plugins
     _plugins.active.forEach(plugin => {
         const pluginObj = _plugins.container[plugin.name];
         //Check if requested plugin exists
         if (pluginObj) {
-            const fn = pluginObj[type];
-            //Check if plugin event exists
-            if (fn) {
-                callback(fn, data, api, plugin.options, plugin.events);
-            }
+            callback(pluginObj[type], data, instance.api, plugin.options, plugin.events);
         } else {
             throw `Missing plugin ${plugin.name}`;
         }
     });
 
     //Call user events
-    callback(context.events[type], data, api);
+    callback(instance.events[type], data, instance.api);
 }

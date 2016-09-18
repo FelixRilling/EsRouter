@@ -1,5 +1,6 @@
 "use strict";
 
+import getApi from "./api/getApi";
 import init from "./init";
 import moveTo from "./move/moveTo";
 import moveBy from "./move/moveBy";
@@ -61,6 +62,8 @@ const Avenue = function(options, events, plugins) {
 
     //Elements
     _this.elements = {};
+
+    _this.api = getApi(_this);
 };
 
 //Plugins Container
@@ -71,13 +74,17 @@ Avenue.plugins = {};
  */
 Avenue.prototype = {
     init,
-    moveTo,
-    moveBy,
+    moveTo: function(id) {
+        return moveBy(this, id);
+    },
+    moveBy: function(val) {
+        return moveBy(this, val);
+    },
     moveForward: function() {
-        return this.moveBy(1);
+        return moveBy(this, 1);
     },
     moveBackward: function() {
-        return this.moveBy(-1);
+        return moveBy(this, -1);
     }
 };
 

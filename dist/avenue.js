@@ -1,5 +1,5 @@
 /**
- * Avenue v3.8.1
+ * Avenue v3.9.0
  * Author: Felix Rilling
  * Homepage: https://github.com/FelixRilling/Avenue#readme
  * License: MIT
@@ -7,6 +7,30 @@
 
 var Avenue = (function () {
 'use strict';
+
+/**
+ * Runs callback with injected API
+ * @param {Object} context Instance context
+ * @param {Function} fn Callback function
+ * @param {Object} data Callback data
+ * @param {Object} options Callback options
+ * @param {Object} subEvents Callback subEvents
+ */
+
+function callback(fn, data, api, options, subEvents) {
+    if (typeof fn === "function") {
+        var args = [data, api];
+
+        if (options) {
+            args.push(options);
+        }
+        if (subEvents) {
+            args.push(subEvents);
+        }
+
+        fn.apply(null, args);
+    }
+}
 
 /**
  * Store Constants
@@ -94,8 +118,9 @@ var eachNode = function eachNode(elements, fn) {
 
 /**
  * Bind UI Events
- * @param {Object} elements The Elements property
- * @param {Object} fn The Event function
+ * @param {Object} elements The elements
+ * @param {Object} type The event type
+ * @param {Object} fn The event function
  */
 var bind = function (elements, type, fn) {
     eachNode(elements, function (element) {
@@ -106,19 +131,27 @@ var bind = function (elements, type, fn) {
 }
 
 /**
- * Runs callback with injected API
+ * Runs Plugin/User events
  * @param {Object} context Instance context
- * @param {Function} fn Callback function
- * @param {Object} data Callback data
- * @param {Object} options Callback options
+ * @param {String} type Event type
+ * @param {Object} data Event data
  */
+var runCallbacks = function (instance, type, data) {
+    var _plugins = instance.plugins;
 
-function callback(fn, data, api, options, subEvents) {
-    if (typeof fn === "function") {
-        var args = [data, api, options, subEvents];
+    //Call plugins
+    _plugins.active.forEach(function (plugin) {
+        var pluginObj = _plugins.container[plugin.name];
+        //Check if requested plugin exists
+        if (pluginObj) {
+            callback(pluginObj[type], data, instance.api, plugin.options, plugin.events);
+        } else {
+            throw "Missing plugin " + plugin.name;
+        }
+    });
 
-        fn.apply(null, args);
-    }
+    //Call user events
+    callback(instance.events[type], data, instance.api);
 }
 
 /**
@@ -144,33 +177,33 @@ var getSlug = function getSlug(slugPrepend) {
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */
-var moveTo = function (id) {
-    var _this = this;
+var moveTo$1 = function (instance, id) {
 
-    if (_this.data.ids.indexOf(id) > -1) {
-        var index = _this.data.ids.indexOf(id);
+    if (instance.data.ids.indexOf(id) > -1) {
+        var index = instance.data.ids.indexOf(id);
+        var element = instance.elements.field[index];
 
         //beforeMove Callback
-        runCallbacks(_this, "beforeMove", {
+        runCallbacks(instance, "beforeMove", {
             id: id,
             index: index,
-            element: _this.elements.field[index]
+            element: element
         });
 
         //Set new section
-        _this.data.activeId = id;
-        _this.data.index = index;
-        setSlug(_this.options.slugPrepend, id);
+        instance.data.activeId = id;
+        instance.data.index = index;
+        setSlug(instance.options.slugPrepend, id);
 
         //afterMove Callback
-        runCallbacks(_this, "afterMove", {
+        runCallbacks(instance, "afterMove", {
             id: id,
             index: index,
-            element: _this.elements.field[index]
+            element: element
         });
     }
 
-    return _this;
+    return instance;
 }
 
 /**
@@ -178,29 +211,39 @@ var moveTo = function (id) {
  * @param {Number} val Value to move by
  * @returns {Object} Avenue instance
  */
-var moveBy = function (val) {
-    var _this = this;
-    var newId = _this.data.ids[_this.data.index + val];
+var moveBy$1 = function (instance, val) {
+    var newId = instance.data.ids[instance.data.index + val];
 
     if (typeof newId !== "undefined") {
-        return moveTo.call(_this, newId);
+        return moveTo$1(instance, newId);
     }
 }
 
-var getApi = function (context) {
+/**
+ * Returns avenue api
+ * @param {Object} instance Avenue instance
+ * @returns {Object} Avenue api
+ */
+var getApi = function (instance) {
+
     //Avenue API
     return {
-        data: context.data,
-        options: context.options,
-        elements: context.elements,
+        data: instance.data,
+        options: instance.options,
+        elements: instance.elements,
         methods: {
             callback: callback,
             util: {
                 eachNode: eachNode
             },
             move: {
-                moveBy: moveBy,
-                moveTo: moveTo
+                //Instance specific, needs context bind
+                moveTo: function moveTo(id) {
+                    return moveTo$1(instance, id);
+                },
+                moveBy: function moveBy$1(val) {
+                    return moveTo$1(instance, val);
+                }
             },
             slug: {
                 setSlug: setSlug,
@@ -214,35 +257,6 @@ var getApi = function (context) {
             }
         }
     };
-}
-
-/**
- * Runs Plugin/User events
- * @param {Object} context Instance context
- * @param {String} type Event type
- * @param {Object} data Event data
- */
-var runCallbacks = function (context, type, data) {
-    var _plugins = context.plugins;
-    var api = getApi(context);
-
-    //Call plugins
-    _plugins.active.forEach(function (plugin) {
-        var pluginObj = _plugins.container[plugin.name];
-        //Check if requested plugin exists
-        if (pluginObj) {
-            var fn = pluginObj[type];
-            //Check if plugin event exists
-            if (fn) {
-                callback(fn, data, api, plugin.options, plugin.events);
-            }
-        } else {
-            throw "Missing plugin " + plugin.name;
-        }
-    });
-
-    //Call user events
-    callback(context.events[type], data, api);
 }
 
 /**
@@ -267,14 +281,14 @@ var init = function () {
         bind(_this.elements.link, "click", function (element) {
             var id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
 
-            _this.moveTo(id);
+            moveTo$1(_this, id);
         });
 
         //Bind router-pagination events
         bind(_this.elements.pagination, "click", function (element) {
-            var val = readData(element, _options.attributes.prefix, _options.attributes.types.pagination);
+            var val = Number(readData(element, _options.attributes.prefix, _options.attributes.types.pagination));
 
-            _this.moveBy(Number(val));
+            moveBy$1(_this, val);
         });
     }
 
@@ -297,9 +311,9 @@ var init = function () {
      */
     //Move to either saved slug or default id
     if (slug !== "") {
-        _this.moveTo(slug);
+        moveTo$1(_this, slug);
     } else {
-        _this.moveTo(_this.data.defaultId);
+        moveTo$1(_this, _this.data.defaultId);
     }
 
     //afterInit Callback
@@ -364,6 +378,8 @@ var Avenue = function Avenue(options, events, plugins) {
 
     //Elements
     _this.elements = {};
+
+    _this.api = getApi(_this);
 };
 
 //Plugins Container
@@ -374,13 +390,17 @@ Avenue.plugins = {};
  */
 Avenue.prototype = {
     init: init,
-    moveTo: moveTo,
-    moveBy: moveBy,
+    moveTo: function moveTo$1(id) {
+        return moveBy$1(this, id);
+    },
+    moveBy: function moveBy(val) {
+        return moveBy$1(this, val);
+    },
     moveForward: function moveForward() {
-        return this.moveBy(1);
+        return moveBy$1(this, 1);
     },
     moveBackward: function moveBackward() {
-        return this.moveBy(-1);
+        return moveBy$1(this, -1);
     }
 };
 

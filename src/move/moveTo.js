@@ -1,6 +1,6 @@
 "use strict";
 
-import runCallbacks from "../callback/runCallbacks";
+import runCallbacks from "../api/runCallbacks";
 import {
     setSlug
 } from "../slug";
@@ -10,32 +10,32 @@ import {
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */
-export default function(id) {
-    const _this = this;
+export default function(instance, id) {
 
-    if (_this.data.ids.indexOf(id) > -1) {
-        const index = _this.data.ids.indexOf(id);
+    if (instance.data.ids.indexOf(id) > -1) {
+        const index = instance.data.ids.indexOf(id);
+        const element = instance.elements.field[index];
 
         //beforeMove Callback
-        runCallbacks(_this, "beforeMove", {
+        runCallbacks(instance, "beforeMove", {
             id,
             index,
-            element: _this.elements.field[index]
+            element
         });
 
         //Set new section
-        _this.data.activeId = id;
-        _this.data.index = index;
-        setSlug(_this.options.slugPrepend, id);
+        instance.data.activeId = id;
+        instance.data.index = index;
+        setSlug(instance.options.slugPrepend, id);
 
         //afterMove Callback
-        runCallbacks(_this, "afterMove", {
+        runCallbacks(instance, "afterMove", {
             id,
             index,
-            element: _this.elements.field[index]
+            element
         });
 
     }
 
-    return _this;
+    return instance;
 }

@@ -7,8 +7,9 @@ import {
 
 /**
  * Bind UI Events
- * @param {Object} elements The Elements property
- * @param {Object} fn The Event function
+ * @param {Object} elements The elements
+ * @param {Object} type The event type
+ * @param {Object} fn The event function
  */
 export default function(elements, type, fn) {
     eachNode(elements, element => {
