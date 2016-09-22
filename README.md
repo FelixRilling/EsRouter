@@ -2,18 +2,92 @@
 
 # AvenueJS
 
-> An ES6 based, modern and small library for for DOM-routing
+> A small and modern DOM-route
 
 ## Introduction
 
-esRouter is an ES6 based, modern and small library for for DOM-routing, with support for both ajax as well as preloaded routing. esRouter was built for easy ajax navigation in CMS environments but can be used with classic websites as well
+Avenue is a small and modern DOM-router designed for on page routing.
 
-# Syntax
+**Plugins**
+
+- [avenue-ajax](https://github.com/FelixRilling/avenue-ajax): Ajax support for your Avenue fields
+
+- [avenue-scroll](https://github.com/FelixRilling/avenue-scroll): Scroll based Avenue navigation
+
+## Usage
+
+Installation via bower:
+
+```shell
+  bower install avenuejs --save
+```
+
+### Example 1: Simple router
 
 ```javascript
-//Avenue(options,events,plugins)
+var myRouter = new Avenue();
+
+myRouter.init();
+
+setTimeout(function(){
+  //move to the field with the id "secondary"
+  myRouter.moveTo("secondary");
+},1000);
+```
+
+Avenue makes use of HTML data attributes to manage your routing sections
+
+```html
+<div>
+  <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1: Main</section>
+  <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2: Secondary</section>
+  <section class="mySection" data-router-section="middle">Et dolor! Page 3: Middle</section>
+  <section class="mySection" data-router-section="fourth">sit amet dolor! Page 4: Fourth</section>
+  <section class="mySection" data-router-section="last">Bye World! Page 5: Last</section>
+</div>
+```
+
+### Example 2: Options and Autobind
+
+```javascript
 var myRouter = new Avenue({
-    autoBind: true, //bind click events to data-router-href/link
+            slugPrepend: "currentSection=",
+        }
+    },
+    {
+        afterMove: function(data) {
+            console.log("Moved to " + data.id)
+        },
+    }, []);
+
+myRouter.init();
+```
+
+```html
+<div>
+  <section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1: Main</section>
+  <section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2: Secondary</section>
+  <section class="mySection" data-router-section="middle">Et dolor! Page 3: Middle</section>
+  <section class="mySection" data-router-section="fourth">sit amet dolor! Page 4: Fourth</section>
+  <section class="mySection" data-router-section="last">Bye World! Page 5: Last</section>
+</div>
+<div>
+  <!--Avenue binds its events to elements withe either "data-router-pagin" or "data-router-href" set-->
+  <button data-router-pagin="-1">Go Backward</button>
+  <button data-router-pagin="1">Go Forward</button>
+  <button data-router-href="main">Jump to main</button>
+  <button data-router-href="last">Jump to Last</button>
+</div>
+```
+
+## Syntax
+
+Init:
+
+```javascript
+//Avenue({options},{events},[plugins])
+var myRouter = new Avenue({
+    autoBind: true, //Bind click events to data-router-href/link
     slugPrepend: "", //Prepend to slug, ex:"currentSection="
     }
 }, {
@@ -24,69 +98,23 @@ var myRouter = new Avenue({
 }, []);
 ```
 
-# Examples
-
-## Example 1: Simple router
+Methods:
 
 ```javascript
-var myRouter = new Avenue();
+myRouter.moveTo("myId"); //Move to field with the section id "myId"
+
+myRouter.moveBy(2); //Move by value, accepts positive and negative numbers
+myRouter.moveForwards(); //Alias for myRouter.moveBy(1)
+myRouter.moveBackwards(); //Alias for myRouter.moveBy(-1)
 ```
 
-Avenue makes use of html data attributes to manage your routing sections
+### Data-attributes
 
-```html
-<!--Classic preloaded routing-->
-<section class="mySection" data-router-section="main" data-router-default="true">Hello World! Page 1: Main</section>
-<section class="mySection" data-router-section="secondary">Lorem ipsum! Page 2: Secondary</section>
-<section class="mySection" data-router-section="middle">Et dolor! Page 3: Middle</section>
-<section class="mySection" data-router-section="fourth">sit amet dolor! Page 4: Fourth</section>
-<section class="mySection" data-router-section="last">Bye World! Page 5: Last</section>
+Avenue has a number of supported HTML data-attributes:
 
-<button data-router-pagin="-1">Go Backward</button>
-<button data-router-pagin="1">Go Forward</button>
-<br>
-<button data-router-href="main">Jump to main</button>
-<button data-router-href="last">Jump to Last</button>
-```
+### Sections
 
-## Example 2: Options
-
-```javascript
-var myRouter = new Avenue({
-            slugPrepend: "currentSection=",
-        }
-    },
-    {
-        afterMove: function (data) {
-            console.log("Moved to " + data.id)
-        },
-    }, []);
-```
-
-
-```html
-<!--Classic preloaded routing-->
-<section class="mySection" data-router-section="main" data-router-src="ajax/main.html" data-router-default="true"></section>
-<section class="mySection" data-router-section="secondary" data-router-src="ajax/secondary.html"></section>
-<div class="mySection" data-router-section="third" data-router-src="ajax/third.html"></div>
-<div class="container">
-    <div class="mySection" data-router-section="wrapped" data-router-src="ajax/last.html"></div>
-</div>
-<br>
-
-<button data-router-href="main">Go to main</button>
-<br>
-<button data-router-pagin="-1">Go Backward</button>
-<button data-router-pagin="1">Go Forward</button>
-```
-
-# Data-attributes
-
-Avenue has a number of HTML data-attributes:
-
-## Sections
-
-**section**: used to declare a part/section/page of the router with name. _required_
+**section**: used to declare a part/section/page of the router with the name. _required_
 
 ```html
 <div data-router-section="mySection"></div>
@@ -98,9 +126,9 @@ Avenue has a number of HTML data-attributes:
 <div data-router-section="mySection" data-router-default="true"></div>
 ```
 
-## Navigation
+### Navigation
 
-**href**: contains an id that the router will jump to.
+**href**: Contains an id that the router will jump to.
 
 ```html
 <a href="javascript:;" data-router-href="mySection">jump to mySection</a>

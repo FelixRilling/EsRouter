@@ -1,7 +1,7 @@
 {
     "name": "avenuejs",
-    "version": "v3.10.0",
-    "description": "Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation.",
+    "version": "v3.11.0",
+    "description": "Avenue is a small and modern DOM-router designed for onpage routing.",
     "main": "dist/avenue.js",
     "module": {
         "name": "Avenue",

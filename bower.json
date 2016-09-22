@@ -1,7 +1,7 @@
 {
     "name": "avenuejs",
-    "version": "v3.10.0",
-    "description": "Avenue is an ES6 based, modern and small library for for DOM-routing built for advanced single-page navigation.",
+    "version": "v3.11.0",
+    "description": "Avenue is a small and modern DOM-router designed for onpage routing.",
     "main": "dist/chevron.js",
     "authors": [
         "Felix Rilling"
@@ -19,8 +19,8 @@
         "bower_components/",
         "npm-debug.*",
         ".DS_Store",
-        "chevron-logo.png",
-        "chevron-logo.psd"
+        "logo.png",
+        "logo.psd"
     ],
     "repository": {
         "type": "git",
