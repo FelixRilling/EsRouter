@@ -1,6 +1,5 @@
 "use strict";
 
-
 /**
  * Get data query for dom element
  * @private

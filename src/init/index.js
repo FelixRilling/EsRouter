@@ -15,7 +15,6 @@ import {
     eachNode
 } from "../util";
 
-
 /**
  * Init Avenue instance
  * @returns {Object} Avenue instance

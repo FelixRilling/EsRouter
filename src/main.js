@@ -1,6 +1,7 @@
 "use strict";
 
 import init from "./init/index";
+import defaultAfterMove from "./init/defaultAfterMove";
 import _moveTo from "./move/moveTo";
 import _moveBy from "./move/moveBy";
 
@@ -40,7 +41,7 @@ const Avenue = function(options, events, plugins) {
         beforeInit: events.beforeInit,
         afterInit: events.afterInit,
         beforeMove: events.beforeMove,
-        afterMove: events.afterMove
+        afterMove: events.afterMove || defaultAfterMove
     };
 
     //Instance Plugins

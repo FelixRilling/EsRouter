@@ -1,5 +1,5 @@
 /**
- * Avenue v4.0.0
+ * Avenue v4.1.0
  * Author: Felix Rilling
  * Repository: git+https://github.com/FelixRilling/Avenue.git
  */
@@ -319,6 +319,17 @@ var init = function () {
     return _this;
 };
 
+var defaultAfterMove = function (data, api) {
+    var allFields = api.elements.field;
+    var activeField = data.element;
+
+    eachNode(allFields, function (field) {
+        field.style.display = "none";
+    });
+
+    activeField.style.display = "inherit";
+};
+
 /**
  * Basic Avenue Constructor
  * @constructor
@@ -355,7 +366,7 @@ var Avenue = function Avenue(options, events, plugins) {
         beforeInit: events.beforeInit,
         afterInit: events.afterInit,
         beforeMove: events.beforeMove,
-        afterMove: events.afterMove
+        afterMove: events.afterMove || defaultAfterMove
     };
 
     //Instance Plugins

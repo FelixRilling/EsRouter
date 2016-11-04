@@ -1,7 +1,7 @@
 {
   "name": "avenuejs",
-  "version": "v4.0.0",
-  "description": "Avenue is a small and modern DOM-router designed for onpage routing.",
+  "version": "v4.1.0",
+  "description": "Avenue is a small and modern DOM-router designed for on-page routing.",
   "main": "dist/chevron.js",
   "authors": [
     "Felix Rilling"

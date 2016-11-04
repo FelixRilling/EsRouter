@@ -7,7 +7,6 @@ import {
     getDataQueryDom
 } from "./data";
 
-
 /**
  * Query router elements
  * @param {Object} attributes The Options attributes property

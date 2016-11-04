@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Avenue is a small and modern DOM-router designed for on page routing.
+Avenue is a small and modern DOM-router designed for on-page routing.
 
 **Plugins**
 
@@ -19,7 +19,7 @@ Avenue is a small and modern DOM-router designed for on page routing.
 Installation via bower:
 
 ```shell
-  bower install avenuejs --save
+bower install avenuejs --save
 ```
 
 ### Example 1: Simple router

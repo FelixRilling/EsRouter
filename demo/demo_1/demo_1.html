@@ -64,13 +64,13 @@
                     console.log("myRouter beforeMove");
                 },
                 afterMove: function(data) {
-                    console.log("myRouter afterMove");
+                    console.log("myRouter afterMove", arguments);
                     highlight(data.element);
                 }
             }, []);
 
             function highlight(element) {
-                [].forEach.call(all, function(item){
+                [].forEach.call(all, function(item) {
                     item.classList.remove("active");
                 });
                 element.classList.add("active");

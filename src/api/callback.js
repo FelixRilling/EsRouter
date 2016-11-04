@@ -1,6 +1,5 @@
 "use strict";
 
-
 /**
  * Runs callback with injected API
  * @param {Object} context Instance context

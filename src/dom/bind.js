@@ -1,6 +1,5 @@
 "use strict";
 
-
 import {
     eachNode
 } from "../util";
