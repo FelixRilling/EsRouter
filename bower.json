@@ -1,31 +1,31 @@
 {
-    "name": "avenuejs",
-    "version": "v3.11.0",
-    "description": "Avenue is a small and modern DOM-router designed for onpage routing.",
-    "main": "dist/chevron.js",
-    "authors": [
-        "Felix Rilling"
-    ],
-    "license": "Felix Rilling",
-    "keywords": [
-        "router",
-        "routing"
-    ],
-    "homepage": "https://github.com/FelixRilling/Avenue#readme",
-    "ignore": [
-        ".git/",
-        ".tmp/",
-        "node_modules/",
-        "bower_components/",
-        "npm-debug.*",
-        ".DS_Store",
-        "logo.png",
-        "logo.psd"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/FelixRilling/Avenue.git"
-    },
-    "author": "Felix Rilling",
-    "bugs": "Felix Rilling"
+  "name": "avenuejs",
+  "version": "v4.0.0",
+  "description": "Avenue is a small and modern DOM-router designed for onpage routing.",
+  "main": "dist/chevron.js",
+  "authors": [
+    "Felix Rilling"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "router",
+    "routing"
+  ],
+  "homepage": "https://github.com/FelixRilling/Avenue#readme",
+  "ignore": [
+    ".git/",
+    ".tmp/",
+    "node_modules/",
+    "bower_components/",
+    "npm-debug.*",
+    ".DS_Store",
+    "logo.png",
+    "logo.psd"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FelixRilling/Avenue.git"
+  },
+  "author": "Felix Rilling",
+  "bugs": "Felix Rilling"
 }

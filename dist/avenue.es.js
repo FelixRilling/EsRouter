@@ -1,17 +1,15 @@
 /**
- * Avenue v3.11.0
+ * Avenue v4.0.0
  * Author: Felix Rilling
- * Homepage: https://github.com/FelixRilling/Avenue#readme
- * License: MIT
+ * Repository: git+https://github.com/FelixRilling/Avenue.git
  */
 
 /**
  * Store Constants
  */
-
-var _window = window;
-var _document = _window.document;
-var _location = _window.location;
+const _window = window;
+const _document = _window.document;
+const _location = _window.location;
 
 /**
  * Get data query for dom element
@@ -20,9 +18,8 @@ var _location = _window.location;
  * @param {String} name Data name
  * @returns {String} Selector query
  */
-
-var getDataQueryDom = function getDataQueryDom(prefix, name) {
-  return "[data-" + prefix + "-" + name + "]";
+const getDataQueryDom = function(prefix, name) {
+    return `[data-${prefix}-${name}]`;
 };
 
 /**
@@ -32,8 +29,8 @@ var getDataQueryDom = function getDataQueryDom(prefix, name) {
  * @param {String} name Data name
  * @returns {String} Prop query
  */
-var getDataQueryProp = function getDataQueryProp(prefix, name) {
-  return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
+const getDataQueryProp = function(prefix, name) {
+    return prefix + name.substr(0, 1).toUpperCase() + name.substr(1);
 };
 
 /**
@@ -43,8 +40,8 @@ var getDataQueryProp = function getDataQueryProp(prefix, name) {
  * @param {String} name The attribute name
  * @returns {String} Value of the attribute
  */
-var readData = function readData(element, prefix, name) {
-  return element.dataset[getDataQueryProp(prefix, name)];
+const readData = function(element, prefix, name) {
+    return element.dataset[getDataQueryProp(prefix, name)];
 };
 
 /**
@@ -54,8 +51,8 @@ var readData = function readData(element, prefix, name) {
  * @param {String} name The attribute name
  * @param {String} value The attribute value
  */
-var writeData = function writeData(element, prefix, name, value) {
-  element.dataset[getDataQueryProp(prefix, name)] = value;
+const writeData = function(element, prefix, name, value) {
+    element.dataset[getDataQueryProp(prefix, name)] = value;
 };
 
 /**
@@ -63,18 +60,18 @@ var writeData = function writeData(element, prefix, name, value) {
  * @param {Object} attributes The Options attributes property
  * @returns {Object} Object of query results
  */
-var queryElements = function (attributes) {
-    var fieldKeys = Object.keys(attributes.types);
-    var result = {};
+var queryElements = function(attributes) {
+    const fieldKeys = Object.keys(attributes.types);
+    const result = {};
 
-    fieldKeys.forEach(function (key, i) {
-        var query = getDataQueryDom(attributes.prefix, attributes.types[key]);
+    fieldKeys.forEach((key, i) => {
+        const query = getDataQueryDom(attributes.prefix, attributes.types[key]);
 
         result[key] = _document.querySelectorAll(query);
     });
 
     return result;
-}
+};
 
 /**
  * NodeList iterate
@@ -82,9 +79,8 @@ var queryElements = function (attributes) {
  * @param {NodeList} elements NodeList to iterate trough
  * @param {Function} fn Function to call
  */
-
-var eachNode = function eachNode(elements, fn) {
-    [].forEach.call(elements, function (element) {
+const eachNode = function(elements, fn) {
+    [].forEach.call(elements, element => {
         fn(element);
     });
 };
@@ -95,13 +91,13 @@ var eachNode = function eachNode(elements, fn) {
  * @param {Object} type The event type
  * @param {Object} fn The event function
  */
-var bind = function (elements, type, fn) {
-    eachNode(elements, function (element) {
-        element.addEventListener(type, function (ev) {
+var bind = function(elements, type, fn) {
+    eachNode(elements, element => {
+        element.addEventListener(type, ev => {
             fn(element, ev);
         }, false);
     });
-}
+};
 
 /**
  * Runs callback with injected API
@@ -111,10 +107,9 @@ var bind = function (elements, type, fn) {
  * @param {Object} options Callback options
  * @param {Object} subEvents Callback subEvents
  */
-
-function callback(fn, data, api, options, subEvents) {
+const callback = function(fn, data, api, options, subEvents) {
     if (typeof fn === "function") {
-        var args = [data, api];
+        const args = [data, api];
 
         if (options) {
             args.push(options);
@@ -125,14 +120,14 @@ function callback(fn, data, api, options, subEvents) {
 
         fn.apply(null, args);
     }
-}
+};
 
 /**
  * Set new slug
  * @param {String} slugPrepend Slug prefix
  * @param {String} active Slug to set
  */
-var setSlug = function setSlug(slugPrepend, active) {
+const setSlug = function(slugPrepend, active) {
     _location.hash = slugPrepend + active;
 };
 
@@ -141,7 +136,7 @@ var setSlug = function setSlug(slugPrepend, active) {
  * @param {String} slugPrepend Slug prefix
  * @returns {String} Slug value
  */
-var getSlug = function getSlug(slugPrepend) {
+const getSlug = function(slugPrepend) {
     return _location.hash.replace(slugPrepend, "").replace("#", "");
 };
 
@@ -150,16 +145,16 @@ var getSlug = function getSlug(slugPrepend) {
  * @param {String} id Id to move to
  * @returns {Object} Avenue instance
  */
-var moveTo$1 = function (instance, id) {
+var moveTo = function(instance, id) {
     if (instance.data.ids.indexOf(id) > -1) {
-        var index = instance.data.ids.indexOf(id);
-        var element = instance.elements.field[index];
+        const index = instance.data.ids.indexOf(id);
+        const element = instance.elements.field[index];
 
         //beforeMove Callback
         runCallbacks(instance, "beforeMove", {
-            id: id,
-            index: index,
-            element: element
+            id,
+            index,
+            element
         });
 
         //Set new section
@@ -169,65 +164,66 @@ var moveTo$1 = function (instance, id) {
 
         //afterMove Callback
         runCallbacks(instance, "afterMove", {
-            id: id,
-            index: index,
-            element: element
+            id,
+            index,
+            element
         });
+
     }
 
     return instance;
-}
+};
 
 /**
  * Move by Value
  * @param {Number} val Value to move by
  * @returns {Object} Avenue instance
  */
-var _moveBy = function (instance, val) {
-    var newId = instance.data.ids[instance.data.index + val];
+var _moveBy = function(instance, val) {
+    const newId = instance.data.ids[instance.data.index + val];
 
     if (typeof newId !== "undefined") {
-        return moveTo$1(instance, newId);
+        return moveTo(instance, newId);
     }
-}
+};
 
 /**
  * Returns avenue api
  * @param {Object} instance Avenue instance
  * @returns {Object} Avenue api
  */
-var getApi = function (instance) {
+var getApi = function(instance) {
 
     //Avenue API
     return {
         data: instance.data,
         options: instance.options,
         elements: instance.elements,
-        callback: callback,
+        callback,
         util: {
-            eachNode: eachNode
+            eachNode
         },
         move: {
             //Instance specific, needs context bind
-            moveTo: function moveTo(id) {
-                return moveTo$1(instance, id);
+            moveTo: function(id) {
+                return moveTo(instance, id);
             },
-            moveBy: function moveBy(val) {
+            moveBy: function(val) {
                 return _moveBy(instance, val);
             }
         },
         slug: {
-            setSlug: setSlug,
-            getSlug: getSlug
+            setSlug,
+            getSlug
         },
         dom: {
-            queryElements: queryElements,
-            bind: bind,
-            readData: readData,
-            writeData: writeData
+            queryElements,
+            bind,
+            readData,
+            writeData
         }
     };
-}
+};
 
 /**
  * Runs Plugin/User events
@@ -235,33 +231,33 @@ var getApi = function (instance) {
  * @param {String} type Event type
  * @param {Object} data Event data
  */
-var runCallbacks = function (instance, type, data) {
-    var _plugins = instance.plugins;
-    var _api = getApi(instance);
+var runCallbacks = function(instance, type, data) {
+    const _plugins = instance.plugins;
+    const _api = getApi(instance);
 
     //Call plugins
-    _plugins.active.forEach(function (plugin) {
-        var pluginObj = _plugins.container[plugin.name];
+    _plugins.active.forEach(plugin => {
+        const pluginObj = _plugins.container[plugin.name];
         //Check if requested plugin exists
         if (pluginObj) {
             callback(pluginObj[type], data, _api, plugin.options, plugin.events);
         } else {
-            throw "Missing plugin " + plugin.name;
+            throw `Missing plugin ${plugin.name}`;
         }
     });
 
     //Call user events
     callback(instance.events[type], data, _api);
-}
+};
 
 /**
  * Init Avenue instance
  * @returns {Object} Avenue instance
  */
-var init = function () {
-    var _this = this;
-    var _options = _this.options;
-    var slug = getSlug(_this.options.slugPrepend);
+var init = function() {
+    const _this = this;
+    const _options = _this.options;
+    const slug = getSlug(_this.options.slugPrepend);
 
     //beforeInit Callback
     runCallbacks(_this, "beforeInit", {});
@@ -273,15 +269,15 @@ var init = function () {
     _this.elements = queryElements(_options.attributes);
     if (_options.autobind) {
         //Bind router-link events
-        bind(_this.elements.link, "click", function (element) {
-            var id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
+        bind(_this.elements.link, "click", element => {
+            const id = readData(element, _options.attributes.prefix, _options.attributes.types.link);
 
-            moveTo$1(_this, id);
+            moveTo(_this, id);
         });
 
         //Bind router-pagination events
-        bind(_this.elements.pagination, "click", function (element) {
-            var val = Number(readData(element, _options.attributes.prefix, _options.attributes.types.pagination));
+        bind(_this.elements.pagination, "click", element => {
+            const val = Number(readData(element, _options.attributes.prefix, _options.attributes.types.pagination));
 
             _moveBy(_this, val);
         });
@@ -291,8 +287,12 @@ var init = function () {
      * Data
      */
     //Read ids
-    eachNode(_this.elements.field, function (element) {
-        var id = readData(element, _options.attributes.prefix, _options.attributes.types.field);
+    eachNode(_this.elements.field, element => {
+        const id = readData(
+            element,
+            _options.attributes.prefix,
+            _options.attributes.types.field
+        );
 
         if (element === _this.elements.fieldDefault[0]) {
             _this.data.defaultId = id;
@@ -306,16 +306,16 @@ var init = function () {
      */
     //Move to either saved slug or default id
     if (slug !== "") {
-        moveTo$1(_this, slug);
+        moveTo(_this, slug);
     } else {
-        moveTo$1(_this, _this.data.defaultId);
+        moveTo(_this, _this.data.defaultId);
     }
 
     //afterInit Callback
     runCallbacks(_this, "afterInit", {});
 
     return _this;
-}
+};
 
 /**
  * Basic Avenue Constructor
@@ -325,8 +325,8 @@ var init = function () {
  * @param {Array} plugins Array of plugins
  * @returns {Object} Avenue instance
  */
-var Avenue = function Avenue(options, events, plugins) {
-    var _this = this;
+const Avenue = function(options, events, plugins) {
+    const _this = this;
 
     //Options
     options = options || {};
@@ -363,6 +363,7 @@ var Avenue = function Avenue(options, events, plugins) {
         container: Avenue.plugins
     };
 
+
     //Data
     _this.data = {
         ids: [],
@@ -382,17 +383,17 @@ Avenue.plugins = {};
  * Expose Avenue methods
  */
 Avenue.prototype = {
-    init: init,
-    moveTo: function moveTo(id) {
-        return _moveBy(this, id);
+    init,
+    moveTo: function(id) {
+        return moveTo(this, id);
     },
-    moveBy: function moveBy(val) {
+    moveBy: function(val) {
         return _moveBy(this, val);
     },
-    moveForward: function moveForward() {
+    moveForward: function() {
         return _moveBy(this, 1);
     },
-    moveBackward: function moveBackward() {
+    moveBackward: function() {
         return _moveBy(this, -1);
     }
 };

@@ -9,7 +9,7 @@
  * @param {Object} options Callback options
  * @param {Object} subEvents Callback subEvents
  */
-export default function callback(fn, data, api, options, subEvents) {
+const callback = function(fn, data, api, options, subEvents) {
     if (typeof fn === "function") {
         const args = [data, api];
 
@@ -22,4 +22,6 @@ export default function callback(fn, data, api, options, subEvents) {
 
         fn.apply(null, args);
     }
-}
+};
+
+export default callback;

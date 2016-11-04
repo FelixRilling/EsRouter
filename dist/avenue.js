@@ -1,8 +1,7 @@
 /**
- * Avenue v3.11.0
+ * Avenue v4.0.0
  * Author: Felix Rilling
- * Homepage: https://github.com/FelixRilling/Avenue#readme
- * License: MIT
+ * Repository: git+https://github.com/FelixRilling/Avenue.git
  */
 
 var Avenue = (function () {
@@ -77,7 +76,7 @@ var queryElements = function (attributes) {
     });
 
     return result;
-}
+};
 
 /**
  * NodeList iterate
@@ -104,7 +103,7 @@ var bind = function (elements, type, fn) {
             fn(element, ev);
         }, false);
     });
-}
+};
 
 /**
  * Runs callback with injected API
@@ -115,7 +114,7 @@ var bind = function (elements, type, fn) {
  * @param {Object} subEvents Callback subEvents
  */
 
-function callback(fn, data, api, options, subEvents) {
+var callback = function callback(fn, data, api, options, subEvents) {
     if (typeof fn === "function") {
         var args = [data, api];
 
@@ -128,7 +127,7 @@ function callback(fn, data, api, options, subEvents) {
 
         fn.apply(null, args);
     }
-}
+};
 
 /**
  * Set new slug
@@ -179,7 +178,7 @@ var moveTo$1 = function (instance, id) {
     }
 
     return instance;
-}
+};
 
 /**
  * Move by Value
@@ -192,7 +191,7 @@ var _moveBy = function (instance, val) {
     if (typeof newId !== "undefined") {
         return moveTo$1(instance, newId);
     }
-}
+};
 
 /**
  * Returns avenue api
@@ -230,7 +229,7 @@ var getApi = function (instance) {
             writeData: writeData
         }
     };
-}
+};
 
 /**
  * Runs Plugin/User events
@@ -255,7 +254,7 @@ var runCallbacks = function (instance, type, data) {
 
     //Call user events
     callback(instance.events[type], data, _api);
-}
+};
 
 /**
  * Init Avenue instance
@@ -318,7 +317,7 @@ var init = function () {
     runCallbacks(_this, "afterInit", {});
 
     return _this;
-}
+};
 
 /**
  * Basic Avenue Constructor
@@ -387,7 +386,7 @@ Avenue.plugins = {};
 Avenue.prototype = {
     init: init,
     moveTo: function moveTo(id) {
-        return _moveBy(this, id);
+        return moveTo$1(this, id);
     },
     moveBy: function moveBy(val) {
         return _moveBy(this, val);
@@ -403,3 +402,5 @@ Avenue.prototype = {
 return Avenue;
 
 }());
+
+//# sourceMappingURL=avenue.js.map

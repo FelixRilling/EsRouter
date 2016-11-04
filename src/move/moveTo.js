@@ -3,7 +3,7 @@
 import runCallbacks from "../api/runCallbacks";
 import {
     setSlug
-} from "../slug";
+} from "../slug/index";
 
 /**
  * Move to id

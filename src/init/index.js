@@ -10,7 +10,7 @@ import {
 } from "../dom/data";
 import {
     getSlug
-} from "../slug";
+} from "../slug/index";
 import {
     eachNode
 } from "../util";

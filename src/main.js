@@ -1,6 +1,6 @@
 "use strict";
 
-import init from "./init";
+import init from "./init/index";
 import _moveTo from "./move/moveTo";
 import _moveBy from "./move/moveBy";
 
@@ -72,7 +72,7 @@ Avenue.plugins = {};
 Avenue.prototype = {
     init,
     moveTo: function(id) {
-        return _moveBy(this, id);
+        return _moveTo(this, id);
     },
     moveBy: function(val) {
         return _moveBy(this, val);

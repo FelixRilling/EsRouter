@@ -15,7 +15,7 @@ import {
 import {
     getSlug,
     setSlug
-} from "../slug";
+} from "../slug/index";
 
 /**
  * Returns avenue api
