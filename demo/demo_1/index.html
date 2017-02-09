@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>OkJS Demo</title>
+    <meta name="description" content="OkJS Demo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://necolas.github.io/normalize.css/5.0.0/normalize.css" type="text/css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" type="text/css"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Demo 1</h1>
+        <a href="/" data-routing>home</a> -
+        <a href="/about" data-routing>/about</a> -
+        <a href="/users/charlike" data-routing>/users/:user</a> -
+        <a href="/users/joe/edit" data-routing>/users/:user/edit</a> -
+        <a href="/groups/123/users/quxie/edit" data-routing>/groups/:group/users/:user/edit</a>
+        <a href="#">no routing</a>
+    </div>
+    <script src="../../dist/avenue.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

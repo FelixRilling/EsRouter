@@ -1,0 +1,36 @@
+{
+    "name": "avenuejs",
+    "version": "2.0.0",
+    "description": "Avenue is an extremely small routing library",
+    "author": "Felix Rilling",
+    "license": "MIT",
+    "keywords": [
+        "validation",
+        "form"
+    ],
+    "bugs": {
+        "url": "https://github.com/FelixRilling/avenuejs/issues"
+    },
+    "homepage": "https://github.com/FelixRilling/avenuejs#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/FelixRilling/avenuejs.git"
+    },
+    "main": "dist/avenue.common.js",
+    "namespace": {
+        "module": "avenue",
+        "file": "avenue"
+    },
+    "scripts": {
+        "start": "node build.js",
+        "test": "jasmine"
+    },
+    "devDependencies": {
+        "babel-core": "^6.21.0",
+        "babel-plugin-external-helpers": "^6.18.0",
+        "babel-preset-es2016": "^6.16.0",
+        "rollup": "^0.41.4",
+        "uglify-js": "git://github.com/mishoo/UglifyJS2.git#harmony"
+    },
+    "dependencies": {}
+}
