@@ -4,8 +4,10 @@ var Avenue = function () {
     const _window = window;
     const _document = _window.document;
     const _location = _window.location;
-    const DOM_ATTR = "routing";
-    const DOM_ATTR_DATA = `[data-${DOM_ATTR}]`;
+
+    const DOM_ATTR_DATA = "[data-routing]";
+
+    const URI_DELIMITER_ARG = ":";
 
     const getHash = function (_location) {
         return _location.hash.replace("#", "");
@@ -21,7 +23,7 @@ var Avenue = function () {
 
             if (routePathPart) {
                 //Checks for wildcard or equivalency
-                return routePathPart.startsWith(":") || currentPathPart === routePathPart;
+                return routePathPart[0] === URI_DELIMITER_ARG || currentPathPart === routePathPart;
             }
         });
     };
@@ -37,8 +39,8 @@ var Avenue = function () {
             const args = {};
 
             matchingRoutePath.forEach((matchingRoutePathPart, index) => {
-                if (matchingRoutePathPart.startsWith(":")) {
-                    const argKey = matchingRoutePathPart.replace(":", "");
+                if (matchingRoutePathPart[0] === URI_DELIMITER_ARG) {
+                    const argKey = matchingRoutePathPart.substr(1);
                     const argVal = currentPath[index];
 
                     args[argKey] = argVal;
