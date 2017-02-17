@@ -1,26 +1,60 @@
 "use strict";
 
 import {
-    _window,
     _document,
     _location,
     DOM_ATTR_DATA
 } from "./lib/constants";
-import navigate from "./lib/navigate";
+import getHash from "./lib/getHash";
+import findRoute from "./lib/findRoute";
+import splitPath from "./lib/splitPath";
+
 /**
- * Applies Avenue to all given forms
+ * Applies Avenue
  *
  * @param {Object} routes Configuration object
  */
-const avenue = function (routes) {
-    const URL_BASE = _location.pathname;
+const AvenueClass = class {
+    constructor(routes) {
+        const _this = this;
+        const currentHash = getHash(_location);
 
-    Array.from(_document.querySelectorAll(DOM_ATTR_DATA)).forEach(element => {
-        element.addEventListener("click", e => {
-            e.preventDefault();
-            navigate(e.target.attributes.getNamedItem("href").value, routes, e, URL_BASE);
+        _this.$routes = [];
+        _this.$elements = Array.from(_document.querySelectorAll(DOM_ATTR_DATA));
+
+        //Parse routes
+        Object.keys(routes).forEach(routePath => {
+            _this.$routes.push({
+                path: splitPath(routePath),
+                fn: routes[routePath]
+            });
         });
-    });
+
+        //Bind events
+        _this.$elements.forEach(element => {
+            element.addEventListener("click", e => {
+                e.preventDefault();
+                _this.navigate(e.target.attributes.getNamedItem("href").value, e);
+            });
+        });
+
+        //load current route
+        if (currentHash.length) {
+            _this.navigate(currentHash);
+        }
+
+    }
+    navigate(path, e) {
+        const _this = this;
+        const routeData = findRoute(path, _this.$routes);
+        console.log(routeData);
+
+        _location.hash = path;
+
+        if (typeof routeData.fn === "function") {
+            routeData.fn(e, routeData.args);
+        }
+    }
 };
 
-export default avenue;
+export default AvenueClass;

@@ -1,6 +1,4 @@
-"use strict";
-
-const router = new Avenue({
+/*const router = gibon({
     "/": (ctx) => console.log("home"),
     "/about": (ctx) => console.log("about"),
     "/users/:user": (ctx, params) => console.log("user:", params.user),
@@ -12,4 +10,7 @@ const router = new Avenue({
     }
 });
 
+router.start();
+
 console.log(router);
+*/

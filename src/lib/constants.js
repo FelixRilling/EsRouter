@@ -7,7 +7,7 @@ const _history = _window.history;
 
 const DOM_ATTR = "routing";
 const DOM_ATTR_DATA = `[data-${DOM_ATTR}]`;
-const URL_BASE = /\.*/;
+const URL_BASE = /\.*\/*/;
 
 export {
     _window,
