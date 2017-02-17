@@ -9,14 +9,33 @@ var Avenue = function () {
 
     const URI_DELIMITER_ARG = ":";
 
+    /**
+     * Returns hash without starting char
+     *
+     * @param {Object} _location location Object
+     * @returns {String} replaced string
+     */
     const getHash = function (_location) {
         return _location.hash.replace("#", "");
     };
 
+    /**
+     * Splits path by dashes and trims
+     *
+     * @param {String} path path string
+     * @returns {Array} split path
+     */
     const splitPath = function (path) {
         return path.split("/").filter(item => item.length);
     };
 
+    /**
+     * Checks two routes for matching
+     *
+     * @param {Array} currentPath splitted current path
+     * @param {Array} currentPath splitted route path
+     * @returns {Boolean} if routes match
+     */
     const matchRoutes = function (currentPath, routePath) {
         return currentPath.every((currentPathPart, index) => {
             const routePathPart = routePath[index];
@@ -28,6 +47,13 @@ var Avenue = function () {
         });
     };
 
+    /**
+     * Finds route by path from route container
+     *
+     * @param {String} path route path
+     * @param {Object} routes route map
+     * @returns {Object} matching route
+     */
     const findRoute = function (path, routes) {
         const currentPath = splitPath(path);
         const matchingRoute = routes.find(route => {
@@ -35,15 +61,11 @@ var Avenue = function () {
         });
 
         if (matchingRoute) {
-            const matchingRoutePath = matchingRoute.path;
             const args = {};
 
-            matchingRoutePath.forEach((matchingRoutePathPart, index) => {
+            matchingRoute.path.forEach((matchingRoutePathPart, index) => {
                 if (matchingRoutePathPart[0] === URI_DELIMITER_ARG) {
-                    const argKey = matchingRoutePathPart.substr(1);
-                    const argVal = currentPath[index];
-
-                    args[argKey] = argVal;
+                    args[matchingRoutePathPart.substr(1)] = currentPath[index];
                 }
             });
 
@@ -57,9 +79,10 @@ var Avenue = function () {
     };
 
     /**
-     * Applies Avenue
+     * Avenue Class
      *
-     * @param {Object} routes Configuration object
+     * @class
+     * @param {Object} routes routing map
      */
     const AvenueClass = class {
         constructor(routes) {
@@ -90,14 +113,19 @@ var Avenue = function () {
                 _this.navigate(currentHash);
             }
         }
+        /**
+         * Navigate to the given path
+         *
+         * @param {String} path Path string
+         * @param {Event} e Click event
+         */
         navigate(path, e) {
             const _this = this;
             const routeData = findRoute(path, _this.$routes);
-            console.log(routeData);
 
             _location.hash = path;
 
-            if (typeof routeData.fn === "function") {
+            if (routeData) {
                 routeData.fn(e, routeData.args);
             }
         }

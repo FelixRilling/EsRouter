@@ -10,9 +10,10 @@ import findRoute from "./lib/findRoute";
 import splitPath from "./lib/splitPath";
 
 /**
- * Applies Avenue
+ * Avenue Class
  *
- * @param {Object} routes Configuration object
+ * @class
+ * @param {Object} routes routing map
  */
 const AvenueClass = class {
     constructor(routes) {
@@ -42,16 +43,20 @@ const AvenueClass = class {
         if (currentHash.length) {
             _this.navigate(currentHash);
         }
-
     }
+    /**
+     * Navigate to the given path
+     *
+     * @param {String} path Path string
+     * @param {Event} e Click event
+     */
     navigate(path, e) {
         const _this = this;
         const routeData = findRoute(path, _this.$routes);
-        console.log(routeData);
 
         _location.hash = path;
 
-        if (typeof routeData.fn === "function") {
+        if (routeData) {
             routeData.fn(e, routeData.args);
         }
     }

@@ -6,6 +6,13 @@ import {
 import splitPath from "./splitPath";
 import matchRoutes from "./matchRoutes";
 
+/**
+ * Finds route by path from route container
+ *
+ * @param {String} path route path
+ * @param {Object} routes route map
+ * @returns {Object} matching route
+ */
 const findRoute = function (path, routes) {
     const currentPath = splitPath(path);
     const matchingRoute = routes.find(route => {
@@ -13,15 +20,11 @@ const findRoute = function (path, routes) {
     });
 
     if (matchingRoute) {
-        const matchingRoutePath = matchingRoute.path;
         const args = {};
 
-        matchingRoutePath.forEach((matchingRoutePathPart, index) => {
+        matchingRoute.path.forEach((matchingRoutePathPart, index) => {
             if (matchingRoutePathPart[0] === URI_DELIMITER_ARG) {
-                const argKey = matchingRoutePathPart.substr(1);
-                const argVal = currentPath[index];
-
-                args[argKey] = argVal;
+                args[matchingRoutePathPart.substr(1)] = currentPath[index];
             }
         });
 
