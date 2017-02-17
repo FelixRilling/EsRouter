@@ -89,7 +89,6 @@ const AvenueClass = class {
         const currentHash = getHash(_location);
 
         _this.$routes = [];
-        _this.$elements = Array.from(_document.querySelectorAll(DOM_ATTR_DATA));
 
         //Parse routes
         Object.keys(routes).forEach(routePath => {
@@ -100,12 +99,17 @@ const AvenueClass = class {
         });
 
         //Bind events
-        _this.$elements.forEach(element => {
+        Array.from(_document.querySelectorAll(DOM_ATTR_DATA)).forEach(element => {
             element.addEventListener("click", e => {
                 e.preventDefault();
                 _this.navigate(e.target.attributes.getNamedItem("href").value, e);
-            });
+            }, false);
         });
+
+        _window.addEventListener("hashchange", e => {
+            _this.navigate(getHash(_location), e);
+        }, false);
+
 
         //load current route
         if (currentHash.length) {
@@ -116,7 +120,7 @@ const AvenueClass = class {
      * Navigate to the given path
      *
      * @param {String} path Path string
-     * @param {Event} e Click event
+     * @param {Event} e Initializer event
      */
     navigate(path, e) {
         const _this = this;
