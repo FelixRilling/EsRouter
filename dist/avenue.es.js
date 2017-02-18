@@ -81,6 +81,26 @@ const findRoute = function (path, routes) {
 };
 
 /**
+ * Changes view by route
+ *
+ * @param {String} path route path
+ * @param {Object} routes route map
+ * @param {Event} e Event object
+ * @returns {Object} matching route
+ */
+const changeView = function (path, routes, e) {
+    const routeData = findRoute(path, routes[0]);
+
+    if (routeData) {
+        //Runs route
+        routeData.fn(e, routeData.args, path);
+    }else{
+        //Or fallback if route wasnt found
+        routes[1](e, path);
+    }
+};
+
+/**
  * Avenue Class
  *
  * @class
@@ -90,46 +110,54 @@ const Avenue = class {
      * Avenue constructor
      *
      * @constructor
-     * @param {Object} routes routing map
+     * @param {Object} routeMap routing map
      */
-    constructor(routes) {
+    constructor(routeMap) {
         const _this = this;
-        const currentHash = getHash(_location);
+        const currentPath = getHash(_location);
+        //[[routes],fallback]
+        const routes = [
+            [],
+            () => {}
+        ];
 
-        _this.$routes = [];
+        _this.$routes = routes;
 
-        //Parse routes from {path:fn} to [{path,fn}]
-        Object.keys(routes).forEach(routePath => {
-            _this.$routes.push({
-                path: splitPath(routePath),
-                fn: routes[routePath]
-            });
+        //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
+        Object.keys(routeMap).forEach(routePath => {
+            if (routePath === "?") {
+                //Fallback route
+                routes[1] = routeMap[routePath];
+            } else {
+                //Normal routes
+                routes[0].push({
+                    path: splitPath(routePath),
+                    fn: routeMap[routePath]
+                });
+            }
         });
 
         //Bind event
         _window.addEventListener("hashchange", e => {
-            _this.navigate(getHash(_location), e);
+            //Change view to new hash path
+            changeView(getHash(_location), routes, e);
         }, false);
 
-        //load current route
-        if (currentHash.length) {
-            _this.navigate(currentHash);
+        //load current route if existing
+        if (currentPath) {
+            changeView(currentPath, routes);
         }
+
     }
     /**
      * Navigate to the given path
      *
      * @param {String} path Path string
-     * @param {Event} e Initializer event
      */
-    navigate(path, e) {
-        const routeData = findRoute(path, this.$routes);
-
+    navigate(path) {
         _location.hash = path;
 
-        if (routeData) {
-            routeData.fn(e, routeData.args);
-        }
+        changeView(path, this.$routes);
     }
 };
 

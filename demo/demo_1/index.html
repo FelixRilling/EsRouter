@@ -14,12 +14,16 @@
 <body>
     <div class="container">
         <h1>Demo 1</h1>
-        <a href="#/" >home</a> -
-        <a href="#/about" >/about</a> -
-        <a href="#/users/charlike" >/users/:user</a> -
-        <a href="#/users/joe/edit" >/users/:user/edit</a> -
-        <a href="#/groups/123/users/quxie/edit" >/groups/:group/users/:user/edit</a>
-        <a href="#">no routing</a>
+        <a href="#/">home</a> -
+        <a href="#/about">/about</a> -
+        <a href="#/users/John">/users/:user</a> -
+        <a href="#/users/Anne/edit">/users/:user/edit</a> -
+        <a href="#/groups/people/users/Dave/edit">/groups/:group/users/:user/edit</a>
+
+        <div>
+            <h2>Route Data</h2>
+            <p id="output"></p>
+        </div>
     </div>
     <script src="../../dist/avenue.js"></script>
     <script src="index.js"></script>

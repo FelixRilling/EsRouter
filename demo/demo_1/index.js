@@ -1,14 +1,25 @@
 "use strict";
 
+const $output = document.querySelector("#output");
+
 const router = new Avenue({
-    "/": (ctx) => console.log("home"),
-    "/about": (ctx) => console.log("about"),
-    "/users/:user": (ctx, params) => console.log("user:", params.user),
-    "/users/:user/edit": (ctx, params) => console.log("edit user:", params.user),
-    "/groups/:group/users/:user/edit": (ctx, params) => {
-        console.log("edit user from group");
-        console.log("group:", params.group);
-        console.log("user:", params.user);
+    "/": () => {
+        $output.textContent = "Home";
+    },
+    "/about": () => {
+        $output.textContent = "About";
+    },
+    "/users/:user": (e, params) => {
+        $output.textContent = `User: ${params.user}`;
+    },
+    "/users/:user/edit": (e, params) => {
+        $output.textContent = `User edit: ${params.user}`;
+    },
+    "/groups/:group/users/:user/edit": (e, params) => {
+        $output.textContent = `User edit: ${params.user} from group ${params.group}`;
+    },
+    "?": (e, path) => {
+        $output.textContent = `URL doesnt match route: ${path}`;
     }
 });
 
