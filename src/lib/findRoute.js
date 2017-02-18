@@ -32,7 +32,7 @@ const findRoute = function (path, routes) {
         };
     }
 
-    return null;
+    return false;
 };
 
 export default findRoute;

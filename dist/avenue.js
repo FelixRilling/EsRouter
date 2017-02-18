@@ -80,16 +80,15 @@ var Avenue = function () {
             };
         }
 
-        return null;
+        return false;
     };
 
     /**
      * Changes view by route
      *
      * @param {String} path route path
-     * @param {Object} routes route map
+     * @param {Object} instanceData Avenue instance data
      * @param {Event} e Event object
-     * @returns {Object} matching route
      */
     const changeView = function (path, instanceData, e) {
         const routeData = findRoute(path, instanceData[0]);
@@ -138,9 +137,8 @@ var Avenue = function () {
                 }
             });
 
-            //Bind event
+            //Bind hashchange event
             _window.addEventListener("hashchange", e => {
-                //Change view to new hash path
                 changeView(getHash(_location), _this, e);
             }, false);
 

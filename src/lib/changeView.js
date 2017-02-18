@@ -6,9 +6,8 @@ import findRoute from "./findRoute";
  * Changes view by route
  *
  * @param {String} path route path
- * @param {Object} routes route map
+ * @param {Object} instanceData Avenue instance data
  * @param {Event} e Event object
- * @returns {Object} matching route
  */
 const changeView = function (path, instanceData, e) {
     const routeData = findRoute(path, instanceData[0]);
@@ -16,7 +15,7 @@ const changeView = function (path, instanceData, e) {
     if (routeData) {
         //Runs route
         routeData.fn(e, routeData.args, path);
-    }else{
+    } else {
         //Or fallback if route wasnt found
         instanceData[1](e, path);
     }

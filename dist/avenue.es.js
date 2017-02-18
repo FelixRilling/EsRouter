@@ -77,16 +77,15 @@ const findRoute = function (path, routes) {
         };
     }
 
-    return null;
+    return false;
 };
 
 /**
  * Changes view by route
  *
  * @param {String} path route path
- * @param {Object} routes route map
+ * @param {Object} instanceData Avenue instance data
  * @param {Event} e Event object
- * @returns {Object} matching route
  */
 const changeView = function (path, instanceData, e) {
     const routeData = findRoute(path, instanceData[0]);
@@ -94,7 +93,7 @@ const changeView = function (path, instanceData, e) {
     if (routeData) {
         //Runs route
         routeData.fn(e, routeData.args, path);
-    }else{
+    } else {
         //Or fallback if route wasnt found
         instanceData[1](e, path);
     }
@@ -119,7 +118,7 @@ const Avenue = class {
         //Route storage
         _this[0] = [];
         //Fallback fn
-        _this[1]= () => {};
+        _this[1] = () => {};
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         Object.keys(routeMap).forEach(routePath => {
@@ -135,9 +134,8 @@ const Avenue = class {
             }
         });
 
-        //Bind event
+        //Bind hashchange event
         _window.addEventListener("hashchange", e => {
-            //Change view to new hash path
             changeView(getHash(_location), _this, e);
         }, false);
 
