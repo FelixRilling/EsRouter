@@ -23,37 +23,34 @@ const Avenue = class {
     constructor(routeMap) {
         const _this = this;
         const currentPath = getHash(_location);
-        //[[routes],fallback]
-        const routes = [
-            [],
-            () => {}
-        ];
 
-        _this.$routes = routes;
+        //Route storage
+        _this[0] = [];
+        //Fallback fn
+        _this[1] = () => {};
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         Object.keys(routeMap).forEach(routePath => {
             if (routePath === "?") {
                 //Fallback route
-                routes[1] = routeMap[routePath];
+                _this[1] = routeMap[routePath];
             } else {
                 //Normal routes
-                routes[0].push({
+                _this[0].push({
                     path: splitPath(routePath),
                     fn: routeMap[routePath]
                 });
             }
         });
 
-        //Bind event
+        //Bind hashchange event
         _window.addEventListener("hashchange", e => {
-            //Change view to new hash path
-            changeView(getHash(_location), routes, e);
+            changeView(getHash(_location), _this, e);
         }, false);
 
         //load current route if existing
         if (currentPath) {
-            changeView(currentPath, routes);
+            changeView(currentPath, _this);
         }
 
     }
@@ -65,7 +62,7 @@ const Avenue = class {
     navigate(path) {
         _location.hash = path;
 
-        changeView(path, this.$routes);
+        changeView(path, this);
     }
 };
 
