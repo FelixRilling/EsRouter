@@ -1,10 +1,8 @@
 "use strict";
 
-import {
-    URI_DELIMITER_ARG
-} from "./constants";
 import splitPath from "./splitPath";
 import matchRoutes from "./matchRoutes";
+import isPathVariable from "./isPathVariable";
 
 /**
  * Finds route by path from route container
@@ -23,7 +21,7 @@ const findRoute = function (path, routes) {
         const args = {};
 
         matchingRoute.path.forEach((matchingRoutePathPart, index) => {
-            if (matchingRoutePathPart[0] === URI_DELIMITER_ARG) {
+            if (isPathVariable(matchingRoutePathPart)) {
                 args[matchingRoutePathPart.substr(1)] = currentPath[index];
             }
         });

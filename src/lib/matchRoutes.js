@@ -1,8 +1,6 @@
 "use strict";
 
-import {
-    URI_DELIMITER_ARG
-} from "./constants";
+import isPathVariable from "./isPathVariable";
 
 /**
  * Checks two routes for matching
@@ -16,8 +14,8 @@ const matchRoutes = function (currentPath, routePath) {
         const routePathPart = routePath[index];
 
         if (routePathPart) {
-            //Checks for wildcard or equivalency
-            return routePathPart[0] === URI_DELIMITER_ARG || currentPathPart === routePathPart;
+            //Checks for variable-wildcard or equivalency
+            return isPathVariable(routePathPart) || currentPathPart === routePathPart;
         }
     });
 };

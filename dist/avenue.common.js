@@ -1,12 +1,7 @@
 'use strict';
 
 const _window = window;
-const _document = _window.document;
 const _location = _window.location;
-
-const DOM_ATTR_DATA = "[data-routing]";
-
-const URI_DELIMITER_ARG = ":";
 
 /**
  * Returns hash without starting char
@@ -29,6 +24,16 @@ const splitPath = function (path) {
 };
 
 /**
+ * Returns wether the pathPart is a variable
+ *
+ * @param {String} path Path part string
+ * @returns {Boolean} wether the pathPart is a variable
+ */
+const isPathVariable = function (path) {
+    return path[0] === ":";
+};
+
+/**
  * Checks two routes for matching
  *
  * @param {Array} currentPath splitted current path
@@ -40,8 +45,8 @@ const matchRoutes = function (currentPath, routePath) {
         const routePathPart = routePath[index];
 
         if (routePathPart) {
-            //Checks for wildcard or equivalency
-            return routePathPart[0] === URI_DELIMITER_ARG || currentPathPart === routePathPart;
+            //Checks for variable-wildcard or equivalency
+            return isPathVariable(routePathPart) || currentPathPart === routePathPart;
         }
     });
 };
@@ -63,7 +68,7 @@ const findRoute = function (path, routes) {
         const args = {};
 
         matchingRoute.path.forEach((matchingRoutePathPart, index) => {
-            if (matchingRoutePathPart[0] === URI_DELIMITER_ARG) {
+            if (isPathVariable(matchingRoutePathPart)) {
                 args[matchingRoutePathPart.substr(1)] = currentPath[index];
             }
         });
@@ -81,16 +86,21 @@ const findRoute = function (path, routes) {
  * Avenue Class
  *
  * @class
- * @param {Object} routes routing map
  */
-const AvenueClass = class {
+const Avenue = class {
+    /**
+     * Avenue constructor
+     *
+     * @constructor
+     * @param {Object} routes routing map
+     */
     constructor(routes) {
         const _this = this;
         const currentHash = getHash(_location);
 
         _this.$routes = [];
 
-        //Parse routes
+        //Parse routes from {path:fn} to [{path,fn}]
         Object.keys(routes).forEach(routePath => {
             _this.$routes.push({
                 path: splitPath(routePath),
@@ -98,18 +108,10 @@ const AvenueClass = class {
             });
         });
 
-        //Bind events
-        Array.from(_document.querySelectorAll(DOM_ATTR_DATA)).forEach(element => {
-            element.addEventListener("click", e => {
-                e.preventDefault();
-                _this.navigate(e.target.attributes.getNamedItem("href").value, e);
-            }, false);
-        });
-
+        //Bind event
         _window.addEventListener("hashchange", e => {
             _this.navigate(getHash(_location), e);
         }, false);
-
 
         //load current route
         if (currentHash.length) {
@@ -123,8 +125,7 @@ const AvenueClass = class {
      * @param {Event} e Initializer event
      */
     navigate(path, e) {
-        const _this = this;
-        const routeData = findRoute(path, _this.$routes);
+        const routeData = findRoute(path, this.$routes);
 
         _location.hash = path;
 
@@ -134,4 +135,4 @@ const AvenueClass = class {
     }
 };
 
-module.exports = AvenueClass;
+module.exports = Avenue;
