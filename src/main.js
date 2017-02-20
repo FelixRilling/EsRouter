@@ -24,18 +24,14 @@ const Avenue = class {
         const _this = this;
         const currentPath = getHash(_location);
 
-        //Route storage
-        _this[0] = [];
-        //Fallback fn
-        _this[1] = () => {};
+        _this[0] = []; //Route storage
+        _this[1] = () => {};//Fallback fn
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         Object.keys(routeMap).forEach(routePath => {
-            if (routePath === "?") {
-                //Fallback route
+            if (routePath === "?") { //Fallback route
                 _this[1] = routeMap[routePath];
-            } else {
-                //Normal routes
+            } else {//Normal route
                 _this[0].push({
                     path: splitPath(routePath),
                     fn: routeMap[routePath]

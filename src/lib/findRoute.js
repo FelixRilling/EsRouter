@@ -31,8 +31,6 @@ const findRoute = function (path, routes) {
             fn: matchingRoute.fn
         };
     }
-
-    return false;
 };
 
 export default findRoute;

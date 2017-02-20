@@ -7,9 +7,7 @@ const _location = _window.location;
  * @param {Object} _location location Object
  * @returns {String} replaced string
  */
-const getHash = function (_location) {
-    return _location.hash.replace("#", "");
-};
+const getHash = _location => _location.hash.replace("#", "");
 
 /**
  * Splits path by dashes and trims
@@ -17,9 +15,7 @@ const getHash = function (_location) {
  * @param {String} path path string
  * @returns {Array} split path
  */
-const splitPath = function (path) {
-    return path.split("/").filter(item => item.length);
-};
+const splitPath = path => path.split("/").filter(item => item.length);
 
 /**
  * Returns wether the pathPart is a variable
@@ -27,9 +23,7 @@ const splitPath = function (path) {
  * @param {String} path Path part string
  * @returns {Boolean} wether the pathPart is a variable
  */
-const isPathVariable = function (path) {
-    return path[0] === ":";
-};
+const isPathVariable = path => path[0] === ":";
 
 /**
  * Checks two routes for matching
@@ -76,8 +70,6 @@ const findRoute = function (path, routes) {
             fn: matchingRoute.fn
         };
     }
-
-    return false;
 };
 
 /**
@@ -115,18 +107,14 @@ const Avenue = class {
         const _this = this;
         const currentPath = getHash(_location);
 
-        //Route storage
-        _this[0] = [];
-        //Fallback fn
-        _this[1] = () => {};
+        _this[0] = []; //Route storage
+        _this[1] = () => {};//Fallback fn
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         Object.keys(routeMap).forEach(routePath => {
-            if (routePath === "?") {
-                //Fallback route
+            if (routePath === "?") { //Fallback route
                 _this[1] = routeMap[routePath];
-            } else {
-                //Normal routes
+            } else {//Normal route
                 _this[0].push({
                     path: splitPath(routePath),
                     fn: routeMap[routePath]

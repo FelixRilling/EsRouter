@@ -6,8 +6,6 @@
  * @param {Object} _location location Object
  * @returns {String} replaced string
  */
-const getHash = function (_location) {
-    return _location.hash.replace("#", "");
-};
+const getHash = _location => _location.hash.replace("#", "");
 
 export default getHash;
