@@ -1,7 +1,7 @@
 "use strict";
 
 const _window = window;
-const _location = _window.location;
+const _location = location;
 
 export {
     _window,
