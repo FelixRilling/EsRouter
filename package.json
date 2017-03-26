@@ -1,12 +1,12 @@
 {
     "name": "avenuejs",
-    "version": "5.1.0",
+    "version": "5.1.1",
     "description": "Avenue is an extremely small routing library",
     "author": "Felix Rilling",
     "license": "MIT",
     "keywords": [
-        "validation",
-        "form"
+        "routing",
+        "router"
     ],
     "main": "dist/avenue.common.js",
     "namespace": {
