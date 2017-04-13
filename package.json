@@ -2,12 +2,6 @@
     "name": "avenuejs",
     "version": "5.1.2",
     "description": "Avenue is an extremely small routing library",
-    "author": "Felix Rilling",
-    "license": "MIT",
-    "keywords": [
-        "routing",
-        "router"
-    ],
     "main": "dist/avenue.common.js",
     "namespace": {
         "module": "Avenue",
@@ -19,14 +13,22 @@
         "lint": "./node_modules/.bin/eslint ./src/",
         "test": "./node_modules/.bin/jasmine"
     },
-    "bugs": {
-        "url": "https://github.com/FelixRilling/avenuejs/issues"
-    },
-    "homepage": "https://github.com/FelixRilling/avenuejs#readme",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/FelixRilling/avenuejs.git"
     },
+    "keywords": [
+        "routing",
+        "router"
+    ],
+    "author": "Felix Rilling",
+    "license": "MIT",
+
+    "bugs": {
+        "url": "https://github.com/FelixRilling/avenuejs/issues"
+    },
+    "homepage": "https://github.com/FelixRilling/avenuejs#readme",
+
     "devDependencies": {
         "babel-core": "^6.24.1",
         "babel-plugin-external-helpers": "^6.22.0",
