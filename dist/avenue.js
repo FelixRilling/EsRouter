@@ -6,7 +6,6 @@ var Avenue = function () {
 
     /**
      * Returns hash without starting char
-     *
      * @param {Object} _location location Object
      * @returns {String} replaced string
      */
@@ -14,7 +13,6 @@ var Avenue = function () {
 
     /**
      * Splits path by dashes and trims
-     *
      * @param {String} path path string
      * @returns {Array} split path
      */
@@ -22,15 +20,13 @@ var Avenue = function () {
 
     /**
      * Returns wether the pathPart is a variable
-     *
      * @param {String} path Path part string
      * @returns {Boolean} wether the pathPart is a variable
      */
     const isPathVariable = path => path[0] === ":";
 
     /**
-     * Checks two routes for matching
-     *
+     * Checks if two routes match
      * @param {Array} currentPath splitted current path
      * @param {Array} currentPath splitted route path
      * @returns {Boolean} if routes match
@@ -48,7 +44,6 @@ var Avenue = function () {
 
     /**
      * Finds route by path from route container
-     *
      * @param {String} path route path
      * @param {Object} routes route map
      * @returns {Object} matching route
@@ -106,12 +101,12 @@ var Avenue = function () {
                 }
             });
 
-            //Bind hashchange event
+            //Bind hashchange event to changeView
             _window.addEventListener("hashchange", e => {
                 _this.changeView(getHash(_location), e);
             }, false);
 
-            //load current route if existing
+            //Load current route when existing
             if (currentPath) {
                 _this.changeView(currentPath);
             }
@@ -134,7 +129,7 @@ var Avenue = function () {
             }
         }
         /**
-         * Navigate to the given path
+         * Navigate to the given path, triggering hashchange event
          * @param {String} path Path string
          */
         navigate(path) {

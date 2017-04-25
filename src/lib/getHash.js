@@ -2,7 +2,6 @@
 
 /**
  * Returns hash without starting char
- *
  * @param {Object} _location location Object
  * @returns {String} replaced string
  */

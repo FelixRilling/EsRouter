@@ -3,8 +3,7 @@
 import isPathVariable from "./isPathVariable";
 
 /**
- * Checks two routes for matching
- *
+ * Checks if two routes match
  * @param {Array} currentPath splitted current path
  * @param {Array} currentPath splitted route path
  * @returns {Boolean} if routes match

@@ -37,12 +37,12 @@ const Avenue = class {
             }
         });
 
-        //Bind hashchange event
+        //Bind hashchange event to changeView
         _window.addEventListener("hashchange", e => {
             _this.changeView(getHash(_location), e);
         }, false);
 
-        //load current route if existing
+        //Load current route when existing
         if (currentPath) {
             _this.changeView(currentPath);
         }
@@ -66,7 +66,7 @@ const Avenue = class {
         }
     }
     /**
-     * Navigate to the given path
+     * Navigate to the given path, triggering hashchange event
      * @param {String} path Path string
      */
     navigate(path) {

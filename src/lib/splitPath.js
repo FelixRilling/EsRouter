@@ -2,7 +2,6 @@
 
 /**
  * Splits path by dashes and trims
- *
  * @param {String} path path string
  * @returns {Array} split path
  */
