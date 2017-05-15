@@ -2,7 +2,7 @@ const _window = window;
 const _location = location;
 
 /**
- * Returns hash without starting char
+ * Returns hash without init-character
  * @param {Object} _location location Object
  * @returns {String} replaced string
  */
@@ -16,7 +16,7 @@ const getHash = _location => _location.hash.replace("#", "");
 const splitPath = path => path.split("/").filter(item => item.length);
 
 /**
- * Returns wether the pathPart is a variable
+ * Returns if the pathPart is a variable
  * @param {String} path Path part string
  * @returns {Boolean} wether the pathPart is a variable
  */
@@ -110,7 +110,7 @@ const Avenue = class {
     /**
      * Changes view by route
      * @param {String} path route path
-     * @param {Event|undefined} e Event object
+     * @param {Event=} e Event object
      */
     changeView(path, e) {
         const _this = this;

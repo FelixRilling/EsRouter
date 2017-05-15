@@ -1,6 +1,6 @@
 {
     "name": "avenuejs",
-    "version": "5.1.3",
+    "version": "5.2.0",
     "description": "Avenue is an extremely small routing library",
     "main": "dist/avenue.common.js",
     "namespace": {
@@ -30,13 +30,13 @@
     "homepage": "https://github.com/FelixRilling/avenuejs#readme",
 
     "devDependencies": {
-        "babel-core": "^7.0.0-alpha.9",
-        "babel-preset-latest": "^7.0.0-alpha.9",
+        "babel-core": "v7.0.0-alpha.7",
+        "babel-preset-latest": "v7.0.0-alpha.7",
         "eslint": "^3.19.0",
-        "jasmine": "^2.5.3",
+        "jasmine": "^2.6.0",
         "npm-run-all": "^4.0.2",
         "rollup": "^0.41.6",
-        "uglify-js": "git://github.com/mishoo/UglifyJS2.git#harmony"
+        "uglify-es": "^3.0.4"
     },
     "dependencies": {}
 }

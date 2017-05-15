@@ -51,7 +51,7 @@ const Avenue = class {
     /**
      * Changes view by route
      * @param {String} path route path
-     * @param {Event|undefined} e Event object
+     * @param {Event=} e Event object
      */
     changeView(path, e) {
         const _this = this;

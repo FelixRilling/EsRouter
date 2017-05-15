@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Returns hash without starting char
+ * Returns hash without init-character
  * @param {Object} _location location Object
  * @returns {String} replaced string
  */
