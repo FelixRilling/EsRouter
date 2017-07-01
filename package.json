@@ -3,6 +3,7 @@
     "version": "5.2.2",
     "description": "Avenue is an extremely small routing library",
     "main": "dist/avenue.common.js",
+    "module": "dist/avenue.esm.js",
     "namespace": {
         "module": "Avenue",
         "file": "avenue"
@@ -30,11 +31,11 @@
     "devDependencies": {
         "babel-core": "^7.0.0-alpha.12",
         "babel-preset-es2016": "^7.0.0-alpha.12",
-        "eslint": "^4.0.0",
+        "eslint": "^4.1.1",
         "jasmine": "^2.6.0",
         "npm-run-all": "^4.0.2",
         "rollup": "^0.43.0",
-        "uglify-es": "^3.0.17"
+        "uglify-es": "^3.0.22"
     },
     "dependencies": {}
 }
