@@ -1,32 +1,46 @@
+"use strict";
+
 const _window = window;
 const _location = location;
 
+"use strict";
+
 /**
  * Returns hash without init-character
+ *
  * @param {Object} _location location Object
- * @returns {String} replaced string
+ * @returns {string} replaced string
  */
 const getHash = _location => _location.hash.replace("#", "");
 
+"use strict";
+
 /**
  * Splits path by dashes and trims
- * @param {String} path path string
- * @returns {Array} split path
+ *
+ * @param {string} path path string
+ * @returns {Array<string>} split path
  */
 const splitPath = path => path.split("/").filter(item => item.length);
 
+"use strict";
+
 /**
  * Returns if the pathPart is a variable
- * @param {String} path Path part string
+ *
+ * @param {string} path Path part string
  * @returns {Boolean} wether the pathPart is a variable
  */
 const isPathVariable = path => path[0] === ":";
 
+"use strict";
+
 /**
  * Checks if two routes match
- * @param {Array} currentPath splitted current path
- * @param {Array} currentPath splitted route path
- * @returns {Boolean} if routes match
+ *
+ * @param {Array<string>} currentPath splitted current path
+ * @param {Array<string>} routePath splitted route path
+ * @returns {boolean} if routes match
  */
 const matchRoutes = function (currentPath, routePath) {
     return currentPath.every((currentPathPart, index) => {
@@ -39,9 +53,12 @@ const matchRoutes = function (currentPath, routePath) {
     });
 };
 
+"use strict";
+
 /**
  * Finds route by path from route container
- * @param {String} path route path
+ *
+ * @param {string} path route path
  * @param {Object} routes route map
  * @returns {Object} matching route
  */
@@ -67,29 +84,32 @@ const findRoute = function (path, routes) {
     }
 };
 
+"use strict";
+
 /**
  * Avenue Class
+ *
  * @class
  */
 const Avenue = class {
     /**
      * Avenue constructor
+     *
      * @constructor
      * @param {Object} routeMap routing map
      */
     constructor(routeMap) {
-        const _this = this;
         const currentPath = getHash(_location);
 
-        _this.routes = []; //Route storage
-        _this.fallback = () => {}; //Fallback fn
+        this.routes = []; //Route storage
+        this.fallback = () => {}; //Fallback fn
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         Object.keys(routeMap).forEach(routePath => {
             if (routePath === "?") { //Fallback route
-                _this.fallback = routeMap[routePath];
+                this.fallback = routeMap[routePath];
             } else { //Normal route
-                _this.routes.push({
+                this.routes.push({
                     path: splitPath(routePath),
                     fn: routeMap[routePath]
                 });
@@ -98,35 +118,36 @@ const Avenue = class {
 
         //Bind hashchange event to changeView
         _window.addEventListener("hashchange", e => {
-            _this.changeView(getHash(_location), e);
+            this.changeView(getHash(_location), e);
         }, false);
 
         //Load current route when existing
         if (currentPath) {
-            _this.changeView(currentPath);
+            this.changeView(currentPath);
         }
 
     }
     /**
      * Changes view by route
-     * @param {String} path route path
-     * @param {Event=} e Event object
+     *
+     * @param {string} path route path
+     * @param {Event} e Event object
      */
     changeView(path, e) {
-        const _this = this;
-        const routeData = findRoute(path, _this.routes);
+        const routeData = findRoute(path, this.routes);
 
         if (routeData) {
             //Runs route
             routeData.fn(e, routeData.args, path);
         } else {
             //Or fallback if route wasnt found
-            _this.fallback(e, path);
+            this.fallback(e, path);
         }
     }
     /**
      * Navigate to the given path, triggering hashchange event
-     * @param {String} path Path string
+     *
+     * @param {string} path Path string
      */
     navigate(path) {
         _location.hash = path;

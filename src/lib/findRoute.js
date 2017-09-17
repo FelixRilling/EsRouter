@@ -6,7 +6,8 @@ import isPathVariable from "./isPathVariable";
 
 /**
  * Finds route by path from route container
- * @param {String} path route path
+ *
+ * @param {string} path route path
  * @param {Object} routes route map
  * @returns {Object} matching route
  */

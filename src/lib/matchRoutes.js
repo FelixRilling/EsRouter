@@ -4,9 +4,10 @@ import isPathVariable from "./isPathVariable";
 
 /**
  * Checks if two routes match
- * @param {Array} currentPath splitted current path
- * @param {Array} currentPath splitted route path
- * @returns {Boolean} if routes match
+ *
+ * @param {Array<string>} currentPath splitted current path
+ * @param {Array<string>} routePath splitted route path
+ * @returns {boolean} if routes match
  */
 const matchRoutes = function (currentPath, routePath) {
     return currentPath.every((currentPathPart, index) => {

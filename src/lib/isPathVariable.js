@@ -2,7 +2,8 @@
 
 /**
  * Returns if the pathPart is a variable
- * @param {String} path Path part string
+ *
+ * @param {string} path Path part string
  * @returns {Boolean} wether the pathPart is a variable
  */
 const isPathVariable = path => path[0] === ":";
