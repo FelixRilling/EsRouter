@@ -1,11 +1,7 @@
 'use strict';
 
-"use strict";
-
 const _window = window;
 const _location = location;
-
-"use strict";
 
 /**
  * Returns hash without init-character
@@ -15,8 +11,6 @@ const _location = location;
  */
 const getHash = _location => _location.hash.replace("#", "");
 
-"use strict";
-
 /**
  * Splits path by dashes and trims
  *
@@ -25,8 +19,6 @@ const getHash = _location => _location.hash.replace("#", "");
  */
 const splitPath = path => path.split("/").filter(item => item.length);
 
-"use strict";
-
 /**
  * Returns if the pathPart is a variable
  *
@@ -34,8 +26,6 @@ const splitPath = path => path.split("/").filter(item => item.length);
  * @returns {Boolean} wether the pathPart is a variable
  */
 const isPathVariable = path => path[0] === ":";
-
-"use strict";
 
 /**
  * Checks if two routes match
@@ -54,8 +44,6 @@ const matchRoutes = function (currentPath, routePath) {
         }
     });
 };
-
-"use strict";
 
 /**
  * Finds route by path from route container
@@ -85,8 +73,6 @@ const findRoute = function (path, routes) {
         };
     }
 };
-
-"use strict";
 
 /**
  * Avenue Class

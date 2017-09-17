@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Splits path by dashes and trims
  *

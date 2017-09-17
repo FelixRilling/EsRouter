@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Returns if the pathPart is a variable
  *

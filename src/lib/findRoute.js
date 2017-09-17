@@ -1,5 +1,3 @@
-"use strict";
-
 import splitPath from "./splitPath";
 import matchRoutes from "./matchRoutes";
 import isPathVariable from "./isPathVariable";

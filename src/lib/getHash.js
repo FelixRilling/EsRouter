@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Returns hash without init-character
  *
