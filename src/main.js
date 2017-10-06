@@ -1,7 +1,3 @@
-import {
-    _location,
-    _window,
-} from "./constants";
 import getHash from "./lib/getHash";
 import splitPath from "./lib/splitPath";
 import findRoute from "./lib/findRoute";
@@ -19,7 +15,7 @@ const Avenue = class {
      * @param {Object} routeMap routing map
      */
     constructor(routeMap) {
-        const currentPath = getHash(_location);
+        const currentPath = getHash();
 
         this.routes = []; //Route storage
         this.fallback = () => {}; //Fallback fn
@@ -37,8 +33,8 @@ const Avenue = class {
         });
 
         //Bind hashchange event to changeView
-        _window.addEventListener("hashchange", e => {
-            this.changeView(getHash(_location), e);
+        window.addEventListener("hashchange", e => {
+            this.changeView(getHash(), e);
         }, false);
 
         //Load current route when existing

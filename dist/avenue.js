@@ -1,16 +1,12 @@
 var Avenue = (function () {
 'use strict';
 
-const _window = window;
-const _location = location;
-
 /**
  * Returns hash without init-character
  *
- * @param {Object} _location location Object
  * @returns {string} replaced string
  */
-const getHash = _location => _location.hash.replace("#", "");
+const getHash = () => location.hash.replace("#", "");
 
 /**
  * Splits path by dashes and trims
@@ -89,7 +85,7 @@ const Avenue = class {
    * @param {Object} routeMap routing map
    */
   constructor(routeMap) {
-    const currentPath = getHash(_location);
+    const currentPath = getHash();
     this.routes = []; //Route storage
 
     this.fallback = () => {}; //Fallback fn
@@ -109,10 +105,9 @@ const Avenue = class {
       }
     }); //Bind hashchange event to changeView
 
-    _window.addEventListener("hashchange", e => {
-      this.changeView(getHash(_location), e);
+    window.addEventListener("hashchange", e => {
+      this.changeView(getHash(), e);
     }, false); //Load current route when existing
-
 
     if (currentPath) {
       this.changeView(currentPath);
