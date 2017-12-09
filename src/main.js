@@ -22,9 +22,11 @@ const Avenue = class {
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         Object.keys(routeMap).forEach(routePath => {
-            if (routePath === "?") { //Fallback route
+            if (routePath === "?") {
+                //Fallback route
                 this.fallback = routeMap[routePath];
-            } else { //Normal route
+            } else {
+                //Normal route
                 this.routes.push({
                     path: splitPath(routePath),
                     fn: routeMap[routePath]
@@ -33,15 +35,18 @@ const Avenue = class {
         });
 
         //Bind hashchange event to changeView
-        window.addEventListener("hashchange", e => {
-            this.changeView(getHash(), e);
-        }, false);
+        window.addEventListener(
+            "hashchange",
+            e => {
+                this.changeView(getHash(), e);
+            },
+            false
+        );
 
         //Load current route when existing
         if (currentPath) {
             this.changeView(currentPath);
         }
-
     }
     /**
      * Changes view by route
