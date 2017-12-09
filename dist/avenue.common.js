@@ -163,7 +163,7 @@ const Avenue = class {
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         forEachEntry(routeMap, (routeFn, routePath) => {
             if (routePath === "?") {
-                this.fallback = routeMap[routePath];
+                this.fallback = routeFn;
             } else {
                 this.routes.push([splitPath(routePath), routeFn]);
             }
@@ -190,7 +190,7 @@ const Avenue = class {
         const result = findRoute(splitPath(path), this.routes);
 
         return result
-            ? result.route.fn(e, result.args, path)
+            ? result.route[1](e, result.args, path)
             : this.fallback(e, path);
     }
     /**

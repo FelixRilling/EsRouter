@@ -160,7 +160,7 @@ const Avenue = class {
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
         forEachEntry(routeMap, (routeFn, routePath) => {
             if (routePath === "?") {
-                this.fallback = routeMap[routePath];
+                this.fallback = routeFn;
             } else {
                 this.routes.push([splitPath(routePath), routeFn]);
             }
@@ -182,7 +182,7 @@ const Avenue = class {
     changeView(path, e = null) {
         const result = findRoute(splitPath(path), this.routes);
 
-        return result ? result.route.fn(e, result.args, path) : this.fallback(e, path);
+        return result ? result.route[1](e, result.args, path) : this.fallback(e, path);
     }
     /**
      * Navigate to the given path, triggering hashchange event
