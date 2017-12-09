@@ -9,7 +9,7 @@ import isPathVariable from "./isPathVariable";
  * @param {Object} routes route map
  * @returns {Object} matching route
  */
-const findRoute = function (path, routes) {
+const findRoute = (path, routes) => {
     const currentPath = splitPath(path);
     const matchingRoute = routes.find(route => {
         return matchRoutes(currentPath, route.path);

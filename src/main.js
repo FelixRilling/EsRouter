@@ -1,6 +1,7 @@
 import getHash from "./lib/getHash";
 import splitPath from "./lib/splitPath";
 import findRoute from "./lib/findRoute";
+import { forEachEntry } from "lightdash";
 
 /**
  * Avenue Class
@@ -17,33 +18,28 @@ const Avenue = class {
     constructor(routeMap) {
         const currentPath = getHash();
 
-        this.routes = []; //Route storage
-        this.fallback = () => {}; //Fallback fn
+        this.routes = [];
+        this.fallback = () => {};
 
         //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
-        Object.keys(routeMap).forEach(routePath => {
+        forEachEntry(routeMap, (routeFn, routePath) => {
             if (routePath === "?") {
-                //Fallback route
                 this.fallback = routeMap[routePath];
             } else {
-                //Normal route
                 this.routes.push({
                     path: splitPath(routePath),
-                    fn: routeMap[routePath]
+                    fn: routeFn
                 });
             }
         });
 
-        //Bind hashchange event to changeView
         window.addEventListener(
             "hashchange",
-            e => {
-                this.changeView(getHash(), e);
-            },
+            e => this.changeView(getHash(), e),
             false
         );
 
-        //Load current route when existing
+        //Load current route if exists
         if (currentPath) {
             this.changeView(currentPath);
         }
@@ -58,10 +54,8 @@ const Avenue = class {
         const routeData = findRoute(path, this.routes);
 
         if (routeData) {
-            //Runs route
             routeData.fn(e, routeData.args, path);
         } else {
-            //Or fallback if route wasnt found
             this.fallback(e, path);
         }
     }
@@ -71,7 +65,7 @@ const Avenue = class {
      * @param {string} path Path string
      */
     navigate(path) {
-        _location.hash = path;
+        location.hash = path;
     }
 };
 

@@ -31,17 +31,14 @@ const isPathVariable = path => path[0] === ":";
  * @param {Array<string>} routePath splitted route path
  * @returns {boolean} if routes match
  */
-
-const matchRoutes = function (currentPath, routePath) {
-  return currentPath.every((currentPathPart, index) => {
+const matchRoutes = (currentPath, routePath) => currentPath.every((currentPathPart, index) => {
     const routePathPart = routePath[index];
 
     if (routePathPart) {
-      //Checks for variable-wildcard or equivalency
-      return isPathVariable(routePathPart) || currentPathPart === routePathPart;
+        //Checks for variable-wildcard or equivalency
+        return isPathVariable(routePathPart) || currentPathPart === routePathPart;
     }
-  });
-};
+});
 
 /**
  * Finds route by path from route container
@@ -50,25 +47,97 @@ const matchRoutes = function (currentPath, routePath) {
  * @param {Object} routes route map
  * @returns {Object} matching route
  */
-
-const findRoute = function (path, routes) {
-  const currentPath = splitPath(path);
-  const matchingRoute = routes.find(route => {
-    return matchRoutes(currentPath, route.path);
-  });
-
-  if (matchingRoute) {
-    const args = {};
-    matchingRoute.path.forEach((matchingRoutePathPart, index) => {
-      if (isPathVariable(matchingRoutePathPart)) {
-        args[matchingRoutePathPart.substr(1)] = currentPath[index];
-      }
+const findRoute = (path, routes) => {
+    const currentPath = splitPath(path);
+    const matchingRoute = routes.find(route => {
+        return matchRoutes(currentPath, route.path);
     });
-    return {
-      args,
-      fn: matchingRoute.fn
-    };
-  }
+
+    if (matchingRoute) {
+        const args = {};
+
+        matchingRoute.path.forEach((matchingRoutePathPart, index) => {
+            if (isPathVariable(matchingRoutePathPart)) {
+                args[matchingRoutePathPart.substr(1)] = currentPath[index];
+            }
+        });
+
+        return {
+            args,
+            fn: matchingRoute.fn
+        };
+    }
+};
+
+/**
+ * Checks if the value has a certain type-string
+ *
+ * @function isTypeOf
+ * @memberof Is
+ * @since 1.0.0
+ * @param {any} val
+ * @param {string} type
+ * @returns {boolean}
+ * @example
+ * // returns true
+ * isTypeOf({}, "object")
+ * isTypeOf([], "object")
+ * isTypeOf("foo", "string")
+ *
+ * @example
+ * // returns false
+ * isTypeOf("foo", "number")
+ */
+/**
+ * Returns an array of the objects entries
+ *
+ * `Object.entries` shorthand
+ *
+ * @function objEntries
+ * @memberof Object
+ * @since 1.0.0
+ * @param {Object} obj
+ * @returns {any[]} Array<[key: any, val: any]>]
+ * @example
+ * // returns [["a", 1], ["b", 2], ["c", 3]]
+ * objEntries({a: 1, b: 2, c: 3})
+ */
+const objEntries = Object.entries;
+
+/**
+ * Iterates over each element in an array
+ *
+ * Wrapper around arr.forEach to have a cleaner API and better minified code
+ *
+ * @function forEach
+ * @memberof For
+ * @param {any[]} arr
+ * @param {function} fn fn(val: any, index: number, arr: any[])
+ * @example
+ * // returns a = [0, 2, 6]
+ * const a = [1, 2, 3];
+ *
+ * forEach(a, (val, index)=>a[index] = val * index)
+ */
+const forEach = (arr, fn) => arr.forEach(fn);
+
+/**
+ * Iterates over each entry of an object
+ *
+ * @function forEachEntry
+ * @memberof For
+ * @param {object} obj
+ * @param {function} fn fn(val: any, key: any, index: number, arr: any[])
+ * @example
+ * // returns a = {a: 0, b: 2}
+ * const a = {a: 1, b: 2};
+ *
+ * forEachEntry(a, (val, key, index) => a[key] = val * index)
+ */
+const forEachEntry = (obj, fn) => {
+  forEach(objEntries(obj), (entry, index) => {
+    fn(entry[1], entry[0], index, obj);
+  });
 };
 
 /**
@@ -76,73 +145,61 @@ const findRoute = function (path, routes) {
  *
  * @class
  */
-
 const Avenue = class {
-  /**
-   * Avenue constructor
-   *
-   * @constructor
-   * @param {Object} routeMap routing map
-   */
-  constructor(routeMap) {
-    const currentPath = getHash();
-    this.routes = []; //Route storage
+    /**
+     * Avenue constructor
+     *
+     * @constructor
+     * @param {Object} routeMap routing map
+     */
+    constructor(routeMap) {
+        const currentPath = getHash();
 
-    this.fallback = () => {}; //Fallback fn
-    //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
+        this.routes = [];
+        this.fallback = () => {};
 
-
-    Object.keys(routeMap).forEach(routePath => {
-      if (routePath === "?") {
-        //Fallback route
-        this.fallback = routeMap[routePath];
-      } else {
-        //Normal route
-        this.routes.push({
-          path: splitPath(routePath),
-          fn: routeMap[routePath]
+        //Change routes from {path:fn} to [{path,fn}] and extracts fallback route
+        forEachEntry(routeMap, (routeFn, routePath) => {
+            if (routePath === "?") {
+                this.fallback = routeMap[routePath];
+            } else {
+                this.routes.push({
+                    path: splitPath(routePath),
+                    fn: routeFn
+                });
+            }
         });
-      }
-    }); //Bind hashchange event to changeView
 
-    window.addEventListener("hashchange", e => {
-      this.changeView(getHash(), e);
-    }, false); //Load current route when existing
+        window.addEventListener("hashchange", e => this.changeView(getHash(), e), false);
 
-    if (currentPath) {
-      this.changeView(currentPath);
+        //Load current route if exists
+        if (currentPath) {
+            this.changeView(currentPath);
+        }
     }
-  }
-  /**
-   * Changes view by route
-   *
-   * @param {string} path route path
-   * @param {Event} e Event object
-   */
+    /**
+     * Changes view by route
+     *
+     * @param {string} path route path
+     * @param {Event} e Event object
+     */
+    changeView(path, e) {
+        const routeData = findRoute(path, this.routes);
 
-
-  changeView(path, e) {
-    const routeData = findRoute(path, this.routes);
-
-    if (routeData) {
-      //Runs route
-      routeData.fn(e, routeData.args, path);
-    } else {
-      //Or fallback if route wasnt found
-      this.fallback(e, path);
+        if (routeData) {
+            routeData.fn(e, routeData.args, path);
+        } else {
+            this.fallback(e, path);
+        }
     }
-  }
-  /**
-   * Navigate to the given path, triggering hashchange event
-   *
-   * @param {string} path Path string
-   */
-
-
-  navigate(path) {
-    _location.hash = path;
-  }
-
+    /**
+     * Navigate to the given path, triggering hashchange event
+     *
+     * @param {string} path Path string
+     */
+    navigate(path) {
+        location.hash = path;
+    }
 };
 
 return Avenue;
