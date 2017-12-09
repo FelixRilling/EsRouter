@@ -1,7 +1,20 @@
-import getHash from "./lib/getHash";
-import splitPath from "./lib/splitPath";
 import findRoute from "./lib/findRoute";
 import { forEachEntry } from "lightdash";
+
+/**
+ * Returns hash without init-character
+ *
+ * @returns {string} replaced string
+ */
+const getHash = () => location.hash.replace("#", "");
+
+/**
+ * Splits path by dashes and trims
+ *
+ * @param {string} path path string
+ * @returns {Array<string>} split path
+ */
+const splitPath = path => path.split("/").filter(item => item.length);
 
 /**
  * Avenue Class
@@ -26,10 +39,7 @@ const Avenue = class {
             if (routePath === "?") {
                 this.fallback = routeMap[routePath];
             } else {
-                this.routes.push({
-                    path: splitPath(routePath),
-                    fn: routeFn
-                });
+                this.routes.push([splitPath(routePath), routeFn]);
             }
         });
 
@@ -50,14 +60,12 @@ const Avenue = class {
      * @param {string} path route path
      * @param {Event} e Event object
      */
-    changeView(path, e) {
-        const routeData = findRoute(path, this.routes);
+    changeView(path, e = null) {
+        const result = findRoute(splitPath(path), this.routes);
 
-        if (routeData) {
-            routeData.fn(e, routeData.args, path);
-        } else {
-            this.fallback(e, path);
-        }
+        return result
+            ? result.route.fn(e, result.args, path)
+            : this.fallback(e, path);
     }
     /**
      * Navigate to the given path, triggering hashchange event
