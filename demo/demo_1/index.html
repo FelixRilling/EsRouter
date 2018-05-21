@@ -6,23 +6,36 @@
     <title>AvenueJS Demo</title>
     <meta name="description" content="AvenueJS Demo">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://necolas.github.io/normalize.css/5.0.0/normalize.css" type="text/css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <link href="https://necolas.github.io/normalize.css/8.0.0/normalize.css" type="text/css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" type="text/css" rel="stylesheet"
+    />
 </head>
 
 <body>
     <div class="container">
         <h1>Demo 1</h1>
-        <a href="#/">home</a> -
-        <a href="#/about">/about</a> -
-        <a href="#/users/John">/users/:user</a> -
-        <a href="#/users/Anne/edit">/users/:user/edit</a> -
-        <a href="#/groups/people/users/Dave/edit">/groups/:group/users/:user/edit</a>
 
-        <div>
-            <h2>Route Data</h2>
-            <p id="output"></p>
-        </div>
+        <h2>Routes:</h2>
+        <ul>
+            <li>
+                <a href="#/">home</a>
+            </li>
+            <li>
+                <a href="#/about">/about</a>
+            </li>
+            <li>
+                <a href="#/users/John">/users/:user</a>
+            </li>
+            <li>
+                <a href="#/users/Anne/edit">/users/:user/edit</a>
+            </li>
+            <li>
+                <a href="#/groups/people/users/Dave/edit">/groups/:group/users/:user/edit</a>
+            </li>
+        </ul>
+
+        <h2>Output:</h2>
+        <p id="output"></p>
     </div>
     <script src="../../dist/avenue.js"></script>
     <script src="index.js"></script>

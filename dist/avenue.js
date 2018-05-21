@@ -103,20 +103,11 @@ var Avenue = (function () {
     };
 
     /**
-     * Returns if the page URL has a hash part
-     *
-     * @private
-     * @returns {boolean}
-     */
-    const hasHash = () => getHash().length > 0;
-    /**
      * Returns hash without init-character
      *
      * @private
      * @returns {string}
      */
-
-
     const getHash = () => location.hash.replace("#", "");
 
     /**
@@ -157,9 +148,7 @@ var Avenue = (function () {
         });
         window.addEventListener("hashchange", e => this.setView(getHash(), e), false); // Load current route if exists
 
-        if (hasHash()) {
-          this.setView(getHash());
-        }
+        this.setView(getHash());
       }
       /**
        * Sets view to a route path

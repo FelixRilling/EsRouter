@@ -1,7 +1,7 @@
 import { forEachEntry } from "lightdash";
 import { IRoutes } from "./interfaces";
 import findRoute from "./lib/findRoute";
-import { getHash, hasHash } from "./lib/hash";
+import { getHash } from "./lib/hash";
 import { splitPath } from "./lib/path";
 import { pathStr, routeArr, routeFn, view } from "./types";
 
@@ -41,9 +41,7 @@ const Avenue = class {
         );
 
         // Load current route if exists
-        if (hasHash()) {
-            this.setView(getHash());
-        }
+        this.setView(getHash());
     }
     /**
      * Sets view to a route path

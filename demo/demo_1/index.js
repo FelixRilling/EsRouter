@@ -20,8 +20,10 @@ const router = new Avenue({
             params.group
         }'`;
     },
-    "?": (path, params, e) => {
-        $output.textContent = `URL doesn't match any route: '${path}'; Parameters: ${params}, Event: ${e}`;
+    "?": (params, path, e) => {
+        $output.textContent = `URL doesn't match any route: '${path}'; Parameters: ${JSON.stringify(
+            params
+        )}, Event: ${e}`;
     }
 });
 
