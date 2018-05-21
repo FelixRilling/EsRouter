@@ -9,17 +9,19 @@ const router = new Avenue({
     "/about": () => {
         $output.textContent = "About";
     },
-    "/users/:user": (e, params) => {
+    "/users/:user": params => {
         $output.textContent = `User: '${params.user}'`;
     },
-    "/users/:user/edit": (e, params) => {
+    "/users/:user/edit": params => {
         $output.textContent = `User edit: '${params.user}'`;
     },
-    "/groups/:group/users/:user/edit": (e, params) => {
-        $output.textContent = `User edit: '${params.user}' from group '${params.group}'`;
+    "/groups/:group/users/:user/edit": params => {
+        $output.textContent = `User edit: '${params.user}' from group '${
+            params.group
+        }'`;
     },
-    "?": (e, path) => {
-        $output.textContent = `URL doesnt match any route: '${path}'`;
+    "?": (path, params, e) => {
+        $output.textContent = `URL doesn't match any route: '${path}'; Parameters: ${params}, Event: ${e}`;
     }
 });
 
