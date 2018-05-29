@@ -2,16 +2,16 @@ import { IParams } from "../interfaces";
 import { pathArr, routeArr, routeItem } from "../types";
 
 /**
- * Returns if the pathPart is a path variable
+ * Returns if the pathPart is a path variable.
  *
  * @private
  * @param {string} path
- * @returns {boolean} wether the pathPart is a variable
+ * @returns {boolean}
  */
 const isPathVariable = (pathPart: string): boolean => pathPart[0] === ":";
 
 /**
- * Checks if two routes match
+ * Checks if two routes match.
  *
  * @private
  * @param {Array<string>} currentPath
@@ -34,12 +34,12 @@ const matchRoutes = (currentPath: pathArr, routePath: pathArr): boolean =>
     });
 
 /**
- * Finds route by path from route container
+ * Finds route by path from route container.
  *
  * @private
- * @param {Array<string>} path route path
- * @param {Object} routes route map
- * @returns {Object} matching route
+ * @param {Array<string>} path
+ * @param {Object} routes
+ * @returns {Object}
  */
 const findRoute = (path: pathArr, routes: routeArr) => {
     const route = routes.find((routeCurrent: routeItem) =>

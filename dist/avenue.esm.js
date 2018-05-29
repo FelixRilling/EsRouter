@@ -42,15 +42,15 @@ const forEachEntry = (obj, fn) => {
 };
 
 /**
- * Returns if the pathPart is a path variable
+ * Returns if the pathPart is a path variable.
  *
  * @private
  * @param {string} path
- * @returns {boolean} wether the pathPart is a variable
+ * @returns {boolean}
  */
 const isPathVariable = (pathPart) => pathPart[0] === ":";
 /**
- * Checks if two routes match
+ * Checks if two routes match.
  *
  * @private
  * @param {Array<string>} currentPath
@@ -67,12 +67,12 @@ const matchRoutes = (currentPath, routePath) => currentPath.every((currentPathPa
     return false;
 });
 /**
- * Finds route by path from route container
+ * Finds route by path from route container.
  *
  * @private
- * @param {Array<string>} path route path
- * @param {Object} routes route map
- * @returns {Object} matching route
+ * @param {Array<string>} path
+ * @param {Object} routes
+ * @returns {Object}
  */
 const findRoute = (path, routes) => {
     const route = routes.find((routeCurrent) => matchRoutes(path, routeCurrent[0]));
@@ -92,7 +92,7 @@ const findRoute = (path, routes) => {
 };
 
 /**
- * Returns hash without init-character
+ * Returns hash without init-character.
  *
  * @private
  * @returns {string}
@@ -100,7 +100,7 @@ const findRoute = (path, routes) => {
 const getHash = () => location.hash.replace("#", "");
 
 /**
- * Splits path by dashes and trims
+ * Splits path by dashes and trims.
  *
  * @private
  * @param {string} pathStr
@@ -109,13 +109,13 @@ const getHash = () => location.hash.replace("#", "");
 const splitPath = (path) => path.split("/").filter(item => item.length);
 
 /**
- * Avenue Class
+ * Avenue class.
  *
  * @class
  */
 const Avenue = class {
     /**
-     * Avenue constructor
+     * Avenue constructor.
      *
      * @constructor
      * @param {Object} routes
@@ -138,7 +138,7 @@ const Avenue = class {
         this.setView(getHash());
     }
     /**
-     * Sets view to a route path
+     * Sets view to a route path.
      *
      * @param {string} path
      * @param {Event|null} [e=null]
@@ -154,7 +154,7 @@ const Avenue = class {
         }
     }
     /**
-     * Returns active view path
+     * Returns active view path.
      *
      * @returns {string}
      */

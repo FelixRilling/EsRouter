@@ -1,5 +1,5 @@
 /**
- * Returns hash without init-character
+ * Returns hash without init-character.
  *
  * @private
  * @returns {string}

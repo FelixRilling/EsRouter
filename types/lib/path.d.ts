@@ -1,5 +1,5 @@
 /**
- * Splits path by dashes and trims
+ * Splits path by dashes and trims.
  *
  * @private
  * @param {string} pathStr

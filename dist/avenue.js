@@ -46,15 +46,15 @@ var Avenue = (function () {
     };
 
     /**
-     * Returns if the pathPart is a path variable
+     * Returns if the pathPart is a path variable.
      *
      * @private
      * @param {string} path
-     * @returns {boolean} wether the pathPart is a variable
+     * @returns {boolean}
      */
     const isPathVariable = pathPart => pathPart[0] === ":";
     /**
-     * Checks if two routes match
+     * Checks if two routes match.
      *
      * @private
      * @param {Array<string>} currentPath
@@ -74,12 +74,12 @@ var Avenue = (function () {
       return false;
     });
     /**
-     * Finds route by path from route container
+     * Finds route by path from route container.
      *
      * @private
-     * @param {Array<string>} path route path
-     * @param {Object} routes route map
-     * @returns {Object} matching route
+     * @param {Array<string>} path
+     * @param {Object} routes
+     * @returns {Object}
      */
 
 
@@ -103,7 +103,7 @@ var Avenue = (function () {
     };
 
     /**
-     * Returns hash without init-character
+     * Returns hash without init-character.
      *
      * @private
      * @returns {string}
@@ -111,7 +111,7 @@ var Avenue = (function () {
     const getHash = () => location.hash.replace("#", "");
 
     /**
-     * Splits path by dashes and trims
+     * Splits path by dashes and trims.
      *
      * @private
      * @param {string} pathStr
@@ -120,14 +120,14 @@ var Avenue = (function () {
     const splitPath = path => path.split("/").filter(item => item.length);
 
     /**
-     * Avenue Class
+     * Avenue class.
      *
      * @class
      */
 
     const Avenue = class {
       /**
-       * Avenue constructor
+       * Avenue constructor.
        *
        * @constructor
        * @param {Object} routes
@@ -151,7 +151,7 @@ var Avenue = (function () {
         this.setView(getHash());
       }
       /**
-       * Sets view to a route path
+       * Sets view to a route path.
        *
        * @param {string} path
        * @param {Event|null} [e=null]
@@ -169,7 +169,7 @@ var Avenue = (function () {
         }
       }
       /**
-       * Returns active view path
+       * Returns active view path.
        *
        * @returns {string}
        */

@@ -1,7 +1,7 @@
 import { pathStr } from "../types";
 
 /**
- * Returns hash without init-character
+ * Returns hash without init-character.
  *
  * @private
  * @returns {string}

@@ -1,7 +1,7 @@
 import { IRoutes } from "./interfaces";
 import { routeFn, view } from "./types";
 /**
- * Avenue Class
+ * Avenue class.
  *
  * @class
  */

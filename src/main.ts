@@ -6,7 +6,7 @@ import { splitPath } from "./lib/path";
 import { pathStr, routeArr, routeFn, view } from "./types";
 
 /**
- * Avenue Class
+ * Avenue class.
  *
  * @class
  */
@@ -15,7 +15,7 @@ const Avenue = class {
     public routes: routeArr;
     public fallback: routeFn;
     /**
-     * Avenue constructor
+     * Avenue constructor.
      *
      * @constructor
      * @param {Object} routes
@@ -44,7 +44,7 @@ const Avenue = class {
         this.setView(getHash());
     }
     /**
-     * Sets view to a route path
+     * Sets view to a route path.
      *
      * @param {string} path
      * @param {Event|null} [e=null]
@@ -60,7 +60,7 @@ const Avenue = class {
         }
     }
     /**
-     * Returns active view path
+     * Returns active view path.
      *
      * @returns {string}
      */
