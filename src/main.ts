@@ -1,6 +1,6 @@
 import { forEachEntry } from "lightdash";
 import { IRoutes } from "./interfaces";
-import findRoute from "./lib/findRoute";
+import { findRoute } from "./lib/findRoute";
 import { getHash } from "./lib/hash";
 import { splitPath } from "./lib/path";
 import { pathStr, routeArr, routeFn, view } from "./types";

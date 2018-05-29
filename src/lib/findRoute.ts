@@ -64,4 +64,4 @@ const findRoute = (path: pathArr, routes: routeArr) => {
     return null;
 };
 
-export default findRoute;
+export { findRoute };

@@ -13,4 +13,4 @@ declare const findRoute: (path: string[], routes: [string[], (params: IParams, p
         [key: string]: any;
     };
 } | null;
-export default findRoute;
+export { findRoute };
