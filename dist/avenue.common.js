@@ -47,34 +47,34 @@ const forEachEntry = (obj, fn) => {
  * Returns hash without init-character.
  *
  * @private
- * @returns {string}
+ * @returns {string} current location hash, without the hash.
  */
 const getLocationHash = () => location.hash.replace("#", "");
 
 /**
- * Splits path by dashes and trims.
+ * Splits path by slashes and trims.
  *
  * @private
- * @param {string} pathStr
- * @returns {Array<string>}
+ * @param {string} pathStr path string.
+ * @returns {Array<string>} trimmed path string array.
  */
 const splitPath = (path) => path.split("/").filter(item => item.length);
 
 /**
- * Returns if the pathPart is a path variable.
+ * Checks if the pathPart is a path variable.
  *
  * @private
- * @param {string} path
- * @returns {boolean}
+ * @param {string} path path string.
+ * @returns {boolean} if the pathPart is a path variable.
  */
 const isPathVariable = (pathPart) => pathPart[0] === ":";
 /**
  * Checks if two routes match.
  *
  * @private
- * @param {Array<string>} currentPath
- * @param {Array<string>} routePath
- * @returns {boolean}
+ * @param {Array<string>} currentPath first route.
+ * @param {Array<string>} routePath second route.
+ * @returns {boolean} if the first and second route match.
  */
 const matchRoutes = (currentPath, routePath) => currentPath.every((currentPathPart, index) => {
     const routePathPart = routePath[index];
@@ -86,12 +86,12 @@ const matchRoutes = (currentPath, routePath) => currentPath.every((currentPathPa
     return false;
 });
 /**
- * Finds route by path from route container.
+ * Finds route by path.
  *
  * @private
- * @param {Array<string>} path
- * @param {Object} routes
- * @returns {Object}
+ * @param {Array<string>} path path string array.
+ * @param {object} routes object containing routes.
+ * @returns {object|null} object containing route and args, or null if none was found.
  */
 const findRoute = (path, routes) => {
     const route = routes.find((routeCurrent) => matchRoutes(path, routeCurrent[0]));
@@ -120,7 +120,7 @@ const Avenue = class {
      * Avenue constructor.
      *
      * @constructor
-     * @param {Object} routes
+     * @param {object} routes object of routes to use.
      */
     constructor(routes) {
         this.view = null;
@@ -142,8 +142,8 @@ const Avenue = class {
     /**
      * Sets view to a route path.
      *
-     * @param {string} path
-     * @param {Event|null} [e=null]
+     * @param {string} path string route path.
+     * @param {Event|null} [e=null] event, if called through one.
      */
     setView(path, e = null) {
         const result = findRoute(splitPath(path), this.routes);
@@ -158,7 +158,7 @@ const Avenue = class {
     /**
      * Returns active view path.
      *
-     * @returns {string}
+     * @returns {string|null} active view, or null if none was set.
      */
     getView() {
         return this.view;

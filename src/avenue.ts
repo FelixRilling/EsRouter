@@ -22,7 +22,7 @@ const Avenue = class {
      * Avenue constructor.
      *
      * @constructor
-     * @param {Object} routes
+     * @param {object} routes object of routes to use.
      */
     constructor(routes: IRoutes) {
         this.view = null;
@@ -50,8 +50,8 @@ const Avenue = class {
     /**
      * Sets view to a route path.
      *
-     * @param {string} path
-     * @param {Event|null} [e=null]
+     * @param {string} path string route path.
+     * @param {Event|null} [e=null] event, if called through one.
      */
     public setView(path: pathStr, e: Event | null = null): void {
         const result = findRoute(splitPath(path), this.routes);
@@ -66,7 +66,7 @@ const Avenue = class {
     /**
      * Returns active view path.
      *
-     * @returns {string}
+     * @returns {string|null} active view, or null if none was set.
      */
     public getView(): view {
         return this.view;
