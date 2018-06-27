@@ -1,4 +1,3 @@
-import { IParams } from "../interfaces";
 /**
  * Finds route by path from route container.
  *
@@ -7,8 +6,8 @@ import { IParams } from "../interfaces";
  * @param {Object} routes
  * @returns {Object}
  */
-declare const findRoute: (path: string[], routes: [string[], (params: IParams, path: string, e: Event | null) => void][]) => {
-    route: [string[], (params: IParams, path: string, e: Event | null) => void];
+declare const findRoute: (path: string[], routes: [string[], import("src/types").routeFn][]) => {
+    route: [string[], import("src/types").routeFn];
     args: {
         [key: string]: any;
     };
