@@ -1,6 +1,6 @@
 {
     "name": "avenuejs",
-    "version": "6.0.1",
+    "version": "6.0.2",
     "description": "Avenue is an extremely small routing library",
     "main": "dist/avenue.common.js",
     "module": "dist/avenue.esm.js",
