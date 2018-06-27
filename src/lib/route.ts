@@ -1,5 +1,12 @@
-import { IParams } from "../interfaces";
-import { pathArr, routeArr, routeItem } from "../types";
+import { pathArr, pathStr } from "./path";
+
+type routeFn = (params: IParams, path: pathStr, e: Event | null) => void;
+type routeItem = [pathArr, routeFn];
+type routeArr = routeItem[];
+
+interface IParams {
+    [key: string]: string;
+}
 
 /**
  * Returns if the pathPart is a path variable.
@@ -64,4 +71,4 @@ const findRoute = (path: pathArr, routes: routeArr) => {
     return null;
 };
 
-export { findRoute };
+export { findRoute, routeFn, routeArr, routeItem };

@@ -1,4 +1,5 @@
-import { pathArr, pathStr } from "../types";
+type pathStr = string;
+type pathArr = pathStr[];
 
 /**
  * Splits path by dashes and trims.
@@ -10,4 +11,4 @@ import { pathArr, pathStr } from "../types";
 const splitPath = (path: pathStr): pathArr =>
     path.split("/").filter(item => item.length);
 
-export { splitPath };
+export { splitPath, pathStr, pathArr };

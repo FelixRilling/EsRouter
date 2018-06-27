@@ -44,6 +44,23 @@ const forEachEntry = (obj, fn) => {
 };
 
 /**
+ * Returns hash without init-character.
+ *
+ * @private
+ * @returns {string}
+ */
+const getLocationHash = () => location.hash.replace("#", "");
+
+/**
+ * Splits path by dashes and trims.
+ *
+ * @private
+ * @param {string} pathStr
+ * @returns {Array<string>}
+ */
+const splitPath = (path) => path.split("/").filter(item => item.length);
+
+/**
  * Returns if the pathPart is a path variable.
  *
  * @private
@@ -94,23 +111,6 @@ const findRoute = (path, routes) => {
 };
 
 /**
- * Returns hash without init-character.
- *
- * @private
- * @returns {string}
- */
-const getHash = () => location.hash.replace("#", "");
-
-/**
- * Splits path by dashes and trims.
- *
- * @private
- * @param {string} pathStr
- * @returns {Array<string>}
- */
-const splitPath = (path) => path.split("/").filter(item => item.length);
-
-/**
  * Avenue class.
  *
  * @class
@@ -135,9 +135,9 @@ const Avenue = class {
                 this.routes.push([splitPath(routeItemPath), routeItemFn]);
             }
         });
-        window.addEventListener("hashchange", e => this.setView(getHash(), e), false);
+        window.addEventListener("hashchange", e => this.setView(getLocationHash(), e), false);
         // Load current route if exists
-        this.setView(getHash());
+        this.setView(getLocationHash());
     }
     /**
      * Sets view to a route path.
