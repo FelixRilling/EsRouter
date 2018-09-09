@@ -1,5 +1,3 @@
-![AvenueJS](./logo.png)
-
 # AvenueJS
 
 > Avenue is an extremely small routing library

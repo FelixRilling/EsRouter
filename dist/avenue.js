@@ -2,26 +2,20 @@ var Avenue = (function () {
     'use strict';
 
     /**
-     * Checks if the value has a certain type-string.
+     * Checks if a value is an array.
      *
-     * @function isTypeOf
+     * Alias of the native `Array.isArray`.
+     *
+     * @function isArray
      * @memberof Is
      * @since 1.0.0
      * @param {any} val
-     * @param {string} type
      * @returns {boolean}
      * @example
-     * isTypeOf({}, "object")
+     * isArray([1, 2, 3]);
      * // => true
      *
-     * isTypeOf([], "object")
-     * // => true
-     *
-     * isTypeOf("foo", "string")
-     * // => true
-     *
-     * @example
-     * isTypeOf("foo", "number")
+     * isArray({});
      * // => false
      */
 
@@ -31,11 +25,13 @@ var Avenue = (function () {
      * @function forEachEntry
      * @memberof For
      * @param {object} obj
-     * @param {function} fn fn(key: any, val: any, index: number, arr: any[])
+     * @param {function} fn fn(key: *, val: *, index: number, arr: any[])
      * @example
      * const a = {a: 1, b: 2};
      *
-     * forEachEntry(a, (key, val, index) => a[key] = val * index)
+     * forEachEntry(a, (key, val, index) => {
+     *     a[key] = val * index;
+     * })
      * // a = {a: 0, b: 2}
      */
     const forEachEntry = (obj, fn) => {

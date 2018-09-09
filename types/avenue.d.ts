@@ -1,6 +1,4 @@
-import { pathStr } from "./lib/path";
 import { routeFn } from "./lib/route";
-declare type view = pathStr | null;
 interface IRoutes {
     [key: string]: routeFn;
 }
@@ -11,7 +9,7 @@ interface IRoutes {
  */
 declare const Avenue: {
     new (routes: IRoutes): {
-        view: view;
+        view: string | null;
         routes: [string[], routeFn][];
         fallback: routeFn;
         /**
@@ -26,7 +24,7 @@ declare const Avenue: {
          *
          * @returns {string|null} active view, or null if none was set.
          */
-        getView(): view;
+        getView(): string | null;
     };
 };
 export { Avenue };

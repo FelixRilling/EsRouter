@@ -4,7 +4,7 @@ import uglify from "rollup-plugin-uglify-es";
 import { settings } from "../package.json";
 
 export default {
-    input: `./src/${settings.input}`,
+    input: `./src/main.ts`,
     output: [
         {
             format: "iife",
@@ -16,12 +16,7 @@ export default {
     plugins: [
         resolve(),
         typescript({
-            cacheRoot: "./.cache/ts/iife-min",
-            tsconfigOverride: {
-                compilerOptions: {
-                    target: "es2015"
-                }
-            }
+            cacheRoot: "./.cache/ts/iife-min"
         }),
         uglify()
     ]
