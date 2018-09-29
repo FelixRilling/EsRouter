@@ -52,7 +52,7 @@ var Avenue = (function () {
      * Splits path by slashes and trims.
      *
      * @private
-     * @param {string} pathStr path string.
+     * @param {string} path Path string.
      * @returns {Array<string>} trimmed path string array.
      */
     const splitPath = (path) => path.split("/").filter(item => item.length);
@@ -61,10 +61,11 @@ var Avenue = (function () {
      * Checks if the pathPart is a path variable.
      *
      * @private
-     * @param {string} path path string.
+     * @param {string} pathPart path string.
      * @returns {boolean} if the pathPart is a path variable.
      */
     const isPathVariable = (pathPart) => pathPart[0] === ":";
+
     /**
      * Checks if two routes match.
      *
@@ -82,6 +83,7 @@ var Avenue = (function () {
         }
         return false;
     });
+
     /**
      * Finds route by path.
      *
@@ -112,7 +114,7 @@ var Avenue = (function () {
      *
      * @class
      */
-    const Avenue = class {
+    class Avenue {
         /**
          * Avenue constructor.
          *
@@ -122,7 +124,7 @@ var Avenue = (function () {
         constructor(routes) {
             this.view = null;
             this.routes = [];
-            this.fallback = () => { };
+            this.fallback = () => null;
             // Change routes from {string: fn} to [string[], fn] and extract fallback route
             forEachEntry(routes, (routeItemPath, routeItemFn) => {
                 if (routeItemPath === "?") {
@@ -133,7 +135,7 @@ var Avenue = (function () {
                 }
             });
             window.addEventListener("hashchange", e => this.setView(getLocationHash(), e), false);
-            // Load current route if exists
+            // Load current route if it exists
             this.setView(getLocationHash());
         }
         /**
@@ -160,7 +162,7 @@ var Avenue = (function () {
         getView() {
             return this.view;
         }
-    };
+    }
 
     return Avenue;
 

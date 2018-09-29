@@ -1,23 +1,22 @@
 import { forEachEntry } from "lightdash";
-import { getLocationHash } from "./lib/location";
-import { pathStr, splitPath } from "./lib/path";
-import { findRoute, routeArr, routeFn } from "./lib/route";
-
-type view = pathStr | null;
-
-interface IRoutes {
-    [key: string]: routeFn;
-}
+import { getLocationHash } from "./location/location";
+import { splitPath } from "./path/path";
+import { IRoutes } from "./route/IRoutes";
+import { findRoute } from "./route/lookup/findRoute";
+import { routeFn } from "./route/routeFn";
+import { routeItem } from "./route/routeItem";
+import { view } from "./view/view";
 
 /**
  * Avenue class.
  *
  * @class
  */
-const Avenue = class {
+class Avenue {
     public view: view;
-    public routes: routeArr;
+    public routes: routeItem[];
     public fallback: routeFn;
+
     /**
      * Avenue constructor.
      *
@@ -27,10 +26,10 @@ const Avenue = class {
     constructor(routes: IRoutes) {
         this.view = null;
         this.routes = [];
-        this.fallback = () => {};
+        this.fallback = () => null;
 
         // Change routes from {string: fn} to [string[], fn] and extract fallback route
-        forEachEntry(routes, (routeItemPath: pathStr, routeItemFn: routeFn) => {
+        forEachEntry(routes, (routeItemPath: string, routeItemFn: routeFn) => {
             if (routeItemPath === "?") {
                 this.fallback = routeItemFn;
             } else {
@@ -44,16 +43,17 @@ const Avenue = class {
             false
         );
 
-        // Load current route if exists
+        // Load current route if it exists
         this.setView(getLocationHash());
     }
+
     /**
      * Sets view to a route path.
      *
      * @param {string} path string route path.
      * @param {Event|null} [e=null] event, if called through one.
      */
-    public setView(path: pathStr, e: Event | null = null): void {
+    public setView(path: string, e: Event | null = null): void {
         const result = findRoute(splitPath(path), this.routes);
 
         if (result) {
@@ -63,6 +63,7 @@ const Avenue = class {
             this.fallback({}, path, e);
         }
     }
+
     /**
      * Returns active view path.
      *
@@ -71,6 +72,6 @@ const Avenue = class {
     public getView(): view {
         return this.view;
     }
-};
+}
 
 export { Avenue };

@@ -1,2 +1,2 @@
-import { Avenue } from "./avenue";
+import { Avenue } from "./Avenue";
 export default Avenue;
