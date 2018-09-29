@@ -3,7 +3,7 @@ import { pathArr } from "../../path/pathArr";
 import { routeItem } from "../routeItem";
 import { IRouteLookup } from "./IRouteLookup";
 import { IRouteParams } from "./IRouteParams";
-import { matchRoutes } from "./matchRoute";
+import { routesMatch } from "./routesMatch";
 
 /**
  * Finds route by path.
@@ -15,7 +15,7 @@ import { matchRoutes } from "./matchRoute";
  */
 const findRoute = (path: pathArr, routes: routeItem[]): IRouteLookup | null => {
     const route = routes.find((routeCurrent: routeItem) =>
-        matchRoutes(path, routeCurrent[0])
+        routesMatch(path, routeCurrent[0])
     );
 
     if (route) {

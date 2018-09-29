@@ -9,7 +9,7 @@ import { pathArr } from "../../path/pathArr";
  * @param {Array<string>} routePath second route.
  * @returns {boolean} if the first and second route match.
  */
-const matchRoutes = (currentPath: pathArr, routePath: pathArr): boolean =>
+const routesMatch = (currentPath: pathArr, routePath: pathArr): boolean =>
     currentPath.every((currentPathPart: string, index: number) => {
         const routePathPart = routePath[index];
 
@@ -24,4 +24,4 @@ const matchRoutes = (currentPath: pathArr, routePath: pathArr): boolean =>
         return false;
     });
 
-export { matchRoutes };
+export { routesMatch };
