@@ -30,6 +30,12 @@ node_modules/
 bower_components/
 
 # Debug Files
+npm-debug.*
+
+# Temp Files
 .cache/
 .tmp/
-npm-debug.*
+spec/out/
+
+# Safe files
+_key*
