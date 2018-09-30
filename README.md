@@ -8,6 +8,8 @@ Avenue is a client side router that focuses on speed and size (~800Bytes).
 The API is heavily influenced by the [AngularJS router](https://docs.angularjs.org/tutorial/step_09) and [gibon.js](https://github.com/tunnckoCore/gibon).
 An unique feature of Avenue is the usage of URL hashes instead of full URLs to ensure compatibility for different web servers.
 
+**[Docs](https://felixrilling.github.io/avenue/)**
+
 ## Usage
 
 ```shell
