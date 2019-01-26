@@ -6,5 +6,5 @@
  * @param {Array<string>} routePath second route.
  * @returns {boolean} if the first and second route match.
  */
-declare const matchRoutes: (currentPath: string[], routePath: string[]) => boolean;
-export { matchRoutes };
+declare const routesMatch: (currentPath: string[], routePath: string[]) => boolean;
+export { routesMatch };

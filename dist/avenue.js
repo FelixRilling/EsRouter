@@ -1,31 +1,14 @@
 var Avenue = (function () {
     'use strict';
 
-    /**
-     * Checks if a value is an array.
-     *
-     * Alias of the native `Array.isArray`.
-     *
-     * @function isArray
-     * @memberof Is
-     * @since 1.0.0
-     * @param {any} val
-     * @returns {boolean}
-     * @example
-     * isArray([1, 2, 3]);
-     * // => true
-     *
-     * isArray({});
-     * // => false
-     */
+    // File is named "_index.ts" to avoid it being treated as a module index file.
 
     /**
      * Iterates over each entry of an object.
      *
-     * @function forEachEntry
      * @memberof For
-     * @param {object} obj
-     * @param {function} fn fn(key: *, val: *, index: number, arr: any[])
+     * @param {object} obj Object to iterate.
+     * @param {function} fn Function to use (`fn(key: *, val: *, index: number, obj: object) => void`).
      * @example
      * const a = {a: 1, b: 2};
      *
@@ -35,9 +18,9 @@ var Avenue = (function () {
      * // a = {a: 0, b: 2}
      */
     const forEachEntry = (obj, fn) => {
-        Object.entries(obj).forEach((entry, index) => {
-            fn(entry[0], entry[1], index, obj);
-        });
+        for (const [key, val] of Object.entries(obj)) {
+            fn(val, key, obj);
+        }
     };
 
     /**
@@ -74,7 +57,7 @@ var Avenue = (function () {
      * @param {Array<string>} routePath second route.
      * @returns {boolean} if the first and second route match.
      */
-    const matchRoutes = (currentPath, routePath) => currentPath.every((currentPathPart, index) => {
+    const routesMatch = (currentPath, routePath) => currentPath.every((currentPathPart, index) => {
         const routePathPart = routePath[index];
         if (routePathPart) {
             // Checks for variable-wildcard or equivalency
@@ -93,7 +76,7 @@ var Avenue = (function () {
      * @returns {object|null} object containing route and args, or null if none was found.
      */
     const findRoute = (path, routes) => {
-        const route = routes.find((routeCurrent) => matchRoutes(path, routeCurrent[0]));
+        const route = routes.find((routeCurrent) => routesMatch(path, routeCurrent[0]));
         if (route) {
             const args = {};
             route[0].forEach((routePathPart, index) => {
@@ -126,7 +109,7 @@ var Avenue = (function () {
             this.routes = [];
             this.fallback = () => null;
             // Change routes from {string: fn} to [string[], fn] and extract fallback route
-            forEachEntry(routes, (routeItemPath, routeItemFn) => {
+            forEachEntry(routes, (routeItemFn, routeItemPath) => {
                 if (routeItemPath === "?") {
                     this.fallback = routeItemFn;
                 }

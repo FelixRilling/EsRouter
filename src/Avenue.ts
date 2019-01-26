@@ -29,7 +29,7 @@ class Avenue {
         this.fallback = () => null;
 
         // Change routes from {string: fn} to [string[], fn] and extract fallback route
-        forEachEntry(routes, (routeItemPath: string, routeItemFn: routeFn) => {
+        forEachEntry(routes, (routeItemFn: routeFn, routeItemPath: string) => {
             if (routeItemPath === "?") {
                 this.fallback = routeItemFn;
             } else {
