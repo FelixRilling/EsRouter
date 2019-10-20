@@ -1,8 +1,6 @@
 var Avenue = (function () {
     'use strict';
 
-    // File is named "_index.ts" to avoid it being treated as a module index file.
-
     /**
      * Iterates over each entry of an object.
      *
@@ -22,6 +20,12 @@ var Avenue = (function () {
             fn(val, key, obj);
         }
     };
+
+    var Delimiters;
+    (function (Delimiters) {
+        Delimiters["KEBAB"] = "-";
+        Delimiters["SNAKE"] = "_";
+    })(Delimiters || (Delimiters = {}));
 
     /**
      * Returns hash without init-character.
