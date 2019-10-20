@@ -1,8 +1,8 @@
 import { isPathVariable } from "../../path/isPathVariable";
-import { pathArr } from "../../path/pathArr";
-import { routeItem } from "../routeItem";
-import { IRouteLookup } from "./IRouteLookup";
-import { IRouteParams } from "./IRouteParams";
+import { PathArr } from "../../path/PathArr";
+import { RouteItem } from "../RouteItem";
+import { RouteLookup } from "./RouteLookup";
+import { RouteParams } from "./RouteParams";
 import { routesMatch } from "./routesMatch";
 
 /**
@@ -13,13 +13,13 @@ import { routesMatch } from "./routesMatch";
  * @param {object} routes object containing routes.
  * @returns {object|null} object containing route and args, or null if none was found.
  */
-const findRoute = (path: pathArr, routes: routeItem[]): IRouteLookup | null => {
-    const route = routes.find((routeCurrent: routeItem) =>
+const findRoute = (path: PathArr, routes: RouteItem[]): RouteLookup | null => {
+    const route = routes.find((routeCurrent: RouteItem) =>
         routesMatch(path, routeCurrent[0])
     );
 
     if (route) {
-        const args: IRouteParams = {};
+        const args: RouteParams = {};
 
         route[0].forEach((routePathPart: string, index: number) => {
             if (isPathVariable(routePathPart)) {

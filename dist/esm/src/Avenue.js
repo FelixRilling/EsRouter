@@ -1,6 +1,6 @@
 import { forEachEntry } from "lightdash";
-import { getLocationHash } from "./location/location";
-import { splitPath } from "./path/path";
+import { getLocationHash } from "./location/getLocationHash";
+import { splitPath } from "./path/splitPath";
 import { findRoute } from "./route/lookup/findRoute";
 /**
  * Avenue class.

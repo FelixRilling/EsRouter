@@ -5,6 +5,6 @@
  * @param {string} pathPart path string.
  * @returns {boolean} if the pathPart is a path variable.
  */
-const isPathVariable = (pathPart: string): boolean => pathPart[0] === ":";
+const isPathVariable = (pathPart: string): boolean => pathPart.startsWith(":");
 
 export { isPathVariable };

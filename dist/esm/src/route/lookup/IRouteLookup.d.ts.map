@@ -1,1 +1,0 @@
-{"version":3,"file":"IRouteLookup.d.ts","sourceRoot":"","sources":["../../../../../src/route/lookup/IRouteLookup.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAC;AACzC,OAAO,EAAE,YAAY,EAAE,MAAM,gBAAgB,CAAC;AAE9C,UAAU,YAAY;IAClB,KAAK,EAAE,SAAS,CAAC;IACjB,IAAI,EAAE,YAAY,CAAC;CACtB;AAED,OAAO,EAAE,YAAY,EAAE,CAAC"}

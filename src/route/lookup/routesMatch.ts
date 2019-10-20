@@ -1,5 +1,5 @@
 import { isPathVariable } from "../../path/isPathVariable";
-import { pathArr } from "../../path/pathArr";
+import { PathArr } from "../../path/PathArr";
 
 /**
  * Checks if two routes match.
@@ -9,7 +9,7 @@ import { pathArr } from "../../path/pathArr";
  * @param {Array<string>} routePath second route.
  * @returns {boolean} if the first and second route match.
  */
-const routesMatch = (currentPath: pathArr, routePath: pathArr): boolean =>
+const routesMatch = (currentPath: PathArr, routePath: PathArr): boolean =>
     currentPath.every((currentPathPart: string, index: number) => {
         const routePathPart = routePath[index];
 

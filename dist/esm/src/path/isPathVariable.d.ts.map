@@ -1,1 +1,1 @@
-{"version":3,"file":"isPathVariable.d.ts","sourceRoot":"","sources":["../../../../src/path/isPathVariable.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AACH,QAAA,MAAM,cAAc,+BAAqD,CAAC;AAE1E,OAAO,EAAE,cAAc,EAAE,CAAC"}
+{"version":3,"file":"isPathVariable.d.ts","sourceRoot":"","sources":["../../../../src/path/isPathVariable.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AACH,QAAA,MAAM,cAAc,+BAA0D,CAAC;AAE/E,OAAO,EAAE,cAAc,EAAE,CAAC"}

@@ -1,23 +1,23 @@
-import { IRoutes } from "./route/IRoutes";
-import { routeFn } from "./route/routeFn";
-import { routeItem } from "./route/routeItem";
-import { view } from "./view/view";
+import { RouteDictionary } from "./route/RouteDictionary";
+import { RouteFn } from "./route/RouteFn";
+import { RouteItem } from "./route/RouteItem";
+import { View } from "./view/View";
 /**
  * Avenue class.
  *
  * @class
  */
 declare class Avenue {
-    view: view;
-    routes: routeItem[];
-    fallback: routeFn;
+    view: View;
+    routes: RouteItem[];
+    fallback: RouteFn;
     /**
      * Avenue constructor.
      *
      * @constructor
      * @param {object} routes object of routes to use.
      */
-    constructor(routes: IRoutes);
+    constructor(routes: RouteDictionary);
     /**
      * Sets view to a route path.
      *
@@ -30,7 +30,7 @@ declare class Avenue {
      *
      * @returns {string|null} active view, or null if none was set.
      */
-    getView(): view;
+    getView(): View;
 }
 export { Avenue };
 //# sourceMappingURL=Avenue.d.ts.map
