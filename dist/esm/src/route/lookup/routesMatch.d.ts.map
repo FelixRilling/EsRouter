@@ -1,1 +1,1 @@
-{"version":3,"file":"routesMatch.d.ts","sourceRoot":"","sources":["../../../../../src/route/lookup/routesMatch.ts"],"names":[],"mappings":"AAGA;;;;;;;GAOG;AACH,QAAA,MAAM,WAAW,yDAaX,CAAC;AAEP,OAAO,EAAE,WAAW,EAAE,CAAC"}
+{"version":3,"file":"routesMatch.d.ts","sourceRoot":"","sources":["../../../../../src/route/lookup/routesMatch.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,OAAO,EAAE,MAAM,oBAAoB,CAAC;AAE7C;;;;;;;GAOG;AACH,QAAA,MAAM,WAAW,uDAaX,CAAC;AAEP,OAAO,EAAE,WAAW,EAAE,CAAC"}

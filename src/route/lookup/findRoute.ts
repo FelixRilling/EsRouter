@@ -9,9 +9,9 @@ import { routesMatch } from "./routesMatch";
  * Finds route by path.
  *
  * @private
- * @param {Array<string>} path path string array.
- * @param {object} routes object containing routes.
- * @returns {object|null} object containing route and args, or null if none was found.
+ * @param path path string array.
+ * @param routes object containing routes.
+ * @returns object containing route and args, or null if none was found.
  */
 const findRoute = (path: PathArr, routes: RouteItem[]): RouteLookup | null => {
     const route = routes.find((routeCurrent: RouteItem) =>

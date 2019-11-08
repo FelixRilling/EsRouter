@@ -3,9 +3,9 @@ import { isPathVariable } from "../../path/isPathVariable";
  * Checks if two routes match.
  *
  * @private
- * @param {Array<string>} currentPath first route.
- * @param {Array<string>} routePath second route.
- * @returns {boolean} if the first and second route match.
+ * @param currentPath first route.
+ * @param routePath second route.
+ * @returns if the first and second route match.
  */
 const routesMatch = (currentPath, routePath) => currentPath.every((currentPathPart, index) => {
     const routePathPart = routePath[index];

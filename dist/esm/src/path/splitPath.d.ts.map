@@ -1,1 +1,1 @@
-{"version":3,"file":"splitPath.d.ts","sourceRoot":"","sources":["../../../../src/path/splitPath.ts"],"names":[],"mappings":"AAEA;;;;;;GAMG;AACH,QAAA,MAAM,SAAS,4BACgC,CAAC;AAEhD,OAAO,EAAE,SAAS,EAAE,CAAC"}
+{"version":3,"file":"splitPath.d.ts","sourceRoot":"","sources":["../../../../src/path/splitPath.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAC;AAEpC;;;;;;GAMG;AACH,QAAA,MAAM,SAAS,2BACgC,CAAC;AAEhD,OAAO,EAAE,SAAS,EAAE,CAAC"}

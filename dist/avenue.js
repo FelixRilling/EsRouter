@@ -31,7 +31,7 @@ var Avenue = (function () {
      * Returns hash without init-character.
      *
      * @private
-     * @returns {string} current location hash, without the hash.
+     * @returns current location hash, without the hash.
      */
     const getLocationHash = () => location.hash.replace("#", "");
 
@@ -39,8 +39,8 @@ var Avenue = (function () {
      * Splits path by slashes and trims.
      *
      * @private
-     * @param {string} path Path string.
-     * @returns {Array<string>} trimmed path string array.
+     * @param path Path string.
+     * @returns trimmed path string array.
      */
     const splitPath = (path) => path.split("/").filter(item => item.length);
 
@@ -48,8 +48,8 @@ var Avenue = (function () {
      * Checks if the pathPart is a path variable.
      *
      * @private
-     * @param {string} pathPart path string.
-     * @returns {boolean} if the pathPart is a path variable.
+     * @param pathPart path string.
+     * @returns if the pathPart is a path variable.
      */
     const isPathVariable = (pathPart) => pathPart.startsWith(":");
 
@@ -57,9 +57,9 @@ var Avenue = (function () {
      * Checks if two routes match.
      *
      * @private
-     * @param {Array<string>} currentPath first route.
-     * @param {Array<string>} routePath second route.
-     * @returns {boolean} if the first and second route match.
+     * @param currentPath first route.
+     * @param routePath second route.
+     * @returns if the first and second route match.
      */
     const routesMatch = (currentPath, routePath) => currentPath.every((currentPathPart, index) => {
         const routePathPart = routePath[index];
@@ -75,9 +75,9 @@ var Avenue = (function () {
      * Finds route by path.
      *
      * @private
-     * @param {Array<string>} path path string array.
-     * @param {object} routes object containing routes.
-     * @returns {object|null} object containing route and args, or null if none was found.
+     * @param path path string array.
+     * @param routes object containing routes.
+     * @returns object containing route and args, or null if none was found.
      */
     const findRoute = (path, routes) => {
         const route = routes.find((routeCurrent) => routesMatch(path, routeCurrent[0]));

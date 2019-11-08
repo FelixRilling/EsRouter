@@ -1,10 +1,11 @@
+import { PathArr } from "./PathArr";
 /**
  * Splits path by slashes and trims.
  *
  * @private
- * @param {string} path Path string.
- * @returns {Array<string>} trimmed path string array.
+ * @param path Path string.
+ * @returns trimmed path string array.
  */
-declare const splitPath: (path: string) => string[];
+declare const splitPath: (path: string) => PathArr;
 export { splitPath };
 //# sourceMappingURL=splitPath.d.ts.map
