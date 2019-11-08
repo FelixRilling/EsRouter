@@ -5,7 +5,8 @@ import { RouteDictionary } from "./route/RouteDictionary";
 import { findRoute } from "./route/lookup/findRoute";
 import { RouteFn } from "./route/RouteFn";
 import { RouteItem } from "./route/RouteItem";
-import { View } from "./view/View";
+
+type View = string | null;
 
 /**
  * Avenue class.

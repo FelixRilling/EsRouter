@@ -1,7 +1,7 @@
 import { RouteDictionary } from "./route/RouteDictionary";
 import { RouteFn } from "./route/RouteFn";
 import { RouteItem } from "./route/RouteItem";
-import { View } from "./view/View";
+declare type View = string | null;
 /**
  * Avenue class.
  *

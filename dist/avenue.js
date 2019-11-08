@@ -52,7 +52,6 @@ var Avenue = (function () {
      * @returns if the pathPart is a path variable.
      */
     const isPathVariable = (pathPart) => pathPart.startsWith(":");
-
     /**
      * Checks if two routes match.
      *
@@ -70,7 +69,6 @@ var Avenue = (function () {
         }
         return false;
     });
-
     /**
      * Finds route by path.
      *

@@ -51,7 +51,6 @@ const splitPath = (path) => path.split("/").filter(item => item.length);
  * @returns if the pathPart is a path variable.
  */
 const isPathVariable = (pathPart) => pathPart.startsWith(":");
-
 /**
  * Checks if two routes match.
  *
@@ -69,7 +68,6 @@ const routesMatch = (currentPath, routePath) => currentPath.every((currentPathPa
     }
     return false;
 });
-
 /**
  * Finds route by path.
  *

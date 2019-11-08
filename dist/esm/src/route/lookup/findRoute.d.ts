@@ -1,6 +1,10 @@
 import { PathArr } from "../../path/PathArr";
 import { RouteItem } from "../RouteItem";
-import { RouteLookup } from "./RouteLookup";
+import { RouteParams } from "./RouteParams";
+interface RouteLookup {
+    route: RouteItem;
+    args: RouteParams;
+}
 /**
  * Finds route by path.
  *
